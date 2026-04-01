@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LookaGenius Academy | المنصة التعليمية الشاملة</title>
+    
+    <!-- SEO & Social Sharing (Open Graph) -->
+    <meta name="description" content="LookaGenius Academy - منصة تعليمية رائدة تقدم كورسات معتمدة في اللغات، والعلوم، والتكنولوجيا، وإرشاد أكاديمي للمنح الدراسية الأوروبية.">
+    <meta property="og:title" content="LookaGenius Academy | طريقك للتميز والمنح العالمية">
+    <meta property="og:description" content="انضم إلى مجتمعنا التعليمي المتميز واستكشف أكثر من 16 مساراً تعليمياً بمهارات العصر وبرمجة المستقبل.">
+    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:url" content="https://lookagenius.academy">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .tw-cursor { font-weight: 300; opacity: 1; animation: blink 0.75s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        /* Team Specific High-End Styling */
+        .team-img-wrapper {
+            width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 20px;
+            position: relative; padding: 6px; background: linear-gradient(130deg, var(--primary-blue), var(--accent-violet));
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+        .team-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-main); }
+    </style>
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div id="canvas-container"></div>
+        <div class="hero-content">
+            <div class="tagline">
+                <i class="fa-solid fa-graduation-cap"></i> منصة تعليمية ذكية بمواصفات عالمية
+            </div>
+            <h1>
+                <span id="typewriter" style="color: var(--success); text-shadow: 0 0 8px #00FFAA;"></span><br>
+                مع <span class="neon">LookaGenius</span>
+            </h1>
+            <p class="description">
+                نحن لا نقدم مجرد دروس، بل نصنع مساراً مستقبلياً متكاملاً: مناهج أكاديمية، علوم البرمجة، تكنولوجيا العصر القادم، ودعم كامل للمنح الأوروبية.
+            </p>
+            <div class="btn-group" style="display: flex; gap: 18px; flex-wrap: wrap;">
+                <a href="register.html" class="btn btn-primary hover-trigger">ابدأ التعلم الآن <i class="fa-solid fa-arrow-left"></i></a>
+                <a href="courses.html" class="btn btn-secondary hover-trigger">استكشف الكورسات</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subjects Section -->
+    <section id="subjects" class="section-container">
+        <div class="section-header" style="margin-bottom: 45px;" data-aos="fade-up">
+            <h2 style="font-size: clamp(26px, 4vw, 38px); font-weight: 800;">المسارات التعليمية المتاحة</h2>
+            <p style="color: var(--text-secondary);">نغطي كافة التخصصات من اللغات والعلوم الأساسية وصولاً إلى أرقى تقنيات المستقبل</p>
+        </div>
+        <div class="subjects-grid">
+            <div class="subject-card hover-trigger" data-aos="fade-up"><div class="subject-icon"><i class="fa-solid fa-language"></i></div><div class="subject-title">اللغات العالمية</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["تعلم لغة جديدة يفتح لك أبواب العالم 🌍", "كل لغة هي نافذة على ثقافة جديدة ✨"]'>إتقان المحادثة والكتابة</span></div><ul class="subject-list"><li>العربية <i class="fa-solid fa-check"></i></li><li>الإنجليزية <i class="fa-solid fa-check"></i></li><li>الفرنسية <i class="fa-solid fa-check"></i></li><li>الألمانية <i class="fa-solid fa-check"></i></li></ul></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="50"><div class="subject-icon"><i class="fa-solid fa-flask"></i></div><div class="subject-title">العلوم الأساسية</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["العلم يبني بيوتاً لا عماد لها 🔬", "استكشف أسرار الكون 🧬"]'>فيزياء - كيمياء - أحياء</span></div><ul class="subject-list"><li>الفيزياء <i class="fa-solid fa-check"></i></li><li>الكيمياء <i class="fa-solid fa-check"></i></li><li>الأحياء <i class="fa-solid fa-check"></i></li><li>الجيولوجيا <i class="fa-solid fa-check"></i></li></ul></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="100"><div class="subject-icon"><i class="fa-solid fa-square-root-variable"></i></div><div class="subject-title">الرياضيات</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["الرياضيات لغة الأذكياء 🔢", "التفكير المنطقي مفتاح النجاح 📐"]'>جبر، تفاضل، إحصاء</span></div><ul class="subject-list"><li>رياضيات متقدمة <i class="fa-solid fa-check"></i></li><li>الجبر والتفاضل <i class="fa-solid fa-check"></i></li><li>الإحصاء <i class="fa-solid fa-check"></i></li></ul></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="150"><div class="subject-icon"><i class="fa-solid fa-compass-drafting"></i></div><div class="subject-title">الهندسة والمساحة</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["المهندسون يصنعون العالم 🏗️", "صمم مستقبلك بدقة 📐"]'>AutoCAD, GIS</span></div><ul class="subject-list"><li>AutoCAD & Revit <i class="fa-solid fa-check"></i></li><li>GIS والمساحة <i class="fa-solid fa-check"></i></li><li>إدارة المشروعات <i class="fa-solid fa-check"></i></li></ul></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="200"><div class="subject-icon"><i class="fa-solid fa-laptop-code"></i></div><div class="subject-title">تكنولوجيا المعلومات</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["التكنولوجيا لغة العصر 💻", "الأمن السيبراني يحمي المستقبل 🔒"]'>أساسيات الكمبيوتر</span></div><ul class="subject-list"><li>أساسيات الكمبيوتر <i class="fa-solid fa-check"></i></li><li>تكنولوجيا المعلومات <i class="fa-solid fa-check"></i></li><li>الأمن السيبراني <i class="fa-solid fa-check"></i></li></ul></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="250"><div class="subject-icon"><i class="fa-solid fa-earth-africa"></i></div><div class="subject-title">الدراسات والتاريخ</div><div class="subject-desc"><span class="card-typewriter" data-quotes='["من لا يقرأ التاريخ لا يبصر المستقبل 🏛️", "سافر عبر الزمن 🌍"]'>تاريخ وجغرافيا</span></div><ul class="subject-list"><li>الدراسات الاجتماعية <i class="fa-solid fa-check"></i></li><li>التاريخ الحديث <i class="fa-solid fa-check"></i></li><li>الجغرافيا السياسية <i class="fa-solid fa-check"></i></li></ul></div>
+        </div>
+    </section>
+
+    <!-- Dynamic Courses Showcase -->
+    <section id="courses" class="section-container" style="background: rgba(0,0,0,0.15);">
+        <div class="section-header" style="margin-bottom: 45px;" data-aos="fade-up">
+            <h2 style="font-size: clamp(26px, 4vw, 38px); font-weight: 800;">أفضل الكورسات المميزة</h2>
+            <div style="margin-top: 10px; font-size: 20px; font-weight: 500;"><span id="quotes-typewriter" style="color: var(--success); border-right: 2px solid var(--success); padding-right: 8px;"></span></div>
+        </div>
+        <div id="homeCourses">
+            <!-- JS Injected Courses -->
+        </div>
+    </section>
+
+    <!-- Scholarships Section -->
+    <section id="scholarships" class="section-container">
+        <div class="section-header" data-aos="fade-up" style="margin-bottom: 45px;">
+            <h2 style="font-size: clamp(26px, 4vw, 38px); font-weight: 800;">المنح الدراسية للجامعات الأوروبية <i class="fa-solid fa-star" style="color:#FBBF24;"></i></h2>
+            <p style="color: var(--text-secondary);">فرص حصرية للالتحاق بأعرق الجامعات العالمية بتمويل شامل</p>
+        </div>
+        <div class="subjects-grid">
+            <div class="subject-card hover-trigger" data-aos="fade-up"><div style="display:flex; gap:12px; margin-bottom:12px;"><i class="fa-solid fa-earth-europe" style="font-size:32px; color:var(--accent-violet);"></i><div><h3 style="color:#fff;">إيراسموس موندوس</h3><p style="color:var(--primary-blue);">Erasmus Mundus</p></div></div><div class="subject-desc"><i class="fa-solid fa-sack-dollar"></i> تمويل كامل + راتب شهري<br><i class="fa-solid fa-calendar"></i> الموعد: يناير</div><a href="scholarships.html" class="btn btn-secondary hover-trigger" style="width:100%; justify-content: center;">التفاصيل وموعد التقديم</a></div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="100"><div style="display:flex; gap:12px;"><i class="fa-solid fa-building-columns" style="font-size:32px; color:var(--success);"></i><div><h3>DAAD ألمانيا</h3><p>EPOS Scholarships</p></div></div><div class="subject-desc"><i class="fa-solid fa-sack-dollar"></i> راتب + تأمين صحي<br><i class="fa-solid fa-calendar"></i> المواعيد تختلف</div><a href="scholarships.html" class="btn btn-secondary hover-trigger" style="width:100%; justify-content: center;">التفاصيل وموعد التقديم</a></div>
+        </div>
+    </section>
+
+    <!-- Team Section (Restored) -->
+    <section id="team" class="section-container" style="background: rgba(255,255,255,0.01);">
+        <div class="section-header" data-aos="fade-up" style="margin-bottom: 45px;">
+            <h2 style="font-size: clamp(26px, 4vw, 38px); font-weight: 800;">القيادة الأكاديمية والإدارية</h2>
+            <p style="color: var(--text-secondary);">نخبة متميزة من المعلمين والخبراء الأكاديميين لضمان نجاحك</p>
+        </div>
+        <div class="subjects-grid" style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));">
+            <div class="subject-card hover-trigger" style="text-align:center;" data-aos="zoom-in">
+                <div class="team-img-wrapper"><img src="https://i.pravatar.cc/150?u=11" alt="Academic Director"></div>
+                <h4>د. أحمد خليل</h4>
+                <p style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700;">المدير الأكاديمي</p>
+            </div>
+            <div class="subject-card hover-trigger" style="text-align:center;" data-aos="zoom-in" data-aos-delay="50">
+                <div class="team-img-wrapper"><img src="https://i.pravatar.cc/150?u=9" alt="Scholarship Consultant"></div>
+                <h4>م. سارة محمود</h4>
+                <p style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700;">مستشار المنح</p>
+            </div>
+            <div class="subject-card hover-trigger" style="text-align:center;" data-aos="zoom-in" data-aos-delay="100">
+                <div class="team-img-wrapper"><img src="https://i.pravatar.cc/150?u=12" alt="CTO"></div>
+                <h4>عمر الشامي</h4>
+                <p style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700;">مدير التكنولوجيا</p>
+            </div>
+            <div class="subject-card hover-trigger" style="text-align:center;" data-aos="zoom-in" data-aos-delay="150">
+                <div class="team-img-wrapper"><img src="https://i.pravatar.cc/150?u=5" alt="Student Support"></div>
+                <h4>ندى طارق</h4>
+                <p style="color: var(--primary-blue); font-size: 0.85rem; font-weight: 700;">دعم الطلاب</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Tools -->
+    <div class="float-wrapper">
+        <a href="#" class="float-btn telegram hover-trigger" title="قناة التليجرام للمنح"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://wa.me/1234567890" class="float-btn whatsapp hover-trigger" target="_blank" title="تواصل عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/db.js" defer></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/pages/home.js" defer></script>
+</body>
+</html>

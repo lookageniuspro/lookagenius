@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LookaGenius Academy | استكشف الكورسات</title>
+    
+    <!-- SEO & Social Sharing (Open Graph) -->
+    <meta name="description" content="تصفح جميع الكورسات المتاحة في LookaGenius Academy. كورسات معتمدة في البرمجة، اللغات، والعلوم.">
+    <meta property="og:title" content="LookaGenius Academy | كتالوج الكورسات">
+    <meta property="og:description" content="اختر مسارك التعليمي من بين عشرات الكورسات المتخصصة.">
+    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <main id="app-container" style="padding-top: 120px;">
+        <section class="section-container" data-aos="fade-up">
+            <div class="section-header mb-4">
+                <h1 style="font-size: clamp(28px, 5vw, 45px); font-weight: 800;">استكشف الكورسات</h1>
+                <p style="color: var(--text-secondary);">اختر المسار الذي يناسب طموحك المهني والأكاديمي</p>
+            </div>
+
+            <!-- Horizontal Filter Bar (Restored Design) -->
+            <div class="filter-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 40px; scrollbar-width: none;">
+                <button class="btn btn-outline active filter-btn" data-filter="all" style="white-space: nowrap;">الكل</button>
+                <button class="btn btn-outline filter-btn" data-filter="languages" style="white-space: nowrap;">اللغات العالمية</button>
+                <button class="btn btn-outline filter-btn" data-filter="physics" style="white-space: nowrap;">الفيزياء</button>
+                <button class="btn btn-outline filter-btn" data-filter="chemistry" style="white-space: nowrap;">الكيمياء</button>
+                <button class="btn btn-outline filter-btn" data-filter="math" style="white-space: nowrap;">الرياضيات</button>
+                <button class="btn btn-outline filter-btn" data-filter="tech" style="white-space: nowrap;">البرمجة والتقنية</button>
+            </div>
+
+            <div id="courses-container" class="subjects-grid">
+                <!-- Courses injected here using courses.js -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Social Tools -->
+    <div class="float-wrapper">
+        <a href="#" class="float-btn telegram hover-trigger" title="قناة التليجرام للمنح"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://wa.me/1234567890" class="float-btn whatsapp hover-trigger" target="_blank" title="تواصل عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/db.js" defer></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/pages/courses.js" defer></script>
+</body>
+</html>

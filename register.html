@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LookaGenius Academy | إنشاء حساب جديد</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <main id="app-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px;">
+        <div class="glass-card" style="width: 100%; max-width: 500px; padding: 40px;" data-aos="zoom-in">
+            <h2 style="text-align: center; margin-bottom: 30px; font-weight: 800;">إنشاء حساب جديد</h2>
+            <form id="regForm">
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">الاسم الكامل</label>
+                    <input type="text" id="regName" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">كلمة المرور</label>
+                    <input type="password" id="regPass" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">نوع الحساب</label>
+                    <select id="regType" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid var(--border-color); color: #fff;">
+                        <option value="student">طالب</option>
+                        <option value="parent">ولي أمر</option>
+                        <option value="teacher">معلم / دكتور</option>
+                    </select>
+                </div>
+                <div id="regErrorMsg" style="color: var(--accent-pink); text-align: center; margin-bottom: 15px; font-size: 0.85rem; display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; border-radius: 50px; font-size: 1.1rem;">إنشاء الحساب <i class="fa-solid fa-user-plus"></i></button>
+            </form>
+            <div style="text-align: center; margin-top: 25px; color: var(--text-secondary); font-size: 0.9rem;">
+                لديك حساب بالفعل؟ <a href="login.html" style="color: var(--primary-blue); font-weight: 700;">تسجيل دخول</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/db.js" defer></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             const form = document.getElementById('regForm');
+             if (form) {
+                 form.onsubmit = (e) => {
+                     e.preventDefault();
+                     const userData = {
+                         name: document.getElementById('regName').value,
+                         email: document.getElementById('regEmail').value,
+                         password: document.getElementById('regPass').value,
+                         type: document.getElementById('regType').value
+                     };
+                     const res = window.auth.register(userData);
+                     if (res.success) {
+                         window.location.href = `dashboard-${res.user.type}.html`;
+                     } else {
+                         const err = document.getElementById('regErrorMsg');
+                         err.textContent = res.message;
+                         err.style.display = 'block';
+                     }
+                 };
+             }
+        });
+    </script>
+</body>
+</html>
