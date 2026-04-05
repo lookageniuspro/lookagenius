@@ -1,64 +1,247 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>LookaGenius Academy | تسجيل الدخول</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius | Login</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
+    
+    <style>
+        :root {
+            --bg-dark: #050510;
+            --neon-blue: #00D4FF;
+            --neon-violet: #A855F7;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
+        body {
+            margin: 0;
+            background: var(--bg-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cairo', sans-serif;
+            overflow: hidden;
+            color: white;
+            padding-top: 60px;
+        }
+
+        .bg-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a1a3a, #050510);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: inherit;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .switch-auth { margin-top: 20px; font-size: 0.9rem; color: #aaa; }
+        .switch-auth a { color: var(--neon-blue); font-weight: bold; text-decoration: none; }
+    </style>
+</head>
 <body>
-    <main id="app-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding-top: 100px;">
-        <div class="glass-card" style="width: 100%; max-width: 450px; padding: 40px;" data-aos="zoom-in">
-            <h2 style="text-align: center; margin-bottom: 30px; font-weight: 800;">تسجيل الدخول</h2>
-            <form id="loginForm">
-                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
-                </div>
-                <div class="form-group" style="text-align: right; margin-bottom: 25px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">كلمة المرور</label>
-                    <input type="password" id="loginPassword" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
-                </div>
-                <div id="loginErrorMsg" style="color: var(--accent-pink); text-align: center; margin-bottom: 15px; font-size: 0.9rem; display: none;"></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; border-radius: 50px; font-size: 1.1rem;">دخول الآن <i class="fa-solid fa-sign-in-alt"></i></button>
-            </form>
-            <div style="text-align: center; margin-top: 25px; color: var(--text-secondary); font-size: 0.9rem;">
-                ليس لديك حساب؟ <a href="register.html" style="color: var(--primary-blue); font-weight: 700;">إنشاء حساب جديد</a>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <!-- Global Header -->
+    <nav class="ag-header ag-glass">
+        <div class="header-container">
+            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/img/logo.png" alt="Logo" style="height: 40px;">
+                <span class="logo-text">LookaGenius</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                <li><a href="index.html#courses" data-i18n="nav_courses">Courses</a></li>
+                <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
+                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+            </ul>
+            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
+                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
+                    <i class="fa-solid fa-globe"></i> العربية
+                </button>
             </div>
         </div>
-    </main>
+    </nav>
 
-    <!-- Scripts -->
+    <div class="bg-particles"></div>
+
+    <div class="auth-container" id="loginBox" data-aos="zoom-in">
+        <div class="logo" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+            <img src="assets/img/logo.png" alt="LookaGenius Logo" style="height: 60px;">
+            <span class="logo-text">LookaGenius</span>
+        </div>
+        <h2 id="authTitle" data-i18n="login_title">Login</h2>
+        
+        <form id="authForm">
+            <div class="form-group" id="nameGroup" style="display: none;">
+                <label data-i18n="name_label">Full Name</label>
+                <input type="text" id="fullName" placeholder="...">
+            </div>
+            
+            <div class="form-group">
+                <label data-i18n="email_label">Email Address</label>
+                <input type="email" id="email" placeholder="example@lookagenius.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label data-i18n="pass_label">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group" id="roleGroup" style="display: none;">
+                <label data-i18n="role_label">Account Type</label>
+                <select id="role">
+                    <option value="student">طالب/متدرب</option>
+                    <option value="teacher">مدرس/أكاديمي</option>
+                    <option value="parent">ولي أمر</option>
+                    <option value="engineer">مهندس</option>
+                    <option value="accountant">محاسب</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-auth" id="submitBtn" data-i18n="login_btn">Login</button>
+        </form>
+
+        <div class="switch-auth">
+            <span id="switchText" data-i18n="no_account">Don't have an account?</span>
+            <a href="#" id="toggleAuth" data-i18n="toggle_signup">Create new account</a>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <a href="index.html" style="color: #666; font-size: 0.8rem; text-decoration: none;" data-i18n="back_home">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="js/db.js" defer></script>
-    <script src="js/components.js" defer></script>
-    <script src="js/auth.js" defer></script>
-    <script src="js/app.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('loginForm');
-            if (form) {
-                form.onsubmit = (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('loginEmail').value;
-                    const pass = document.getElementById('loginPassword').value;
-                    const res = window.auth.login(email, pass);
-                    if (res.success) {
-                        window.location.href = `dashboard-${res.user.type}.html`;
-                    } else {
-                        const err = document.getElementById('loginErrorMsg');
-                        err.textContent = res.message;
-                        err.style.display = 'block';
-                    }
-                };
+        AOS.init({ duration: 800 });
+        
+        const authForm = document.getElementById('authForm');
+        const toggleAuth = document.getElementById('toggleAuth');
+        const authTitle = document.getElementById('authTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const switchText = document.getElementById('switchText');
+        const nameGroup = document.getElementById('nameGroup');
+        const roleGroup = document.getElementById('roleGroup');
+        
+        let isLogin = true;
+
+        function updatePageSpecificI18n(lang) {
+            if (isLogin) {
+                authTitle.setAttribute('data-i18n', 'login_title');
+                submitBtn.setAttribute('data-i18n', 'login_btn');
+                switchText.setAttribute('data-i18n', 'no_account');
+                toggleAuth.setAttribute('data-i18n', 'toggle_signup');
+            } else {
+                authTitle.setAttribute('data-i18n', 'signup_title');
+                submitBtn.setAttribute('data-i18n', 'signup_btn');
+                switchText.setAttribute('data-i18n', 'have_account');
+                toggleAuth.setAttribute('data-i18n', 'toggle_login');
             }
+            // Trigger translation for these dynamic keys
+            document.querySelectorAll('#authTitle, #submitBtn, #switchText, #toggleAuth').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        toggleAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLogin = !isLogin;
+            nameGroup.style.display = isLogin ? "none" : "block";
+            roleGroup.style.display = isLogin ? "none" : "block";
+            document.getElementById('fullName').required = !isLogin;
+            updatePageSpecificI18n(currentLang);
+        });
+
+        // Handle form submission via auth.js
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '...';
+
+            if (isLogin) {
+                if(typeof login === "function") await login(email, password);
+                else console.warn("auth.js failed to load Supabase.");
+            } else {
+                const fullName = document.getElementById('fullName').value;
+                const role = document.getElementById('role').value;
+                if(typeof signUp === "function") await signUp(email, password, fullName, role);
+                else console.warn("auth.js failed to load Supabase.");
+            }
+
+            submitBtn.disabled = false;
+            updatePageSpecificI18n(currentLang); // Reset button text
         });
     </script>
 </body>

@@ -1,0 +1,49 @@
+backend:
+  name: github
+  repo: your-username/lookagenius # Replace with your GitHub repo (e.g. mohamed/lookagenius)
+  branch: main
+
+local_backend: true
+
+media_folder: "assets/img/uploads"
+public_folder: "/assets/img/uploads"
+
+collections:
+  - name: "courses"
+    label: "الكورسات"
+    folder: "_courses"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "العنوان", name: "title", widget: "string"}
+      - {label: "تاريخ النشر", name: "date", widget: "datetime"}
+      - {label: "الصورة البارزة", name: "image", widget: "image"}
+      - {label: "الوصف القصير", name: "description", widget: "text"}
+      - {label: "رابط بريفيو الفيديو", name: "video_url", widget: "string", required: false}
+      - {label: "محتوى الكورس (Markdown)", name: "body", widget: "markdown"}
+      - {label: "السعر ($)", name: "price", widget: "number", value_type: "float"}
+      - {label: "الفئة", name: "category", widget: "select", options: ["لغات", "علوم", "رياضيات", "برمجة", "هندسة"]}
+
+  - name: "scholarships"
+    label: "المنح الدراسية"
+    folder: "_scholarships"
+    create: true
+    fields:
+      - {label: "اسم المنحة", name: "title", widget: "string"}
+      - {label: "الدولة", name: "country", widget: "string"}
+      - {label: "تاريخ الانتهاء", name: "deadline", widget: "date"}
+      - {label: "رابط التقديم", name: "apply_url", widget: "string"}
+      - {label: "التفاصيل", name: "body", widget: "markdown"}
+
+  - name: "services"
+    label: "الخدمات والقطاعات"
+    folder: "_services"
+    create: true
+    fields:
+      - {label: "عنوان الخدمة", name: "title", widget: "string"}
+      - {label: "الأيقونة (استخدم FontAwesome Class)", name: "icon", widget: "string", default: "fa-solid fa-star"}
+      - {label: "القطاع", name: "category", widget: "string"}
+      - {label: "الوصف", name: "description", widget: "text"}
+      - {label: "قائمة المميزات", name: "features", widget: "list", field: {label: "ميزة", name: "feature_text", widget: "string"}}
+      - {label: "السعر المستهدف", name: "price_range", widget: "string"}
+      - {label: "نص العرض التسويقي / المحتوى", name: "body", widget: "markdown"}

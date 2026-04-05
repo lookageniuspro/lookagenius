@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius | المدونة التعليمية</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
+
+    <!-- SEO -->
+    <meta name="description" content="مدونة LookaGenius - مقالات يومية حول التعليم، التكنولوجيا، والمنح الدراسية.">
+    <meta property="og:title" content="LookaGenius | المدونة التعليمية">
+    <meta property="og:image" content="assets/img/logo.png">
+
+    <style>
+        body { background: #050510; color: white; padding-top: 100px; }
+        
+        .blog-hero {
+            text-align: center;
+            padding: 80px 5%;
+            background: linear-gradient(to bottom, #11112a, #050510);
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 50px 8%;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--ag-primary);
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .post-image {
+            height: 220px;
+            background: #222;
+            position: relative;
+        }
+
+        .post-image img { width: 100%; height: 100%; object-fit: crop; }
+
+        .post-content { padding: 25px; }
+
+        .post-date { color: var(--ag-primary); font-size: 13px; font-weight: bold; margin-bottom: 10px; display: block; }
+        
+        .read-more {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .read-more:hover { color: var(--ag-primary); gap: 15px; }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <!-- Global Header -->
+    <nav class="ag-header ag-glass">
+        <div class="header-container">
+            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/img/logo.png" alt="Logo" style="height: 40px;">
+                <span class="logo-text">LookaGenius</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                <li><a href="blog.html" class="active" data-i18n="nav_blog">Blog</a></li>
+                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+            </ul>
+            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
+                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
+                    <i class="fa-solid fa-globe"></i> العربية
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="blog-hero" data-aos="fade-up">
+        <h1 class="ag-text-gradient" style="font-size: 3.5rem;" data-i18n="blog_title">LookaGenius Blog</h1>
+        <p style="font-size: 1.2rem; color: #aaa;" data-i18n="blog_hero_d">Daily articles to enrich your knowledge and guide you to the top.</p>
+    </section>
+
+    <div class="posts-grid">
+        <!-- Post 1: Education -->
+        <article class="post-card" data-aos="fade-up">
+            <div class="post-image">
+                <img src="assets/img/edu_article.png" alt="Education">
+            </div>
+            <div class="post-content">
+                <span class="post-date">10 أبريل 2026</span>
+                <h3>مستقبل التعليم والواقع الافتراضي</h3>
+                <p style="color: #aaa; font-size: 15px;">كيف تساهم تقنيات الهولوجرام والواقع الافتراضي في خلق بيئات تعليمية غامرة تعزز من تركيز الطلاب واستيعابهم...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 2: Tech -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="post-image">
+                <img src="assets/img/tech_article.png" alt="Tech">
+            </div>
+            <div class="post-content">
+                <span class="post-date">8 أبريل 2026</span>
+                <h3>إدارة البيانات عبر السيرفرات السحابية</h3>
+                <p style="color: #aaa; font-size: 15px;">تعرف على أحدث أنظمة حفظ البيانات وطرق عمل المطورين في غرف السيرفرات المتقدمة لتوفير أمان تام لمعلوماتك...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 3: Languages -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="post-image">
+                <img src="assets/img/lang_article.png" alt="Languages">
+            </div>
+            <div class="post-content">
+                <span class="post-date">5 أبريل 2026</span>
+                <h3>التواصل عبر حواجز اللغة</h3>
+                <p style="color: #aaa; font-size: 15px;">اكتشف كيف أن تقنيات الترجمة الفورية الهولوغرافية تزيل قيود التواصل وتبني جسوراً بين الثقافات المختلفة...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 4: Programming -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="post-image">
+                <img src="assets/img/prog_article.png" alt="Programming">
+            </div>
+            <div class="post-content">
+                <span class="post-date">1 أبريل 2026</span>
+                <h3>بيئة المبرمج المثالية في 2026</h3>
+                <p style="color: #aaa; font-size: 15px;">من الشاشات المتعددة لتنظيم الأكواد المعقدة إلى الإنارات المحفزة، ما الذي يحتاجه المبرمج العصري لإنجاز مهامه بذكاء؟</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="script.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
+</body>
+</html>

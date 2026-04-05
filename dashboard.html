@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius | Dashboard</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --neon-blue: #00D4FF;
+            --neon-violet: #A855F7;
+            --glass: rgba(255, 255, 255, 0.05);
+            --sidebar-width: 260px;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            direction: ltr; /* Handled by i18n */
+        }
+
+        /* Sidebar - Glassmorphism & Logical Properties */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-inline-end: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 20px;
+            position: fixed;
+            inset-block: 0;
+            inset-inline-start: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .logo { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 40px; text-align: center; }
+        .logo img { height: 60px; width: auto; }
+        .logo-text { font-size: 1.4rem; font-weight: 900; background: linear-gradient(135deg, var(--neon-blue), var(--neon-violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .nav-menu { list-style: none; padding: 0; flex-grow: 1; }
+        .nav-item { margin-bottom: 10px; }
+        .nav-link { display: flex; align-items: center; gap: 15px; color: #ccc; text-decoration: none; padding: 12px 20px; border-radius: 12px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: var(--glass); color: var(--neon-blue); }
+
+        .main-content {
+            margin-inline-start: var(--sidebar-width);
+            padding: 40px;
+            width: 100%;
+            background: radial-gradient(circle at 0% 0%, #0a0a2a, #050505);
+            box-sizing: border-box;
+        }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .user-profile { display: flex; align-items: center; gap: 15px; background: var(--glass); padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .stat-card { background: var(--glass); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .course-card { background: var(--glass); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .progress-container { height: 8px; background: #222; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet)); transition: 1s ease-out; }
+
+        .btn-logout { color: #ff3366; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
+
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; }
+            .sidebar .logo, .sidebar .nav-link span { display: none; }
+            .main-content { margin-inline-start: 80px; }
+        }
+        
+        /* Language Switcher Overlay */
+        .ag-header { position: sticky; top: 0; z-index: 1000; padding: 10px 0; }
+        .ag-btn { padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .ag-btn-outline { border: 1px solid var(--neon-blue); color: var(--neon-blue); background: transparent; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="assets/img/logo.png" alt="LG Logo">
+            <span class="logo-text">LookaGenius</span>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item"><a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">Home</span></a></div>
+            <div class="nav-item"><a href="#" class="nav-link active"><i class="fa-solid fa-gauge"></i> <span data-i18n="dash_title">Dashboard</span></a></div>
+            <div class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="dash_my_courses">My Courses</span></a></div>
+            <div class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-certificate"></i> <span data-i18n="dash_certificates">Certificates</span></a></div>
+            <div class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-i18n="dash_settings">Settings</span></a></div>
+        </nav>
+        
+        <div class="nav-item" style="margin-bottom: 20px;">
+             <button id="langSwitcher" class="ag-btn ag-btn-outline" style="width: 100%; font-size: 12px;">
+                <i class="fa-solid fa-globe"></i> العربية
+            </button>
+        </div>
+
+        <a href="#" class="nav-link btn-logout" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span data-i18n="dash_logout">Logout</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h1><span data-i18n="dash_welcome">Welcome,</span> <span id="userName" data-i18n="dash_creative">Creative Scholar</span>! 🚀</h1>
+                <p style="color: #888;" data-i18n="dash_continue_journey">Continue your learning journey today.</p>
+            </div>
+            <div class="user-profile">
+                <span id="userRoleBadge" style="background: var(--neon-blue); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;" data-i18n="dash_student">Student</span>
+                <i class="fa-solid fa-circle-user" style="font-size: 24px;"></i>
+            </div>
+        </header>
+
+        <section class="dashboard-grid">
+            <div class="stat-card">
+                <h3 data-i18n="dash_hours_done">Hours Completed</h3>
+                <p style="font-size: 2.5rem; font-weight: bold; margin: 10px 0;">24.5</p>
+                <span style="color: var(--neon-blue); font-size: 14px;"><i class="fa-solid fa-arrow-up"></i> +12%</span>
+            </div>
+            
+            <div class="stat-card">
+                <h3 data-i18n="dash_active_courses">Active Courses</h3>
+                <p style="font-size: 2.5rem; font-weight: bold; margin: 10px 0;">3</p>
+                <span style="color: var(--neon-violet); font-size: 14px;" data-i18n="dash_most_active">Most Active</span>
+            </div>
+
+            <div class="course-card">
+                <h3 style="margin-top: 0;">Full-Stack Development</h3>
+                <p style="color: #888; font-size: 14px;">Next: "Advanced Flexbox & Grid"</p>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 65%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span><span data-i18n="dash_completed_pct">Completed</span> 65%</span>
+                    <span>12/18 <span data-i18n="dash_lessons">Lessons</span></span>
+                </div>
+                <button class="ag-btn" style="width: 100%; margin-top: 20px; background: var(--neon-blue); color: #000;" data-i18n="dash_continue_learning">Continue Learning</button>
+            </div>
+        </section>
+
+        <h2 style="margin-top: 50px;" data-i18n="dash_explore_more">Explore More</h2>
+        <div class="dashboard-grid" id="recommendedCourses"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script>
+        async function loadUserData() {
+            if (typeof supabase === 'undefined') return;
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                document.getElementById('userName').innerText = user.user_metadata.full_name || user.email.split('@')[0];
+                const role = user.user_metadata.role || 'student';
+                const roleEl = document.getElementById('userRoleBadge');
+                roleEl.setAttribute('data-i18n', role === 'teacher' ? 'dash_teacher' : 'dash_student');
+                // Re-translate specific element
+                if (translations[currentLang][roleEl.getAttribute('data-i18n')]) {
+                    roleEl.innerHTML = translations[currentLang][roleEl.getAttribute('data-i18n')];
+                }
+                if (role === 'teacher') roleEl.style.background = 'var(--neon-violet)';
+            }
+        }
+        setTimeout(loadUserData, 1000);
+    </script>
+</body>
+</html>
