@@ -13,11 +13,14 @@ const SUPABASE_KEY = 'sb_publishable_UDT1nwvbwivUijDYcGMImQ_WHn4L-Q_';
 let supabase;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (typeof supabasejs !== 'undefined') {
-        supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Check for both 'supabase' and 'supabasejs' globals depending on CDN version
+    const lib = window.supabase || window.supabasejs;
+    
+    if (lib) {
+        supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
         checkSession();
     } else {
-        console.error("Supabase library not loaded.");
+        console.error("Supabase library not loaded. Ensure the CDN script is included in the HTML.");
     }
 });
 

@@ -176,6 +176,7 @@ h1 {
 h1 span {
     background: linear-gradient(135deg, var(--primary-blue), var(--accent-violet));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -398,6 +399,36 @@ h1 span {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
+}
+
+/* Course Filter Tabs */
+.filter-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.filter-btn.active {
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
+    color: white;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+}
+
+#courseSearch:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
 }
 
 .course-card {

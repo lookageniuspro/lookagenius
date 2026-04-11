@@ -282,6 +282,47 @@
         }
     }
 
+    // 6. Course Filter & Search Logic
+    function initCourseFilter() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const courseSearch = document.getElementById('courseSearch');
+        const courseCards = document.querySelectorAll('.course-card');
+
+        const filterCourses = () => {
+            const query = courseSearch.value.toLowerCase().trim();
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+
+            courseCards.forEach(card => {
+                const title = card.querySelector('.course-title').innerText.toLowerCase();
+                const desc = card.querySelector('.subject-desc').innerText.toLowerCase();
+                const categories = card.getAttribute('data-category') || '';
+                
+                const matchesSearch = title.includes(query) || desc.includes(query);
+                const matchesFilter = activeFilter === 'all' || categories.split(' ').includes(activeFilter);
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                    card.setAttribute('data-aos', 'fade-up');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            AOS.refresh();
+        };
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterCourses();
+            });
+        });
+
+        if (courseSearch) {
+            courseSearch.addEventListener('input', filterCourses);
+        }
+    }
+
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {
         loopTypewriter();
@@ -290,5 +331,6 @@
         initThreeJS();
         initCursor();
         initMobileMenu();
+        initCourseFilter();
     });
 })();

@@ -70,37 +70,110 @@ const translations = {
         schol_3_t: 'Eiffel scholarship', schol_3_s: 'France', schol_3_f: 'Salary + Insurance', schol_3_s2: 'Master & PhD', schol_3_deadline: 'Deadline: Jan',
         schol_4_t: 'Politecnico di Milano', schol_4_s: 'Italy', schol_4_f: 'Fee Waiver + Gold Scholarship', schol_4_s2: 'Master in Engineering & Design', schol_4_deadline: 'Deadline: Feb',
         
-        // Team
-        team_title: 'Leadership Team',
+        // Team (Unified Section)
+        academy_team_title: 'LookaGenius Academy Team',
+        academy_team_desc: 'Unified elite of academic leaders and expert teachers to guide you to success.',
         team_1_n: 'Dr. Ahmed Khalil', team_1_r: 'Academic Director',
         team_2_n: 'Sarah Mahmoud', team_2_r: 'Scholarship Consultant',
         team_3_n: 'Omar El Shamy', team_3_r: 'Tech Manager',
         team_4_n: 'Nada Tarek', team_4_r: 'Support Officer',
+        t_mahran_n: 'Mr. Mohamed Mahran', t_mahran_r: 'Academic Director',
+        l_mahmoud_n: 'Mahmoud Abo-Taleb', l_mahmoud_r: 'Financial Director',
+        l_atef_n: 'Mr. Ahmed Atef', l_atef_r: 'Legal Manager',
+        l_farouk_n: 'Ahmed Farouk', l_farouk_r: 'Business Development',
+        
+        t_hadeer_n: 'Miss Hadeer El-Sayed', t_hadeer_s: 'English',
+        t_somaya_n: 'Miss Somaya Mohamed', t_somaya_s: 'English',
+        t_marwa_n: 'Miss Marwa Hamdy', t_marwa_s: 'Arabic',
         
         // Services Page
         serv_hero_t: 'More Than Just Education',
         serv_hero_d: 'We are your strategic partner in the journey of digital transformation and professional excellence. Our solutions are designed to make you a global expert in your field.',
-        serv_1_cat: 'Academic Guidance',
-        serv_1_t: 'University Admission Consulting',
-        serv_1_d: 'We pave the way for you to reach the best global universities through a strong and professional academic profile.',
-        serv_1_f1: 'Motivation Letter Review',
-        serv_1_f2: 'Choosing the Right Major',
-        serv_1_f3: 'Scholarship Applications',
+        serv_1_cat: 'Academics & Teachers',
+        serv_1_t: 'Integrated Educational Platforms',
+        serv_1_d: 'Turn your academic expertise into passive income. We build your platform in 48 hours.',
+        serv_1_f1: 'LMS integrated with Zoom/Teams',
+        serv_1_f2: 'CRM & Student Communication System',
+        serv_1_f3: 'Course Store (Shopify/Woo)',
+        serv_1_p: '1500 - 2500 USD',
         serv_1_btn: 'Book Your Consultation',
-        serv_2_cat: 'Professional Training',
-        serv_2_t: 'Building Technical Talent',
-        serv_2_d: 'Intensive programs for companies and teams to learn the latest web, programming, and AI technologies.',
-        serv_2_f1: 'Full-Stack Development',
-        serv_2_f2: 'Information Security',
-        serv_2_f3: 'Prompt Engineering',
+
+        serv_2_cat: 'Engineers & Construction',
+        serv_2_t: 'Engineering Project Management',
+        serv_2_d: 'Every project deserves a professional showcase. Build a site that reflects your quality.',
+        serv_2_f1: 'Professional Portfolio (Webflow)',
+        serv_2_f2: 'Project Management (Asana/ClickUp)',
+        serv_2_f3: 'Cloud System for Quantities & Reports',
+        serv_2_p: '1000 - 3000 USD',
         serv_2_btn: 'Contact as Company',
-        serv_3_cat: 'Innovation Lab',
-        serv_3_t: 'Software Project Development',
-        serv_3_d: 'We turn your innovative idea into a real product (MVP) that competes in the global market using the latest standards.',
-        serv_3_f1: 'SaaS Platform Development',
-        serv_3_f2: 'UI/UX Interface Design',
-        serv_3_f3: 'AI Software',
-        serv_3_btn: 'Start Your Project',
+
+        serv_3_cat: 'Accounting Offices',
+        serv_3_t: 'Accounting & Client Systems',
+        serv_3_d: 'Automate your invoicing and client management. Focus on consulting while we handle the admin.',
+        serv_3_btn: 'Order Service Now',
+        serv_3_f1: 'Specialized CRM for Accountants',
+        serv_3_f2: 'Secure Client Portal for Documents',
+        serv_3_f3: 'SEO Optimized Site & Lead Gen',
+        serv_3_p: '800 - 2500 USD',
+
+        serv_4_cat: 'Law Firms',
+        serv_4_t: 'Case & Consultation Management',
+        serv_4_d: 'Get found first on Google with a professional booking system and legal blog.',
+        serv_4_f1: 'Automated Consultation Booking',
+        serv_4_f2: 'Case Management & File Tracking',
+        serv_4_f3: 'Professional Legal Site (SEO)',
+        serv_4_p: '1000 - 2500 USD',
+        
+        serv_5_cat: 'Content Creators',
+        serv_5_t: 'Digital Product Platforms',
+        serv_5_d: 'Convert your followers into customers with a unified platform for your content and products.',
+        serv_5_f1: 'Portfolio & Digital Store',
+        serv_5_f2: 'Sponsor & Deal Management',
+        serv_5_f3: 'Exclusive Subscription (Patreon-style)',
+        serv_5_p: '800 - 2500 USD',
+
+        serv_6_cat: 'Doctors & Clinics',
+        serv_6_t: 'Medical Booking Systems',
+        serv_6_d: 'Improve patient experience with one-click bookings and automated reminders.',
+        serv_6_f1: 'Appointment System & Reminders',
+        serv_6_f2: 'Patient File Management (HIPAA)',
+        serv_6_f3: 'Tele-consultation Platform',
+        serv_6_p: '1200 - 4000 USD',
+
+        serv_7_cat: 'University Professors',
+        serv_7_t: 'University & Research Platforms',
+        serv_7_d: 'Build an academic site to display your research and manage student assignments.',
+        serv_7_f1: 'LMS with Attendance & Assignments',
+        serv_7_f2: 'Academic Site for Research DB',
+        serv_7_f3: 'E-Testing with Auto-Grading',
+        serv_7_p: '1000 - 2500 USD',
+
+        serv_8_cat: 'Retail Stores',
+        serv_8_t: 'E-commerce Stores',
+        serv_8_d: 'Your competitors are online. Build your store to work 24/7 with delivery solutions.',
+        serv_8_f1: 'Shopify Store with Delivery Integration',
+        serv_8_f2: 'ERP & Inventory Management',
+        serv_8_f3: 'Client Loyalty & Rewards System',
+        serv_8_p: '800 - 2000 USD',
+
+        serv_9_cat: 'Pharmacies',
+        serv_9_t: 'Online Pharmacies & Delivery',
+        serv_9_d: 'Be the first in your area to offer digital services and prescription tracking.',
+        serv_9_f1: 'Online Store & Prescription Booking',
+        serv_9_f2: 'Expiry Tracking & Stock MGMT',
+        serv_9_f3: 'Medicine Reminders for Patients',
+        serv_9_p: '1000 - 2500 USD',
+
+        serv_10_cat: 'Gyms',
+        serv_10_t: 'Gym Management Systems',
+        serv_10_d: 'Transform your gym into an integrated digital platform for memberships and bookings.',
+        serv_10_f1: 'Class Booking & Trainer Schedules',
+        serv_10_f2: 'Membership MGMT with Auto-Renewal',
+        serv_10_f3: 'Digital Supplement & Gear Store',
+        serv_10_p: '1000 - 2500 USD',
+
+        wa_service_prefix: 'I want to inquire about: ',
+        serv_pkg_prof: 'Professional Package: ',
         
         // Workflow
         work_t: 'Our Methodology',
@@ -156,15 +229,83 @@ const translations = {
         dash_lessons: 'Lessons',
         dash_student: 'Student',
         dash_teacher: 'Teacher',
-
+        
         blog_title: 'LookaGenius Blog',
-        footer_rights: '© 2026 LookaGenius Academy. All rights reserved.'
+        footer_rights: '© 2026 LookaGenius Academy. All rights reserved.',
+
+        // Team (Detailed)
+        t_saad_n: 'Mr. Saad El-Din', t_saad_s: 'English',
+        t_farag_n: 'Mr. Farag El-Senoussi', t_farag_s: 'French',
+        t_iman_n: 'Miss Iman Omar', t_iman_s: 'Physics',
+        t_ashraqat_n: 'Miss Ashraqat Hassan', t_ashraqat_s: 'Chemistry',
+        t_islam_n: 'Mr. Islam Mohamed', t_islam_s: 'Biology',
+        t_magdy_n: 'Mr. Ahmed Magdy', t_magdy_s: 'History & Social Studies',
+        t_sally_n: 'Mrs. Sally Youssef', t_sally_s: 'Mental Math',
+        
+        // Scholarship Tips Section
+        schol_tips_title: 'Main Tips for Success',
+        schol_tips_desc: 'Top 4 tips to increase your chances of winning European and international scholarships.',
+        tip_cv_t: 'Professional CV',
+        tip_cv_d: 'Use Europass template and highlight volunteer and academic experience.',
+        tip_mot_t: 'Motivation Letter',
+        tip_mot_d: 'Avoid copying! Explain your goals and future impact clearly.',
+        tip_lang_t: 'Language Tests',
+        tip_lang_d: 'Get IELTS (6.5+) or TOEFL early to ensure university admission.',
+        tip_rec_t: 'Academic Recommendation',
+        tip_rec_d: 'Choose professors who know you well, rather than just high-position ones.',
+
+        // Platform Benefits Section
+        benefits_title: 'Benefits of Joining the Platform',
+        benefits_desc: 'We don\'t just provide courses, we build a bright future for you.',
+        bene_cert_t: 'Globally Certified Certificates',
+        bene_cert_d: 'From the strongest academic organizations.',
+        bene_train_t: 'Expert Trainers',
+        bene_train_d: 'Summary of expert experiences and real labor market.',
+        bene_guid_t: 'Guidance & Follow-up',
+        bene_guid_d: 'We review your scholarship application papers with you.',
+
+        // Filters
+        filter_all: 'All',
+        filter_lang: 'Languages',
+        filter_sci: 'Science',
+        filter_sec: 'Secondary',
+        filter_uni: 'University',
+        filter_career: 'Career',
+        filter_tech: 'Technology',
+        search_placeholder: 'Search for courses...',
+
+        // Recruitment
+        join_badge: '🚀 Join Our Educational Team!',
+        join_title: 'Looking for Passionate Teachers',
+        join_desc: 'Join the elite teachers across all stages: Kindergarten – Primary – Preparatory – Secondary – University – Career Development. Whether you teach a national, international, or Gulf curriculum.. we are waiting for you!',
+        join_feat1: 'Flexible Schedules (Remote/In-person)',
+        join_feat2: 'Supportive Educational Environment',
+        join_feat3: 'Continuous Training for Smart Tools',
+        join_feat4: 'Competitive Salaries and Incentives',
+        join_subj_title: '📚 Required Specialties:',
+        join_subj_list: 'Quran – Mental Math – Math – Science – Languages – Programming – Cyber Security – University Specialties and others',
+        join_btn: '<i class="fa-brands fa-whatsapp" style="margin-left: 10px;"></i> Apply Now via WhatsApp',
+
+        // New Detailed Courses
+        c17_t: 'Engineering (Civil, Elec, Mech, Arch)', c17_d: 'University engineering specialties by top experts.', c17_s: '"Today\'s engineer builds tomorrow\'s cities.. start designing now"',
+        c18_t: 'Medicine, Dentistry & Pharmacy', c18_d: 'Explaining complex medical curricula in a simple way for doctors.', c18_s: '"Your smile starts from the heart of a perfect doctor – rise with your message"',
+        c19_t: 'Python from Scratch to Pro', c19_d: 'Learn Python and its applications in AI and Data Science.', c19_s: '"Python is the language of the era.. master it and excel over thousands"',
+        c20_t: 'Data Analysis', c20_d: 'Mastering data analysis tools to make smart business decisions.', c20_s: '"Data is the new oil.. be an expert in refining and extracting it"',
+        c21_t: 'Physics: 3rd Secondary', c21_d: 'Comprehensive coverage with smart simulations for modern physics.',
+        c22_t: 'Physics: 2nd Secondary', c22_d: 'Basics of mechanical and light physics with simplicity.',
+        c23_t: 'Chemistry: 3rd Secondary', c23_d: 'Organic and inorganic chemistry through understanding, not memorization.',
+        wa_reserve: 'Book via WhatsApp <i class="fa-brands fa-whatsapp"></i>',
+        duration: 'Hours',
+        yt_title: 'YouTube Channel',
+        tg_title: 'Telegram Channel',
+        wa_title: 'WhatsApp Contact',
+        swipe_hint: 'Swipe to see more teachers'
     },
     ar: {
         dir: 'rtl',
         lang_btn: '<i class="fa-solid fa-globe"></i> English',
         site_title: 'LookaGenius | المنصة التعليمية الشاملة',
-        site_desc: 'المنصة الرائدة التي تجمع بين المناهج الأكاديمية العالمية، العلوم الدقيقية، وأحدث تقنيات الويب والذكاء الاصطناعي.',
+        site_desc: 'المنصة الرائدة التي تجمع بين المناهج الأكاديمية العالمية، العلوم الدقيقة، وأحدث تقنيات الويب والذكاء الاصطناعي.',
         nav_home: 'الرئيسية',
         nav_courses: 'الكورسات',
         nav_blog: 'المدونة',
@@ -310,8 +451,88 @@ const translations = {
         dash_student: 'طالب',
         dash_teacher: 'مدرس',
 
-        blog_title: 'مدونة LookaGenius',
-        footer_rights: '© 2026 أكاديمية LookaGenius. جميع الحقوق محفوظة.'
+        // Team (Unified Section)
+        academy_team_title: 'فريق عمل أكاديمية LookaGenius',
+        academy_team_desc: 'نخبة موحدة من القادة الأكاديميين وكبار المعلمين لإرشادك نحو النجاح.',
+        team_1_n: 'د. أحمد خليل', team_1_r: 'المدير الأكاديمي',
+        team_2_n: 'م. سارة محمود', team_2_r: 'مستشار المنح الدراسية',
+        team_3_n: 'عمر الشامي', team_3_r: 'مدير التكنولوجيا',
+        team_4_n: 'ندى طارق', team_4_r: 'مسؤولة الدعم',
+        t_mahran_n: 'أ. محمد مهران', t_mahran_r: 'المدير الأكاديمي',
+        l_mahmoud_n: 'محمود أبو طالب', l_mahmoud_r: 'المدير المالي',
+        l_atef_n: 'أ. أحمد عاطف', l_atef_r: 'مدير الشئون القانونية',
+        l_farouk_n: 'أحمد فاروق', l_farouk_r: 'مدير تطوير الأعمال',
+
+        t_hadeer_n: 'ميس هدير السيد', t_hadeer_s: 'اللغة الإنجليزية',
+        t_somaya_n: 'ميس سمية محمد', t_somaya_s: 'اللغة الإنجليزية',
+        t_marwa_n: 'ميس مروة حمدي', t_marwa_s: 'اللغة العربية',
+
+        t_saad_n: 'أ. سعد الدين', t_saad_s: 'اللغة الإنجليزية',
+        t_farag_n: 'مسيو فرج السنوسي', t_farag_s: 'اللغة الفرنسية',
+        t_iman_n: 'ميس إيمان عمر', t_iman_s: 'الفيزياء',
+        t_ashraqat_n: 'أ. أشرقت حسن', t_ashraqat_s: 'الكيمياء',
+        t_islam_n: 'أ. إسلام محمد', t_islam_s: 'الأحياء',
+        t_magdy_n: 'أ. أحمد مجدي', t_magdy_s: 'التاريخ والدراسات',
+        t_sally_n: 'أ. سالي يوسف', t_sally_s: 'الحساب الذهني',
+
+        // Scholarship Tips Section
+        schol_tips_title: 'أهم النصائح للقبول بالمنح',
+        schol_tips_desc: 'أهم 4 نصائح لزيادة فرصتك في الفوز بالمنح الدراسية الأوروبية والعالمية.',
+        tip_cv_t: 'سيرة ذاتية احترافية',
+        tip_cv_d: 'استخدم نموذج Europass وأبرز خبراتك التطوعية والأكاديمية.',
+        tip_mot_t: 'خطاب الدافع',
+        tip_mot_d: 'ابتعد عن النسخ! اشرح أهدافك وتأثيرك المستقبلي بوضوح.',
+        tip_lang_t: 'اختبارات اللغة',
+        tip_lang_d: 'احصل على IELTS (6.5+) أو TOEFL مبكراً لضمان قبولك الجامعي.',
+        tip_rec_t: 'التوصية الأكاديمية',
+        tip_rec_d: 'اختر أساتذة يعرفونك جيداً، بدلاً من ذوي المناصب فقط.',
+
+        // Platform Benefits Section
+        benefits_title: 'فوائد الانضمام للمنصة',
+        benefits_desc: 'نحن لا نقدم كورسات وحسب، بل نبني لك مستقبلاً مشرقاً.',
+        bene_cert_t: 'شهادات معتمدة عالمياً',
+        bene_cert_d: 'من أقوى المنظمات الأكاديمية.',
+        bene_train_t: 'مدربون خبراء',
+        bene_train_d: 'خلاصة تجارب وسوق عمل حقيقي.',
+        bene_guid_t: 'إرشاد ومتابعة',
+        bene_guid_d: 'نراجع معك أوراق العمل التقديمية.',
+
+        // Filters
+        filter_all: 'الكل',
+        filter_lang: 'لغات',
+        filter_sci: 'علوم',
+        filter_sec: 'المرحلة الثانوية',
+        filter_uni: 'جامعي',
+        filter_career: 'تطويري',
+        filter_tech: 'تكنولوجيا',
+        search_placeholder: 'بحث عن كورس...',
+
+        // Recruitment
+        join_badge: '🚀 انضم إلى فريقنا التعليمي المتميز!',
+        join_title: 'نبحث عن مدرسين شغوفين للعمل معنا',
+        join_desc: 'انضم إلى نخبة المعلمين في جميع المراحل: رياض أطفال – ابتدائي – إعدادي – ثانوي – جامعي – تطويري. سواء كنت تدرس منهجاً حكومياً، إنترناشيونال، أو خليجياً.. نحن ننتظرك!',
+        join_feat1: 'جداول مرنة (عن بعد / حضوري)',
+        join_feat2: 'بيئة تعليمية داعمة',
+        join_feat3: 'تدريب مستمر لأدوات التعليم الذكي',
+        join_feat4: 'رواتب وحوافز مجزية',
+        join_subj_title: '📚 التخصصات المطلوبة:',
+        join_subj_list: 'القرآن الكريم – الحاسب الذهني – الرياضيات – العلوم – اللغات – البرمجة – الأمن السيبراني – التخصصات الجامعية وغيرها',
+        join_btn: '<i class="fa-brands fa-whatsapp" style="margin-left: 10px;"></i> قدم الآن عبر واتساب',
+
+        // New Detailed Courses
+        c17_t: 'الهندسة (مدني، كهرباء، ميكانيكا، عمارة)', c17_d: 'تخصصات الهندسة الجامعية بأيدي أمهر الخبراء.', c17_s: '"مهندس اليوم يبني مدن الغد.. ابدأ التصميم الآن"',
+        c18_t: 'الطب البشري وطب الأسنان والصيدلة', c18_d: 'شرح المناهج الطبية المعقدة بأسلوب مبسط للأطباء الواعدين.', c18_s: '"بسمتك تبدأ من قلب طبيب متقن – ارتقِ برسالتك"',
+        c19_t: 'بايثون (Python) من الصفر للاحتراف', c19_d: 'تعلم بايثون وتطبيقاتها في الذكاء الاصطناعي وعلوم البيانات.', c19_s: '"بايثون لغة العصر.. أتقنها تتفوق على آلاف المتقدمين"',
+        c20_t: 'تحليل البيانات (Data Analysis)', c20_d: 'احتراف أدوات تحليل البيانات لاتخاذ قرارات عمل ذكية.', c20_s: '"البيانات هي النفط الجديد.. كن خبيراً في تنقيته واستخراجه"',
+        c21_t: 'الفيزياء للصف الثالث الثانوي', c21_d: 'تغطية شاملة للمنهج مع تجارب محاكاة ذكية للفيزياء الحديثة.',
+        c22_t: 'الفيزياء للصف الثاني الثانوي', c22_d: 'أساسيات الفيزياء الميكانيكية والضوئية بتبسيط واحترافية.',
+        c23_t: 'الكيمياء للصف الثالث الثانوي', c23_d: 'الكيمياء العضوية وغير العضوية بمنهجية الفهم لا الحفظ.',
+        wa_reserve: 'حجز واتساب <i class="fa-brands fa-whatsapp"></i>',
+        duration: 'ساعة',
+        yt_title: 'قناة اليوتيوب',
+        tg_title: 'قناة التليجرام للمنح',
+        wa_title: 'تواصل معنا عبر واتساب',
+        swipe_hint: 'اسحب لرؤية المزيد من المعلمين'
     }
 };
 
@@ -334,12 +555,28 @@ function setLanguage(lang) {
     if (ogTitle && translations[lang].site_title) ogTitle.setAttribute('content', translations[lang].site_title);
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc && translations[lang].site_desc) ogDesc.setAttribute('content', translations[lang].site_desc);
-
+    
     // Update all elements with data-i18n
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key]) {
             el.innerHTML = translations[lang][key];
+        }
+    });
+
+    // Update Input Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            el.placeholder = translations[lang][key];
+        }
+    });
+
+    // Update Title Attributes (for tooltips)
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (translations[lang] && translations[lang][key]) {
+            el.setAttribute('title', translations[lang][key]);
         }
     });
 

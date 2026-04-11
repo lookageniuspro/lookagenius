@@ -13,12 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div id="ag-chatbot-window" style="display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: rgba(10, 10, 25, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; z-index: 9998; box-shadow: 0 20px 40px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; font-family: 'Cairo', sans-serif;">
             <div style="background: linear-gradient(130deg, var(--ag-primary), var(--ag-accent)); padding: 15px 20px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fa-solid fa-headset" style="margin-left: 8px;"></i> المساعد الذكي (LookaBot)</span>
+                <span><i class="fa-solid fa-headset" style="margin-left: 8px;"></i> مساعد أكاديمية LookaGenius</span>
                 <i id="ag-chatbot-close" class="fa-solid fa-xmark hover-trigger" style="cursor: pointer;"></i>
             </div>
             <div id="ag-chatbot-messages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
                 <div style="align-self: flex-start; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 15px 15px 15px 0; color: white; max-width: 80%; font-size: 14px;">
-                    أهلاً بك في منصة LookaGenius. أنا المساعد الافتراضي للمنصة، كيف يمكنني مساعدتك؟ (اسألني عن الكورسات، الأسعار، التسجيل، المنح)
+                    أهلاً بك في أكاديمية LookaGenius. أنا مساعدك الأكاديمي، كيف يمكنني مساعدتك في رحلتك التعليمية اليوم؟ (اسألني عن الكورسات، المناهج، أو حجز الحصص)
                 </div>
             </div>
             <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px;">
@@ -62,11 +62,51 @@ document.addEventListener('DOMContentLoaded', () => {
         if (txt.includes('تسجيل') || txt.includes('دخول') || txt.includes('انشاء حساب')) {
             return "يمكنك النقر على زر 'Start Now' في الهيدر للوصول إلى لوحة التحكم والتسجيل في حسابات الطلاب، المدرسين، أولياء الأمور أو المهندسين.";
         }
+
+        // 3. Teachers & Subjects Info
+        const teachers = {
+            'انجليزي': 'استاذ سعد الدين، ميس هدير السيد، ميس سمية محمد',
+            'english': 'Mr. Saad Eldin, Miss Hadeer El-Sayed, Miss Somaya Mohamed',
+            'فرنسي': 'مسيو فرج السنوسى',
+            'french': 'مسيو فرج السنوسى',
+            'فيزياء': 'ميس ايمان عمر',
+            'physics': 'ميس ايمان عمر',
+            'كيمياء': 'ميس اشرقت حسن',
+            'chemistry': 'ميس اشرقت حسن',
+            'احياء': 'استاذ اسلام محمد',
+            'biology': 'استاذ اسلام محمد',
+            'حساب ذهني': 'استاذة سالى يوسف',
+            'mental math': 'استاذة سالى يوسف',
+            'تاريخ': 'استاذ احمد مجدي',
+            'دراسات': 'استاذ احمد مجدي',
+            'history': 'استاذ احمد مجدي',
+            'عربي': 'ميس مروة حمدي',
+            'arabic': 'Miss Marwa Hamdy'
+        };
+
+        for (const [subj, name] of Object.entries(teachers)) {
+            if (txt.includes(subj)) {
+                return `بالنسبة لـ ${subj}، لدينا نخبة من المعلمين المتميزين وعلى رأسهم ${name}. يمكنك حجز حصة الآن عبر واتساب!`;
+            }
+        }
+
+        if (txt.includes('موقع اخر') || txt.includes('اكاديمية اخرى') || txt.includes('منافس')) {
+            return "عذراً، أنا هنا للمساعدة في كل ما يخص أكاديمية LookaGenius فقط. لا يمكنني تقديم معلومات عن منصات أو أكاديميات أخرى.";
+        }
+
+        if (txt.includes('مدرس') || txt.includes('معلم') || txt.includes('استاذ')) {
+            return "لدينا نخبة من أفضل المعلمين في جميع التخصصات (سعد الدين، ميس هدير، ميس سمية، ميس مروة، ميس إيمان، وغيرهم). عن أي مادة تبحث تحديداً؟";
+        }
+
+        // 4. Recruitment Logic
+        if (txt.includes('شغل') || txt.includes('تقديم') || txt.includes('انضمام') || txt.includes('وظيفة')) {
+            return "نحن نبحث دائماً عن مدرسين شغوفين! يمكنك التقديم عبر الانتقال لقسم 'انضم إلى فريقنا' أسفل الصفحة أو التواصل مباشرة عبر الواتساب لإرسال سيرتك الذاتية.";
+        }
         
-        // 2. Fetch from Free LLM Backend for general/scientific questions
+        // 5. Fetch from Free LLM Backend for general/scientific questions
         try {
             // Include System Prompt in the message context
-            const systemPrompt = "أنت مساعد ذكاء اصطناعي ذكي واسمك (LookaBot) لمنصة (LookaGenius) لتعليم اللغات والبرمجة والعلوم. أجب اختصاراً وبشكل علمي مفيد باللغة العربية. السؤال هو: ";
+            const systemPrompt = "أنت المساعد الذكي الرسمي لأكاديمية (LookaGenius). مهمتك هي الرد على استفسارات الطلاب حول المناهج والكورسات الخاصة بنا فقط. يمنع منعاً باتاً ذكر أو شرح أي مواقع أو أكاديميات أخرى أو منافسين. إذا سُئلت عن أكاديمية أخرى، اعتذر ووجه المستخدم لخدمات LookaGenius. المعلمون المتاحون: (انجليزي: سعد الدين وهدير السيد وسمية محمد، عربي: مروة حمدي، فيزياء: إيمان عمر، كيمياء: أشرقت حسن، فرنسي: فرج السنوسي، أحياء: إسلام محمد، جغرافيا وتاريخ: أحمد مجدي). أجب دائماً بصيغة الأكاديمية وكن ودوداً. السؤال: ";
             const fullQuery = systemPrompt + txt;
             
             // Pollinations offers a free AI text endpoint without API keys
@@ -84,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 3. Dynamic Fallback if AI server is overloaded
         const fallbacks = [
-            "عذراً، الخوادم مضغوطة قليلاً الآن! يرجى ترك استفسارك في رسالة وسيتواصل معك المعلمون في LookaGenius.",
-            "هل يمكنك صياغة السؤال بطريقة أخرى؟ أنا هنا لمساعدتك في كل ما يخص العلوم والكورسات.",
-            "كمساعد ذكي، أواجه صعوبة مؤقتة في الاتصال. لكن لا تقلق، لقد سجلنا استفسارك ليقوم الدعم بالرد عليه لاحقاً."
+            "عذراً، الخوادم مضغوطة قليلاً! يمكنك التواصل معنا مباشرة عبر واتساب الأكاديمية للحصول على رد سريع.",
+            "أنا هنا لمساعدتك في كل ما يخص العلوم والكورسات في الأكاديمية. هل يمكنك توضيح سؤالك أكثر؟",
+            "كمساعد أكاديمية LookaGenius، أواجه صعوبة مؤقتة في الاتصال. يرجى محاولة السؤال مرة أخرى أو مراسلتنا."
         ];
         return fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
