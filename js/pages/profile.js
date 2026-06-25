@@ -98,13 +98,10 @@
             const reader = new FileReader();
             reader.onload = function(ev) {
                 document.getElementById('profAvatar').src = ev.target.result;
-                // Save avatar to user
-                const users = window.db.getUsers();
-                const u = users.find(x => x.id === user.id);
-                if (u) {
-                    u.avatar = ev.target.result;
-                    window.db.saveData({...window.db.getData(), users});
-                    if (window.auth && window.auth.currentUser) window.auth.currentUser.avatar = ev.target.result;
+                window.db.updateUser(user.id, { avatar: ev.target.result });
+                if (window.auth && window.auth.currentUser) {
+                    window.auth.currentUser.avatar = ev.target.result;
+                    localStorage.setItem('lookagenius_session', JSON.stringify(window.auth.currentUser));
                 }
             };
             reader.readAsDataURL(file);
@@ -146,9 +143,10 @@
                 u.password = newPass;
             }
 
-            window.db.saveData({...window.db.getData(), users});
+            window.db.updateUser(user.id, u);
             if (window.auth && window.auth.currentUser) {
                 Object.assign(window.auth.currentUser, u);
+                localStorage.setItem('lookagenius_session', JSON.stringify(window.auth.currentUser));
             }
             alert('Profile saved successfully!');
             document.getElementById('pfCurPass').value = '';

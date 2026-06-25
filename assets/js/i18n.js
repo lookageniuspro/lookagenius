@@ -312,7 +312,25 @@ const translations = {
         label_whatsapp: 'WhatsApp Number',
         label_parent_phone: 'Parent / Guardian Phone',
         label_education_stage: 'Educational Stage',
-        label_avatar: 'Profile Picture'
+        chat_title: 'LookaGenius Assistant',
+        chat_welcome: 'Welcome to LookaGenius! I am your academic assistant. Ask me about courses, teachers, or anything else!',
+        label_avatar: 'Profile Picture',
+        close: 'Close',
+        nav_admin_dashboard: 'Dashboard',
+        nav_admin_users: 'Users',
+        nav_admin_courses: 'Courses',
+        nav_admin_scholarships: 'Scholarships',
+        nav_admin_articles: 'Articles',
+        nav_admin_services: 'Services',
+        nav_admin_team: 'Team',
+        nav_admin_financials: 'Financials',
+        nav_admin_collaborations: 'Collaborations',
+        nav_admin_settlements: 'Settlements',
+        nav_admin_chatlogs: 'Chat Logs',
+        nav_admin_notifications: 'Notifications',
+        nav_admin_settings: 'Settings',
+        nav_admin_view_site: 'View Site',
+        nav_admin_logout: 'Logout'
     },
     ar: {
         dir: 'rtl',
@@ -558,7 +576,25 @@ const translations = {
         label_whatsapp: 'رقم واتساب',
         label_parent_phone: 'رقم ولي الأمر',
         label_education_stage: 'المرحلة التعليمية',
-        label_avatar: 'الصورة الشخصية'
+        chat_title: 'مساعد LookaGenius',
+        chat_welcome: 'مرحباً بك في LookaGenius! أنا مساعدك الأكاديمي. اسألني عن الكورسات، المدرسين، أو أي شيء آخر!',
+        label_avatar: 'الصورة الشخصية',
+        close: 'إغلاق',
+        nav_admin_dashboard: 'لوحة التحكم',
+        nav_admin_users: 'المستخدمين',
+        nav_admin_courses: 'الكورسات',
+        nav_admin_scholarships: 'المنح الدراسية',
+        nav_admin_articles: 'المقالات',
+        nav_admin_services: 'الخدمات',
+        nav_admin_team: 'فريق العمل',
+        nav_admin_financials: 'الحسابات المالية',
+        nav_admin_collaborations: 'طلبات التعاون',
+        nav_admin_settlements: 'طلبات التصفية',
+        nav_admin_chatlogs: 'سجل الشات',
+        nav_admin_notifications: 'الإشعارات',
+        nav_admin_settings: 'الإعدادات',
+        nav_admin_view_site: 'عرض الموقع',
+        nav_admin_logout: 'تسجيل الخروج'
     }
 };
 

@@ -29,13 +29,20 @@
         const chatContainer = document.createElement('div');
         chatContainer.id = 'ag-chatbot';
         chatContainer.innerHTML = `
+            <style>
+                @media (max-width: 768px) {
+                    #ag-chatbot-window { width: 92vw !important; height: 70vh !important; right: 4vw !important; bottom: 100px !important; }
+                    #ag-chatbot-close { font-size: 24px !important; padding: 8px !important; }
+                    #ag-chatbot-bubble { width: 52px !important; height: 52px !important; bottom: 20px !important; right: 20px !important; font-size: 20px !important; }
+                }
+            </style>
             <div id="ag-chatbot-bubble" class="hover-trigger ag-glow-pulse" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(130deg, var(--ag-primary, #00D4FF), var(--ag-accent, #A855F7)); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);">
                 <i class="fa-solid fa-robot"></i>
             </div>
             <div id="ag-chatbot-window" style="display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: rgba(10, 10, 25, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; z-index: 9998; box-shadow: 0 20px 40px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; font-family: 'Cairo', sans-serif;">
                 <div style="background: linear-gradient(130deg, var(--ag-primary, #00D4FF), var(--ag-accent, #A855F7)); padding: 15px 20px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
                     <span><i class="fa-solid fa-headset" style="margin-left: 8px;"></i> <span data-i18n="chat_title">LookaGenius Assistant</span></span>
-                    <i id="ag-chatbot-close" class="fa-solid fa-xmark hover-trigger" style="cursor: pointer; font-size: 18px;"></i>
+                    <span id="ag-chatbot-close" style="cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,0.15);" class="hover-trigger"><span class="ag-close-label" style="font-size: 13px; font-weight: 400;" data-i18n="close">Close</span><i class="fa-solid fa-xmark" style="font-size: 18px;"></i></span>
                 </div>
                 <div id="ag-chatbot-messages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
                     <div style="align-self: flex-start; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 15px 15px 15px 0; color: white; max-width: 80%; font-size: 14px;">

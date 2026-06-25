@@ -241,30 +241,27 @@
             align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
         }
         .sidebar-toggle:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
-        .sidebar-overlay { display: none; }
         @media (max-width: 992px) {
             .sidebar { width: 68px; }
-            .sidebar .sidebar-header .logo-text, .sidebar .sidebar-header .admin-badge, .sidebar .nav-link span, .sidebar .nav-link .notif-badge, .sidebar-footer .nav-link span { display: none; }
+            .sidebar .sidebar-header .logo-text, .sidebar .sidebar-header .admin-badge, .sidebar .nav-link span, .sidebar .nav-link .notif-badge, .sidebar-footer .nav-link span, .sidebar-close-mobile { display: none; }
             .sidebar .nav-link { justify-content: center; padding: 10px; }
             .sidebar .nav-link i { margin: 0; }
             .main-content { margin-inline-start: 68px; padding: 20px; }
         }
+        .sidebar-close-mobile { display: none; }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar-toggle { display: flex; }
+            .sidebar-close-mobile { display: block !important; }
             .sidebar {
-                width: 250px; transform: translateX(100%); inset-inline-start: auto;
-                transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 200;
+                width: 260px; inset-inline-start: -100%;
+                transition: inset-inline-start 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 200;
+                box-shadow: 0 0 30px rgba(0,0,0,0.5);
             }
-            .sidebar.open { transform: translateX(0); }
+            .sidebar.open { inset-inline-start: 0; }
             .sidebar .sidebar-header .logo-text, .sidebar .sidebar-header .admin-badge, .sidebar .nav-link span, .sidebar .nav-link .notif-badge, .sidebar-footer .nav-link span { display: block; }
             .sidebar .nav-link { justify-content: flex-start; padding: 10px 16px; }
             .sidebar .nav-link i { margin: 0 0 0 12px; }
-            .sidebar.open ~ .sidebar-overlay { display: block; }
-            .sidebar-overlay.open {
-                display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-                z-index: 199; backdrop-filter: blur(4px);
-            }
             .main-content { margin-inline-start: 0; padding: 16px; padding-top: 70px; }
             .top-bar { flex-direction: column; align-items: flex-start; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -287,32 +284,39 @@
 
     <!-- Mobile Sidebar Toggle -->
     <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <!-- Sidebar -->
     <aside class="sidebar" id="mainSidebar">
-        <div class="sidebar-header">
-            <img src="assets/img/logo.png" alt="LG Logo" class="logo-img">
-            <span class="logo-text">LookaGenius</span>
-            <span class="admin-badge">Admin Panel</span>
+        <div class="sidebar-header" style="display:flex;align-items:center;justify-content:space-between;padding:15px 20px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <img src="assets/img/logo.png" alt="LG Logo" class="logo-img" style="height:40px;">
+                <span class="logo-text" style="font-size:1rem;">LookaGenius</span>
+            </div>
+            <button id="sidebarCloseMobile" onclick="toggleSidebar()" style="display:none;background:none;border:none;color:var(--text-secondary);font-size:20px;cursor:pointer;" class="sidebar-close-mobile"><i class="fa-solid fa-xmark"></i></button>
+            <span class="admin-badge" style="font-size:10px;">Admin Panel</span>
         </div>
         <nav class="nav-menu">
-            <div class="nav-item"><button class="nav-link active" data-page="dashboard"><i class="fa-solid fa-gauge"></i> <span>لوحة التحكم</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="users"><i class="fa-solid fa-users"></i> <span>المستخدمين</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="courses"><i class="fa-solid fa-graduation-cap"></i> <span>الكورسات</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="scholarships"><i class="fa-solid fa-star"></i> <span>المنح الدراسية</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="articles"><i class="fa-solid fa-newspaper"></i> <span>المقالات</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="services"><i class="fa-solid fa-briefcase"></i> <span>الخدمات</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="team"><i class="fa-solid fa-people-group"></i> <span>فريق العمل</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="financials"><i class="fa-solid fa-coins"></i> <span>الحسابات المالية</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="collaborations"><i class="fa-solid fa-handshake"></i> <span>طلبات التعاون</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="settlements"><i class="fa-solid fa-file-invoice"></i> <span>طلبات التصفية</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="chatlogs"><i class="fa-solid fa-comment-dots"></i> <span>سجل الشات</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="notifications"><i class="fa-solid fa-bell"></i> <span>الإشعارات</span> <span class="notif-badge" id="notifSidebarBadge">0</span></button></div>
-            <div class="nav-item"><button class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i> <span>الإعدادات</span></button></div>
-            <div class="nav-item"><a href="index.html" class="nav-link" target="_blank"><i class="fa-solid fa-eye"></i> <span>عرض الموقع</span></a></div>
+            <div class="nav-item"><button class="nav-link active" data-page="dashboard" data-i18n="nav_admin_dashboard"><i class="fa-solid fa-gauge"></i> <span>لوحة التحكم</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="users" data-i18n="nav_admin_users"><i class="fa-solid fa-users"></i> <span>المستخدمين</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="courses" data-i18n="nav_admin_courses"><i class="fa-solid fa-graduation-cap"></i> <span>الكورسات</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="scholarships" data-i18n="nav_admin_scholarships"><i class="fa-solid fa-star"></i> <span>المنح الدراسية</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="articles" data-i18n="nav_admin_articles"><i class="fa-solid fa-newspaper"></i> <span>المقالات</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="services" data-i18n="nav_admin_services"><i class="fa-solid fa-briefcase"></i> <span>الخدمات</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="team" data-i18n="nav_admin_team"><i class="fa-solid fa-people-group"></i> <span>فريق العمل</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="financials" data-i18n="nav_admin_financials"><i class="fa-solid fa-coins"></i> <span>الحسابات المالية</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="collaborations" data-i18n="nav_admin_collaborations"><i class="fa-solid fa-handshake"></i> <span>طلبات التعاون</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="settlements" data-i18n="nav_admin_settlements"><i class="fa-solid fa-file-invoice"></i> <span>طلبات التصفية</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="chatlogs" data-i18n="nav_admin_chatlogs"><i class="fa-solid fa-comment-dots"></i> <span>سجل الشات</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="notifications" data-i18n="nav_admin_notifications"><i class="fa-solid fa-bell"></i> <span>الإشعارات</span> <span class="notif-badge" id="notifSidebarBadge">0</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="settings" data-i18n="nav_admin_settings"><i class="fa-solid fa-gear"></i> <span>الإعدادات</span></button></div>
+            <div class="nav-item"><a href="index.html" class="nav-link" target="_blank" data-i18n="nav_admin_view_site"><i class="fa-solid fa-eye"></i> <span>عرض الموقع</span></a></div>
         </nav>
         <div class="sidebar-footer">
-            <button class="nav-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل الخروج</span></button>
+            <div id="syncStatus" style="display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:0.7rem;color:var(--text-secondary);border-bottom:1px solid var(--border-color);">
+                <span id="syncDot" style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span>
+                <span id="syncText">متصل</span>
+                <button onclick="window.dbSync?.syncNow?.();showToast('جاري المزامنة...','info');" style="margin-inline-start:auto;background:none;border:none;color:var(--neon-blue);cursor:pointer;font-size:0.7rem;" title="مزامنة يدوية"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+            <button class="nav-link" id="logoutBtn" data-i18n="nav_admin_logout"><i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل الخروج</span></button>
         </div>
     </aside>
 
@@ -947,9 +951,29 @@
     <div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i><span id="toastMessage"></span></div>
 
     <script src="js/db.js"></script>
+    <script src="js/db-sync.js"></script>
     <script>
     (function() {
         'use strict';
+
+        function updateSyncStatus(status) {
+            const dot = document.getElementById('syncDot');
+            const text = document.getElementById('syncText');
+            if (!dot || !text) return;
+            if (status === 'synced') {
+                dot.style.background = 'var(--success)';
+                text.textContent = 'مزامن';
+            } else if (status === 'syncing') {
+                dot.style.background = 'var(--warning)';
+                text.textContent = 'جاري المزامنة...';
+            } else if (status === 'error') {
+                dot.style.background = 'var(--neon-pink)';
+                text.textContent = 'خطأ في المزامنة';
+            } else {
+                dot.style.background = 'var(--success)';
+                text.textContent = 'متصل';
+            }
+        }
 
         const session = localStorage.getItem('lookagenius_session');
         if (!session) { window.location.href = 'login.html'; return; }
@@ -2115,7 +2139,36 @@
         renderCharts();
         populateCourseCategoryFilter();
         loadAdminCategories();
-        setInterval(() => { renderAll(); }, 5000);
+
+        // Real-time sync across tabs & devices
+        if (window.dbSync) {
+            // Listen for data changes from other tabs
+            window.dbSync.onDataChange(() => {
+                renderAll();
+                if (document.getElementById('page-dashboard').classList.contains('active')) renderCharts();
+                updateSyncStatus('synced');
+            });
+            setTimeout(() => window.dbSync.init(), 200);
+        }
+
+        // Smart polling: only re-render if data actually changed
+        let lastDataHash = 0;
+        function hashData() {
+            try {
+                const raw = localStorage.getItem('lookagenius_db');
+                if (!raw) return 0;
+                const data = JSON.parse(raw);
+                return data._version || 0;
+            } catch(e) { return 0; }
+        }
+        setInterval(() => {
+            const hash = hashData();
+            if (hash !== lastDataHash) {
+                lastDataHash = hash;
+                renderAll();
+                if (document.getElementById('page-dashboard').classList.contains('active')) renderCharts();
+            }
+        }, 2000);
         setInterval(() => { if (document.getElementById('page-dashboard').classList.contains('active')) renderCharts(); }, 15000);
 
         if (window.db.getNotifications().length === 0) {
@@ -2126,7 +2179,6 @@
 
     function toggleSidebar() {
         document.getElementById('mainSidebar').classList.toggle('open');
-        document.getElementById('sidebarOverlay').classList.toggle('open');
     }
     </script>
     <script src="js/mock-api.js"></script>
