@@ -1,15 +1,15 @@
 /**
  * db.js
- * Mock Database with 16 Initial Courses (Restored from User Brief)
+ * Central Database with full CRUD for all entities
  */
 
 const DB_KEY = 'lookagenius_db';
 
 const defaultData = {
     users: [
-        { id: 1, name: 'Ahmed Mahmoud', email: 'student@test.com', password: '123', type: 'student' },
-        { id: 2, name: 'Dr. Mohamed Tarek', email: 'teacher@test.com', password: '123', type: 'teacher' },
-        { id: 3, name: 'Admin User', email: 'admin@lookagenius.com', password: 'password123', type: 'admin' }
+        { id: 1, name: 'Ahmed Mahmoud', email: 'student@test.com', password: '123', type: 'student', active: true },
+        { id: 2, name: 'Dr. Mohamed Tarek', email: 'teacher@test.com', password: '123', type: 'teacher', active: true },
+        { id: 3, name: 'Admin User', email: 'admin@lookagenius.com', password: 'password123', type: 'admin', active: true }
     ],
     courses: [
         { id: 101, title: "Arabic: Foundation & Eloquence", description: "Discover the magic of the Arabic language and master grammar and rhetoric.", category: "languages", price: 25, duration: "36 hours", badge: "Arabic", image: "https://picsum.photos/seed/arabic/400/250" },
@@ -32,7 +32,24 @@ const defaultData = {
     scholarships: [
         { id: 201, title: 'Erasmus Mundus', country: 'Europe', funding: 'Full Funding', university: 'Multiple' },
         { id: 202, title: 'DAAD Scholarship', country: 'Germany', funding: 'Full Funding', university: 'Multiple' }
-    ]
+    ],
+    articles: [],
+    services: [],
+    team: [],
+    courseCategories: [],
+    currencies: [],
+    settings: {
+        siteName: 'LookaGenius',
+        siteDescription: 'Educational Platform',
+        whatsapp: '',
+        email: '',
+        currency: '$'
+    },
+    notifications: [],
+    financials: [],
+    settlementRequests: [],
+    collaborations: [],
+    _version: 1
 };
 
 function initDB() {
@@ -41,45 +58,198 @@ function initDB() {
     }
 }
 
-window.db = {
-    getData: () => JSON.parse(localStorage.getItem(DB_KEY)) || defaultData,
-    saveData: (data) => localStorage.setItem(DB_KEY, JSON.stringify(data)),
-    getUsers: () => window.db.getData().users,
-    getCourses: () => window.db.getData().courses,
-    
-    addUser: (user) => {
-        const data = window.db.getData();
-        user.id = Date.now();
-        data.users.push(user);
-        window.db.saveData(data);
-        return user;
-    },
+function getData() {
+    return JSON.parse(localStorage.getItem(DB_KEY)) || defaultData;
+}
 
-    addCourse: (course) => {
-        const data = window.db.getData();
-        course.id = Date.now();
-        data.courses.push(course);
-        window.db.saveData(data);
-        return course;
-    },
+function saveData(data) {
+    data._version = (data._version || 0) + 1;
+    localStorage.setItem(DB_KEY, JSON.stringify(data));
+}
 
-    updateCourse: (id, updatedCourse) => {
-        const data = window.db.getData();
-        const index = data.courses.findIndex(c => c.id === parseInt(id));
-        if (index !== -1) {
-            data.courses[index] = { ...data.courses[index], ...updatedCourse };
-            window.db.saveData(data);
-            return true;
+function makeId() {
+    return Date.now() + Math.floor(Math.random() * 1000);
+}
+
+function crudFor(key) {
+    return {
+        getAll: () => getData()[key] || [],
+        getById: (id) => (getData()[key] || []).find(x => x.id === parseInt(id)),
+        add: (item) => {
+            const data = getData()
+            item.id = makeId()
+            data[key].push(item)
+            saveData(data)
+            return item
+        },
+        update: (id, updates) => {
+            const data = getData()
+            const arr = data[key]
+            const idx = arr.findIndex(x => x.id === parseInt(id))
+            if (idx !== -1) {
+                arr[idx] = { ...arr[idx], ...updates }
+                saveData(data)
+                return true
+            }
+            return false
+        },
+        delete: (id) => {
+            const data = getData()
+            data[key] = (data[key] || []).filter(x => x.id !== parseInt(id))
+            saveData(data)
+            return true
         }
-        return false;
+    }
+}
+
+window.db = {
+    getData,
+    saveData,
+
+    // Users
+    getUsers: () => getData().users,
+    addUser: (user) => {
+        const data = getData()
+        user.id = makeId()
+        user.active = true
+        data.users.push(user)
+        saveData(data)
+        return user
+    },
+    updateUser: (id, updates) => {
+        const data = getData()
+        const idx = data.users.findIndex(u => u.id === parseInt(id))
+        if (idx !== -1) {
+            data.users[idx] = { ...data.users[idx], ...updates }
+            saveData(data)
+            return true
+        }
+        return false
+    },
+    deleteUser: (id) => {
+        const data = getData()
+        data.users = data.users.filter(u => u.id !== parseInt(id))
+        saveData(data)
+        return true
+    },
+    getUser: (id) => getData().users.find(u => u.id === parseInt(id)),
+
+    // Courses
+    getCourses: () => getData().courses,
+    addCourse: (course) => {
+        const data = getData()
+        course.id = makeId()
+        data.courses.push(course)
+        saveData(data)
+        return course
+    },
+    updateCourse: (id, updates) => {
+        const data = getData()
+        const idx = data.courses.findIndex(c => c.id === parseInt(id))
+        if (idx !== -1) {
+            data.courses[idx] = { ...data.courses[idx], ...updates }
+            saveData(data)
+            return true
+        }
+        return false
+    },
+    deleteCourse: (id) => {
+        const data = getData()
+        data.courses = data.courses.filter(c => c.id !== parseInt(id))
+        saveData(data)
+        return true
     },
 
-    deleteCourse: (id) => {
-        const data = window.db.getData();
-        data.courses = data.courses.filter(c => c.id !== parseInt(id));
-        window.db.saveData(data);
-        return true;
-    }
-};
+    // Scholarships
+    getScholarships: () => getData().scholarships,
+    addScholarship: (item) => crudFor('scholarships').add(item),
+    updateScholarship: (id, updates) => crudFor('scholarships').update(id, updates),
+    deleteScholarship: (id) => crudFor('scholarships').delete(id),
 
-initDB();
+    // Articles
+    getArticles: () => getData().articles,
+    addArticle: (item) => crudFor('articles').add(item),
+    updateArticle: (id, updates) => crudFor('articles').update(id, updates),
+    deleteArticle: (id) => crudFor('articles').delete(id),
+
+    // Services
+    getServices: () => getData().services,
+    addService: (item) => crudFor('services').add(item),
+    updateService: (id, updates) => crudFor('services').update(id, updates),
+    deleteService: (id) => crudFor('services').delete(id),
+
+    // Team
+    getTeam: () => getData().team,
+    addTeamMember: (item) => crudFor('team').add(item),
+    updateTeamMember: (id, updates) => crudFor('team').update(id, updates),
+    deleteTeamMember: (id) => crudFor('team').delete(id),
+
+    addTeacherWithAccount: (data, password) => {
+        const teacher = window.db.addUser({ name: data.name, email: data.email, password, type: 'teacher' })
+        window.db.addTeamMember({ ...data, userId: teacher.id })
+        return teacher
+    },
+
+    // Course Categories
+    getCourseCategories: () => getData().courseCategories || [],
+    addCourseCategory: (item) => crudFor('courseCategories').add(item),
+    deleteCourseCategory: (id) => crudFor('courseCategories').delete(id),
+
+    getLinkedTeachers: () => {
+        const users = getData().users.filter(u => u.type === 'teacher' && u.active !== false)
+        const team = getData().team
+        return users.map(u => {
+            const t = team.find(m => m.userId === u.id)
+            return { ...u, specialty: t ? t.specialty : '' }
+        })
+    },
+
+    // Notifications
+    getNotifications: () => getData().notifications || [],
+    addNotification: (item) => {
+        const data = getData()
+        item.id = makeId()
+        item.read = false
+        item.createdAt = new Date().toISOString()
+        data.notifications.unshift(item)
+        saveData(data)
+        return item
+    },
+    markNotificationRead: (id) => crudFor('notifications').update(id, { read: true }),
+    markAllNotificationsRead: () => {
+        const data = getData()
+        data.notifications.forEach(n => n.read = true)
+        saveData(data)
+    },
+    deleteNotification: (id) => crudFor('notifications').delete(id),
+    clearAllNotifications: () => {
+        const data = getData()
+        data.notifications = []
+        saveData(data)
+    },
+    getUnreadNotificationsCount: () => (getData().notifications || []).filter(n => !n.read).length,
+
+    // Settings
+    getSettings: () => getData().settings || defaultData.settings,
+    updateSettings: (updates) => {
+        const data = getData()
+        data.settings = { ...data.settings, ...updates }
+        saveData(data)
+    },
+
+    // Financials
+    getFinancials: () => getData().financials || [],
+
+    // Settlement Requests
+    getSettlementRequests: () => getData().settlementRequests || [],
+    approveSettlementRequest: (id) => crudFor('settlementRequests').update(id, { status: 'approved' }),
+    rejectSettlementRequest: (id) => crudFor('settlementRequests').update(id, { status: 'rejected' }),
+
+    // Collaborations
+    getCollaborations: () => getData().collaborations || [],
+    addCollaboration: (item) => crudFor('collaborations').add(item),
+    updateCollaboration: (id, updates) => crudFor('collaborations').update(id, updates),
+    deleteCollaboration: (id) => crudFor('collaborations').delete(id)
+}
+
+initDB()
