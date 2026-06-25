@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius | خدماتنا المتكاملة</title>
+    
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Premium Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="استكشف خدمات LookaGenius المتكاملة: توجيه مهني، تدريب شركات، وتطوير مشاريع ابتكارية.">
+    <meta property="og:title" content="LookaGenius | خدماتنا">
+    <meta property="og:image" content="assets/img/logo.png">
+
+    <style>
+        body {
+            background: #050510;
+            color: white;
+            padding-top: 100px;
+            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* 3D Canvas Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .services-hero {
+            text-align: center;
+            padding: 80px 5% 40px;
+            position: relative;
+        }
+
+        .services-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .services-hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Structured Service Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 40px 8%;
+            position: relative;
+        }
+
+        .service-card {
+            padding: 40px 30px;
+            border-radius: 30px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+        }
+
+        .service-category-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary));
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--ag-primary);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.1);
+        }
+
+        .service-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--ag-primary);
+            transition: 0.4s;
+        }
+
+        .service-card:hover .service-icon-wrapper {
+            background: var(--ag-primary);
+            color: white;
+            border-radius: 50%;
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .service-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            text-align: right;
+        }
+
+        .service-features li {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-features i {
+            color: var(--ag-primary);
+            font-size: 0.8rem;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            padding: 80px 8%;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            margin-top: 50px;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .step-item {
+            position: relative;
+            padding: 30px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .step-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, var(--ag-primary), transparent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .step-content h3 { 
+            margin-bottom: 15px; 
+            color: var(--ag-primary); 
+            font-size: 1.4rem;
+        }
+
+        @media (max-width: 768px) {
+            .services-hero h1 { font-size: 2.5rem; }
+            .service-grid { padding: 30px 5%; }
+        }
+    </style>
+</head>
+<body class="services-page">
+
+    <!-- 3D Canvas Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <!-- Global Header -->
+    <nav class="ag-header ag-glass" id="mainHeader">
+        <div class="header-container">
+            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/img/logo.png" alt="Logo" class="lg-logo">
+                <span class="logo-text">LookaGenius</span>
+            </a>
+            <ul class="nav-links">
+            <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="courses.html" data-i18n="nav_courses">Courses</a></li>
+            <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
+            <li><a href="services.html" class="active" data-i18n="nav_services">Services</a></li>
+            <li><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a></li>
+            <li><a href="join-us.html" data-i18n="nav_join">Join Us</a></li>
+            <li><a href="support.html" data-i18n="nav_about">About Us</a></li>
+            </ul>
+            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
+                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
+                    <i class="fa-solid fa-globe"></i> العربية
+                </button>
+                <a href="login.html" class="ag-btn" data-i18n="btn_start">Start Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="services-hero" data-aos="fade-down">
+        <h1 class="ag-text-gradient" data-i18n="serv_hero_t">More Than Just Education</h1>
+        <p data-i18n="serv_hero_d">
+            We are your strategic partner in the journey of digital transformation and professional excellence. Our solutions are designed to make you a global expert in your field.
+        </p>
+    </section>
+
+    <div class="service-grid" id="servicesContainer">
+        <!-- يتم ريندر الخدمات ديناميكياً من db.js عبر services.js -->
+    </div>
+
+    <!-- Workflow Section -->
+    <section class="workflow-section" data-aos="fade-up">
+        <h2 class="ag-text-gradient" style="font-size: 2.8rem; margin-bottom: 20px;" data-i18n="work_t">Our Methodology</h2>
+        <p style="color: #888; max-width: 600px; margin: 0 auto 50px;" data-i18n="work_d">Calculated steps to ensure you reach your goals with high efficiency and professionalism.</p>
+        <div class="workflow-steps">
+            <div class="step-item" data-aos="zoom-in">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3 data-i18n="step_1_t">Needs Analysis</h3>
+                    <p data-i18n="step_1_d">A deep understanding of your personal or corporate goals.</p>
+                </div>
+            </div>
+            <div class="step-item" data-aos="zoom-in" data-aos-delay="100">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3 data-i18n="step_2_t">Mapping</h3>
+                    <p data-i18n="step_2_d">Developing a customized action plan and a clear timeline for success.</p>
+                </div>
+            </div>
+            <div class="step-item" data-aos="zoom-in" data-aos-delay="200">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3 data-i18n="step_3_t">Execution & Training</h3>
+                    <p data-i18n="step_3_d">Practical application of the latest curricula and technologies with continuous follow-up.</p>
+                </div>
+            </div>
+            <div class="step-item" data-aos="zoom-in" data-aos-delay="300">
+                <div class="step-number">04</div>
+                <div class="step-content">
+                    <h3 data-i18n="step_4_t">Access & Empowerment</h3>
+                    <p data-i18n="step_4_d">Achieving the set goal and ensuring continued excellence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Space -->
+    <footer style="padding: 60px 8%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 60px; background: rgba(0,0,0,0.3);">
+        <img src="assets/img/logo.png" alt="Logo" class="lg-logo" style="height:50px;width:50px;margin-bottom:20px;">
+        <p style="color: #666; font-size: 14px;">© 2026 LookaGenius Academy. جميع الحقوق محفوظة.</p>
+    </section>
+
+    <!-- Floating Buttons Group -->
+    <div class="floating-container">
+        <a href="https://youtube.com/@LookaGenius" class="social-btn youtube-btn" title="YouTube">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+        <a href="https://wa.me/201098768356" class="social-btn whatsapp-btn" title="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="js/supabase.js"></script>
+
+    <!-- Database & Auth (localStorage mock) -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+
+    <!-- Page-specific: Dynamic services rendering -->
+    <script src="js/pages/services.js"></script>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LookaGenius Academy | Ã˜Â¥Ã™â€ Ã˜Â´Ã˜Â§Ã˜Â¡ Ã˜Â­Ã˜Â³Ã˜Â§Ã˜Â¨ Ã˜Â¬Ã˜Â¯Ã™Å Ã˜Â¯</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <main id="app-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px;">
+        <div class="glass-card" style="width: 100%; max-width: 500px; padding: 40px;" data-aos="zoom-in">
+            <h2 style="text-align: center; margin-bottom: 30px; font-weight: 800;">Ã˜Â¥Ã™â€ Ã˜Â´Ã˜Â§Ã˜Â¡ Ã˜Â­Ã˜Â³Ã˜Â§Ã˜Â¨ Ã˜Â¬Ã˜Â¯Ã™Å Ã˜Â¯</h2>
+            <form id="regForm">
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ™Æ’Ã˜Â§Ã™â€¦Ã™â€ž</label>
+                    <input type="text" id="regName" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Ã˜Â§Ã™â€žÃ˜Â¨Ã˜Â±Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â¥Ã™â€žÃ™Æ’Ã˜ÂªÃ˜Â±Ã™Ë†Ã™â€ Ã™Å </label>
+                    <input type="email" id="regEmail" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Ã™Æ’Ã™â€žÃ™â€¦Ã˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã™Ë†Ã˜Â±</label>
+                    <input type="password" id="regPass" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Ã™â€ Ã™Ë†Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â³Ã˜Â§Ã˜Â¨</label>
+                    <select id="regType" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid var(--border-color); color: #fff;">
+                        <option value="student">Ã˜Â·Ã˜Â§Ã™â€žÃ˜Â¨</option>
+                        <option value="parent">Ã™Ë†Ã™â€žÃ™Å  Ã˜Â£Ã™â€¦Ã˜Â±</option>
+                        <option value="teacher">Ã™â€¦Ã˜Â¹Ã™â€žÃ™â€¦ / Ã˜Â¯Ã™Æ’Ã˜ÂªÃ™Ë†Ã˜Â±</option>
+                    </select>
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Ã˜Â§Ã™â€žÃ˜ÂµÃ™Ë†Ã˜Â±Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â®Ã˜ÂµÃ™Å Ã˜Â©</label>
+                    <input type="file" id="regAvatar" accept="image/*" style="width:100%;padding:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:10px;color:white;">
+                    <div id="regAvatarPreview" style="margin-top:8px;display:none;">
+                        <img id="regAvatarImg" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--neon-blue);object-fit:cover;">
+                    </div>
+                </div>
+                <div id="regErrorMsg" style="color: var(--accent-pink); text-align: center; margin-bottom: 15px; font-size: 0.85rem; display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; border-radius: 50px; font-size: 1.1rem;">Ã˜Â¥Ã™â€ Ã˜Â´Ã˜Â§Ã˜Â¡ Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â³Ã˜Â§Ã˜Â¨ <i class="fa-solid fa-user-plus"></i></button>
+            </form>
+            <div style="text-align: center; margin-top: 25px; color: var(--text-secondary); font-size: 0.9rem;">
+                Ã™â€žÃ˜Â¯Ã™Å Ã™Æ’ Ã˜Â­Ã˜Â³Ã˜Â§Ã˜Â¨ Ã˜Â¨Ã˜Â§Ã™â€žÃ™ÂÃ˜Â¹Ã™â€žÃ˜Å¸ <a href="login.html" style="color: var(--primary-blue); font-weight: 700;">Ã˜ÂªÃ˜Â³Ã˜Â¬Ã™Å Ã™â€ž Ã˜Â¯Ã˜Â®Ã™Ë†Ã™â€ž</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="js/supabase.js" defer></script>
+    <script src="js/db.js" defer></script>
+    <script src="js/db-sync.js" defer></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script>
+        let regAvatarData = '';
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('regAvatar').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    regAvatarData = ev.target.result;
+                    document.getElementById('regAvatarImg').src = regAvatarData;
+                    document.getElementById('regAvatarPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            });
+
+            const form = document.getElementById('regForm');
+            if (form) {
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    const userData = {
+                        name: document.getElementById('regName').value,
+                        email: document.getElementById('regEmail').value,
+                        password: document.getElementById('regPass').value,
+                        type: document.getElementById('regType').value,
+                        avatar: regAvatarData
+                    };
+                    const res = await window.auth.register(userData);
+                    if (res.success) {
+                        window.location.href = `dashboard-${res.user.type}.html`;
+                    } else {
+                        const err = document.getElementById('regErrorMsg');
+                        err.textContent = res.message;
+                        err.style.display = 'block';
+                    }
+                };
+            }
+        });
+    </script>
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>

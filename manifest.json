@@ -1,0 +1,23 @@
+{
+  "name": "LookaGenius Academy",
+  "short_name": "LookaGenius",
+  "description": "The leading SMART educational platform.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a19",
+  "theme_color": "#00D4FF",
+  "icons": [
+    {
+      "src": "assets/img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

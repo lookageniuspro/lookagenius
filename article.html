@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius | Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
+    <style>
+        body {
+            background: #050510;
+            color: white;
+            padding-top: 100px;
+        }
+
+        .article-banner {
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .article-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #050510 10%, transparent 60%);
+        }
+
+        .article-banner-info {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px 5%;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .article-banner-info h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .article-meta span i {
+            color: var(--ag-primary);
+            margin-left: 6px;
+        }
+
+        .article-body {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 5% 80px;
+            font-size: 1.1rem;
+            line-height: 2;
+            color: #ddd;
+        }
+
+        .article-body h2 {
+            font-size: 1.8rem;
+            color: var(--ag-primary);
+            margin: 40px 0 20px;
+        }
+
+        .article-body h3 {
+            font-size: 1.4rem;
+            color: var(--accent-violet);
+            margin: 30px 0 15px;
+        }
+
+        .article-body p {
+            margin-bottom: 20px;
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 20px 0;
+            padding-right: 30px;
+        }
+
+        .article-body li {
+            margin-bottom: 10px;
+        }
+
+        .article-body img {
+            max-width: 100%;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .article-body blockquote {
+            border-right: 4px solid var(--ag-primary);
+            padding: 20px 30px;
+            margin: 30px 0;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 0 15px 15px 0;
+            font-style: italic;
+            color: #ccc;
+        }
+
+        .article-body em {
+            color: var(--ag-primary);
+        }
+
+        .article-body strong {
+            color: #fff;
+        }
+
+        .share-section {
+            max-width: 900px;
+            margin: 0 auto 80px;
+            padding: 0 5%;
+            text-align: center;
+        }
+
+        .share-section h3 {
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .share-btn:hover {
+            background: var(--ag-primary);
+            color: #050510;
+            border-color: var(--ag-primary);
+            transform: translateY(-3px);
+        }
+
+        .back-to-blog {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #aaa;
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .back-to-blog:hover {
+            color: var(--ag-primary);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .article-banner {
+                height: 250px;
+            }
+            .article-banner-info h1 {
+                font-size: 1.8rem;
+            }
+            .article-body {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav class="ag-header ag-glass">
+        <div class="header-container">
+            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/img/logo.png" alt="Logo" class="lg-logo">
+                <span class="logo-text">LookaGenius</span>
+            </a>
+            <ul class="nav-links">
+            <li><a href="index.html" data-i18n="nav_home">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a></li>
+            <li><a href="courses.html" data-i18n="nav_courses">Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª</a></li>
+            <li><a href="scholarships.html" data-i18n="nav_scholarships">Ã˜Â§Ã™â€žÃ™â€¦Ã™â€ Ã˜Â­</a></li>
+            <li><a href="blog.html" class="active" data-i18n="nav_blog">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></li>
+            <li><a href="services.html" data-i18n="nav_services">Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜ÂªÃ™â€ Ã˜Â§</a></li>
+            <li><a href="join-us.html" data-i18n="nav_join">Ã˜Â§Ã™â€ Ã˜Â¶Ã™â€¦ Ã˜Â¥Ã™â€žÃ™Å Ã™â€ Ã˜Â§</a></li>
+            <li><a href="support.html" data-i18n="nav_about">Ã™â€¦Ã™â€  Ã™â€ Ã˜Â­Ã™â€ </a></li>
+            </ul>
+            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
+                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
+                    <i class="fa-solid fa-globe"></i> English
+                </button>
+            </div>
+            <button class="mobile-menu-btn" onclick="const n=this.closest('.ag-header').querySelector('.nav-links'),i=this.querySelector('i');n.classList.toggle('active');i.className=n.classList.contains('active')?'fa-solid fa-xmark':'fa-solid fa-bars';">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="articleContent">
+        <div style="text-align:center;padding:100px 20px;color:#aaa;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:3rem;margin-bottom:20px;display:block;"></i>
+            Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Å  Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž...
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="script.js"></script>
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            const articleId = parseInt(params.get('id'));
+            const container = document.getElementById('articleContent');
+
+            if (!articleId || !window.db) {
+                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã™Ë†Ã˜Â¬Ã™Ë†Ã˜Â¯</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></div>';
+                return;
+            }
+
+            const articles = window.db.getArticles();
+            const article = articles.find(a => a.id === articleId);
+
+            if (!article) {
+                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã™Ë†Ã˜Â¬Ã™Ë†Ã˜Â¯</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></div>';
+                return;
+            }
+
+            document.title = article.title + ' | LookaGenius';
+
+            container.innerHTML = `
+                <div class="article-banner" style="background-image:url('${article.image || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80'}')">
+                    <div class="article-banner-info">
+                        <a href="blog.html" class="back-to-blog"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a>
+                        <h1 class="ag-text-gradient">${article.title}</h1>
+                        <div class="article-meta">
+                            <span><i class="fa-regular fa-calendar"></i> ${article.date || ''}</span>
+                            <span><i class="fa-regular fa-user"></i> ${article.author || 'LookaGenius'}</span>
+                            <span><i class="fa-regular fa-folder-open"></i> ${article.category === 'education' ? 'Ã˜ÂªÃ˜Â¹Ã™â€žÃ™Å Ã™â€¦' : article.category === 'tech' ? 'Ã˜ÂªÃ™Æ’Ã™â€ Ã™Ë†Ã™â€žÃ™Ë†Ã˜Â¬Ã™Å Ã˜Â§' : article.category || 'Ã˜Â¹Ã˜Â§Ã™â€¦'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="article-body">
+                    ${article.content || '<p>Ã™â€žÃ˜Â§ Ã™Å Ã™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã˜Â¨Ã˜Â¹Ã˜Â¯</p>'}
+                </div>
+                <div class="share-section">
+                    <h3>Ã˜Â´Ã˜Â§Ã˜Â±Ã™Æ’ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž</h3>
+                    <div class="share-buttons">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' ' + window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(article.title)}" target="_blank" class="share-btn"><i class="fa-brands fa-telegram-plane"></i></a>
+                        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('Ã˜ÂªÃ™â€¦ Ã™â€ Ã˜Â³Ã˜Â® Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â§Ã˜Â¨Ã˜Â·'))" class="share-btn"><i class="fa-solid fa-link"></i></button>
+                    </div>
+                </div>
+            `;
+
+            AOS.init({ duration: 1000, once: true });
+        })();
+
+    </script>
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>
