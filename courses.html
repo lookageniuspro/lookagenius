@@ -9,7 +9,7 @@
     <meta name="description" content="تصفح جميع الكورسات المتاحة في LookaGenius Academy. كورسات معتمدة في البرمجة، اللغات، والعلوم.">
     <meta property="og:title" content="LookaGenius Academy | كتالوج الكورسات">
     <meta property="og:description" content="اختر مسارك التعليمي من بين عشرات الكورسات المتخصصة.">
-    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:image" content="assets/img/logo.png">
     <meta property="og:type" content="website">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +21,7 @@
 </head>
 
 <body>
+    <div id="global-nav"></div>
     <main id="app-container" style="padding-top: 120px;">
         <section class="section-container" data-aos="fade-up">
             <div class="section-header mb-4">
@@ -28,14 +29,24 @@
                 <p style="color: var(--text-secondary);">اختر المسار الذي يناسب طموحك المهني والأكاديمي</p>
             </div>
 
-            <!-- Horizontal Filter Bar (Restored Design) -->
+            <!-- Stage Filter -->
+            <div class="filter-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
+                <button class="btn btn-outline active filter-stage-btn" data-stage="all" style="white-space: nowrap;">كل المراحل</button>
+                <button class="btn btn-outline filter-stage-btn" data-stage="primary" style="white-space: nowrap;">🏫 ابتدائي</button>
+                <button class="btn btn-outline filter-stage-btn" data-stage="middle" style="white-space: nowrap;">📚 إعدادي</button>
+                <button class="btn btn-outline filter-stage-btn" data-stage="high" style="white-space: nowrap;">🎓 ثانوي</button>
+            </div>
+
+            <!-- Category Filter -->
             <div class="filter-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 40px; scrollbar-width: none;">
-                <button class="btn btn-outline active filter-btn" data-filter="all" style="white-space: nowrap;">الكل</button>
-                <button class="btn btn-outline filter-btn" data-filter="languages" style="white-space: nowrap;">اللغات العالمية</button>
-                <button class="btn btn-outline filter-btn" data-filter="physics" style="white-space: nowrap;">الفيزياء</button>
-                <button class="btn btn-outline filter-btn" data-filter="chemistry" style="white-space: nowrap;">الكيمياء</button>
-                <button class="btn btn-outline filter-btn" data-filter="math" style="white-space: nowrap;">الرياضيات</button>
-                <button class="btn btn-outline filter-btn" data-filter="tech" style="white-space: nowrap;">البرمجة والتقنية</button>
+                <button class="btn btn-outline active filter-btn" data-filter="all" style="white-space: nowrap;">جميع التصنيفات</button>
+                <button class="btn btn-outline filter-btn" data-filter="languages" style="white-space: nowrap;">🌍 اللغات العالمية</button>
+                <button class="btn btn-outline filter-btn" data-filter="physics" style="white-space: nowrap;">⚡ الفيزياء</button>
+                <button class="btn btn-outline filter-btn" data-filter="chemistry" style="white-space: nowrap;">🧪 الكيمياء</button>
+                <button class="btn btn-outline filter-btn" data-filter="math" style="white-space: nowrap;">📐 الرياضيات</button>
+                <button class="btn btn-outline filter-btn" data-filter="science" style="white-space: nowrap;">🔬 العلوم</button>
+                <button class="btn btn-outline filter-btn" data-filter="social" style="white-space: nowrap;">🌍 الاجتماعيات</button>
+                <button class="btn btn-outline filter-btn" data-filter="tech" style="white-space: nowrap;">💻 البرمجة والتقنية</button>
             </div>
 
             <div id="courses-container" class="subjects-grid">
@@ -47,7 +58,7 @@
     <!-- Social Tools -->
     <div class="float-wrapper">
         <a href="#" class="float-btn telegram hover-trigger" title="قناة التليجرام للمنح"><i class="fa-brands fa-telegram"></i></a>
-        <a href="https://wa.me/1234567890" class="float-btn whatsapp hover-trigger" target="_blank" title="تواصل عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://wa.me/201098768356" class="float-btn whatsapp hover-trigger" target="_blank" title="تواصل عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
     </div>
 
     <!-- Scripts -->
@@ -57,5 +68,7 @@
     <script src="js/auth.js" defer></script>
     <script src="js/app.js" defer></script>
     <script src="js/pages/courses.js" defer></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/chatbot.js"></script>
 </body>
 </html>

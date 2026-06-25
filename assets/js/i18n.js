@@ -14,6 +14,8 @@ const translations = {
         nav_blog: 'Blog',
         nav_services: 'Services',
         nav_scholarships: 'Scholarships',
+        nav_join: 'Join Us',
+        nav_about: 'About Us',
         btn_start: 'Start Now',
         hero_tagline: 'Smart Education Platform',
         hero_title_1: 'Empower Your Skills',
@@ -299,7 +301,18 @@ const translations = {
         yt_title: 'YouTube Channel',
         tg_title: 'Telegram Channel',
         wa_title: 'WhatsApp Contact',
-        swipe_hint: 'Swipe to see more teachers'
+        swipe_hint: 'Swipe to see more teachers',
+        label_first_name: 'First Name',
+        label_father_name: 'Father Name',
+        label_grandfather_name: 'Grandfather Name',
+        label_family_name: 'Family Name',
+        label_phone: 'Phone Number',
+        label_country: 'Country',
+        label_address: 'Address',
+        label_whatsapp: 'WhatsApp Number',
+        label_parent_phone: 'Parent / Guardian Phone',
+        label_education_stage: 'Educational Stage',
+        label_avatar: 'Profile Picture'
     },
     ar: {
         dir: 'rtl',
@@ -311,6 +324,8 @@ const translations = {
         nav_blog: 'المدونة',
         nav_services: 'خدماتنا',
         nav_scholarships: 'المنح',
+        nav_join: 'انضم إلينا',
+        nav_about: 'من نحن',
         btn_start: 'ابدأ الآن',
         hero_tagline: 'منصة تعليمية ذكية',
         hero_title_1: 'طور مهاراتك الخاصة',
@@ -532,7 +547,18 @@ const translations = {
         yt_title: 'قناة اليوتيوب',
         tg_title: 'قناة التليجرام للمنح',
         wa_title: 'تواصل معنا عبر واتساب',
-        swipe_hint: 'اسحب لرؤية المزيد من المعلمين'
+        swipe_hint: 'اسحب لرؤية المزيد من المعلمين',
+        label_first_name: 'الاسم الأول',
+        label_father_name: 'اسم الأب',
+        label_grandfather_name: 'اسم الجد',
+        label_family_name: 'اسم العائلة',
+        label_phone: 'رقم الهاتف',
+        label_country: 'الدولة',
+        label_address: 'العنوان',
+        label_whatsapp: 'رقم واتساب',
+        label_parent_phone: 'رقم ولي الأمر',
+        label_education_stage: 'المرحلة التعليمية',
+        label_avatar: 'الصورة الشخصية'
     }
 };
 
@@ -596,7 +622,9 @@ function setLanguage(lang) {
     }));
 }
 
-// Initialize
+// Initialize - run immediately (sync) for static content, then again on DOMContentLoaded for dynamic content
+setLanguage(currentLang);
+
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
     
@@ -608,3 +636,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Also re-run when components.js finishes injecting nav
+document.addEventListener('navRendered', () => setLanguage(currentLang));

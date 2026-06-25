@@ -282,45 +282,79 @@
         }
     }
 
-    // 6. Course Filter & Search Logic
+    // 6. Course Filter & Search Logic (category + stage + price)
     function initCourseFilter() {
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const stageBtns = document.querySelectorAll('.filter-stage-btn');
+        const priceRange = document.getElementById('priceRange');
+        const priceLabel = document.getElementById('priceLabel');
         const courseSearch = document.getElementById('courseSearch');
         const courseCards = document.querySelectorAll('.course-card');
 
+        let activeCategory = 'all';
+        let activeStage = 'all';
+        let maxPrice = priceRange ? parseInt(priceRange.value) : 9999;
+
         const filterCourses = () => {
-            const query = courseSearch.value.toLowerCase().trim();
-            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            const query = courseSearch ? courseSearch.value.toLowerCase().trim() : '';
 
             courseCards.forEach(card => {
-                const title = card.querySelector('.course-title').innerText.toLowerCase();
-                const desc = card.querySelector('.subject-desc').innerText.toLowerCase();
-                const categories = card.getAttribute('data-category') || '';
-                
-                const matchesSearch = title.includes(query) || desc.includes(query);
-                const matchesFilter = activeFilter === 'all' || categories.split(' ').includes(activeFilter);
+                const titleEl = card.querySelector('.subject-title') || card.querySelector('.course-title') || card.querySelector('h3');
+                const descEl = card.querySelector('.subject-desc') || card.querySelector('.course-desc') || card.querySelector('p');
+                const title = titleEl ? titleEl.innerText.toLowerCase() : '';
+                const desc = descEl ? descEl.innerText.toLowerCase() : '';
+                const categories = (card.getAttribute('data-category') || '').toLowerCase();
+                const coursePrice = parseFloat(card.getAttribute('data-price')) || 0;
+                const stage = card.getAttribute('data-stage') || 'all';
 
-                if (matchesSearch && matchesFilter) {
+                const matchesSearch = title.includes(query) || desc.includes(query);
+                const matchesCategory = activeCategory === 'all' || categories.split(' ').includes(activeCategory);
+                const matchesStage = activeStage === 'all' || stage === activeStage || stage === 'all';
+                const matchesPrice = coursePrice <= maxPrice;
+
+                if (matchesSearch && matchesCategory && matchesStage && matchesPrice) {
                     card.style.display = 'block';
                     card.setAttribute('data-aos', 'fade-up');
                 } else {
                     card.style.display = 'none';
                 }
             });
-            AOS.refresh();
+            if (typeof AOS !== 'undefined') AOS.refresh();
         };
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                activeCategory = btn.getAttribute('data-filter');
                 filterCourses();
             });
         });
 
+        if (stageBtns.length > 0) {
+            stageBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    stageBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeStage = btn.getAttribute('data-stage');
+                    filterCourses();
+                });
+            });
+        }
+
+        if (priceRange) {
+            priceRange.addEventListener('input', () => {
+                maxPrice = parseInt(priceRange.value);
+                if (priceLabel) priceLabel.textContent = '$' + maxPrice;
+                filterCourses();
+            });
+        }
+
         if (courseSearch) {
             courseSearch.addEventListener('input', filterCourses);
         }
+
+        setTimeout(filterCourses, 500);
     }
 
     // Initialization
@@ -332,5 +366,21 @@
         initCursor();
         initMobileMenu();
         initCourseFilter();
+        // تحميل وتشغيل المساعد الذكي
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = src; s.onload = resolve; s.onerror = reject;
+                document.body.appendChild(s);
+            });
+        }
+        setTimeout(async () => {
+            if (document.getElementById('lkg-chat-container')) return;
+            try {
+                await loadScript('js/ai-assistant.js');
+                await loadScript('js/pages/ai-chat.js');
+                if (window.AI_CHAT) AI_CHAT.init();
+            } catch(e) { console.warn('AI Assistant load skipped'); }
+        }, 3000);
     });
 })();

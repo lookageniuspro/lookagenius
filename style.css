@@ -419,11 +419,35 @@ h1 span {
     color: #fff;
 }
 
+.filter-stage-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-family: 'Cairo', sans-serif;
+}
+.filter-stage-btn:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+}
+
 .filter-btn.active {
     background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
     color: white;
     border: none;
     box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+}
+
+.filter-stage-btn.active {
+    background: rgba(0, 212, 255, 0.12);
+    color: var(--neon-blue);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.15);
 }
 
 #courseSearch:focus {

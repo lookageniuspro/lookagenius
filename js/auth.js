@@ -89,6 +89,18 @@ window.auth = {
             'admin': 'Admin'
         };
         return roles[role] || 'User';
+    },
+
+    getRoleAr: (role) => {
+        const roles = {
+            'student': 'طالب',
+            'parent': 'ولي أمر',
+            'teacher': 'مدرس',
+            'engineer': 'مهندس',
+            'accountant': 'محاسب',
+            'admin': 'مدير'
+        };
+        return roles[role] || 'مستخدم';
     }
 };
 

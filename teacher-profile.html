@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Profile | LookaGenius</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
+    <style>
+        .tp-hero {
+            padding: 120px 5% 60px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(0,212,255,0.08), transparent);
+        }
+        .tp-avatar {
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 4px solid var(--neon-blue);
+            object-fit: cover;
+            box-shadow: 0 0 40px rgba(0,212,255,0.3);
+            margin-bottom: 20px;
+        }
+        .tp-name { font-size: 2rem; font-weight: 900; margin-bottom: 5px; }
+        .tp-role { color: var(--neon-blue); font-size: 1.1rem; margin-bottom: 20px; }
+        .tp-bio { color: var(--text-secondary); max-width: 500px; margin: 0 auto 30px; line-height: 1.7; }
+        .tp-share { display: inline-flex; gap: 10px; align-items: center; padding: 12px 25px; background: rgba(255,255,255,0.05); border-radius: 50px; border: 1px solid var(--border-color); color: white; cursor: pointer; font-size: 0.9rem; }
+        .tp-share:hover { border-color: var(--neon-blue); background: rgba(0,212,255,0.1); }
+        .tp-courses { padding: 40px 5% 80px; max-width: 1200px; margin: 0 auto; }
+        .tp-courses h2 { margin-bottom: 30px; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav class="ag-header ag-glass">
+        <div class="header-container">
+            <a href="index.html" class="logo" style="display:flex;align-items:center;gap:12px;">
+                <img src="assets/img/logo.png" alt="Logo" class="lg-logo" style="height:40px;width:40px;">
+                <span class="logo-text">LookaGenius</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="login.html" class="ag-btn" style="padding:8px 20px;font-size:13px;">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="tp-hero" id="tpHero">
+        <img id="tpAvatar" class="tp-avatar" src="" alt="Teacher">
+        <div class="tp-name" id="tpName">Loading...</div>
+        <div class="tp-role" id="tpRole"></div>
+        <div class="tp-bio" id="tpBio"></div>
+        <button class="tp-share" onclick="copyProfileLink()"><i class="fa-solid fa-link"></i> Copy Profile Link</button>
+        <a id="tpWhatsapp" href="#" target="_blank" class="tp-share" style="margin-inline-start:10px;text-decoration:none;"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> Contact on WhatsApp</a>
+    </div>
+
+    <div class="tp-courses" id="tpCourses">
+        <h2><i class="fa-solid fa-graduation-cap" style="color:var(--neon-violet);"></i> Courses by This Teacher</h2>
+        <div class="courses-grid" id="tpCoursesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;"></div>
+        <div id="tpNoCourses" style="text-align:center;padding:60px 20px;color:var(--text-secondary);display:none;">
+            <i class="fa-solid fa-book-open" style="font-size:3rem;display:block;margin-bottom:15px;opacity:0.3;"></i>
+            <p>No courses available yet.</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        AOS.init({ duration: 800 });
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function copyProfileLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Profile link copied!');
+            }).catch(() => {
+                prompt('Copy this link:', url);
+            });
+        }
+
+        function loadProfile() {
+            const teacherId = parseInt(getQueryParam('id'));
+            if (!teacherId) {
+                document.getElementById('tpName').textContent = 'Teacher not found';
+                document.getElementById('tpRole').textContent = 'Invalid profile link';
+                return;
+            }
+
+            const user = window.db.getUsers().find(u => u.id === teacherId && u.type === 'teacher');
+            if (!user) {
+                document.getElementById('tpName').textContent = 'Teacher not found';
+                document.getElementById('tpRole').textContent = 'This teacher profile does not exist.';
+                return;
+            }
+
+            const avatar = user.avatar || 'https://ui-avatars.com/api/?name='+encodeURIComponent(user.name)+'&background=0D8ABC&color=fff&size=160';
+            document.getElementById('tpAvatar').src = avatar;
+            document.getElementById('tpAvatar').onerror = function() {
+                this.src = 'https://ui-avatars.com/api/?name='+encodeURIComponent(user.name)+'&background=0D8ABC&color=fff&size=160';
+            };
+            document.getElementById('tpName').textContent = user.name;
+            
+            // Get teacher specialization from team or role
+            const teamMember = window.db.getTeam().find(t => t.userId === teacherId);
+            const specialization = teamMember ? teamMember.role : (user.specialization || user.type);
+            document.getElementById('tpRole').textContent = specialization;
+
+            const bio = user.bio || (teamMember ? teamMember.role + ' at LookaGenius Academy' : 'Instructor at LookaGenius Academy');
+            document.getElementById('tpBio').textContent = bio;
+
+            // WhatsApp link
+            const wa = user.whatsapp || '';
+            if (wa) {
+                document.getElementById('tpWhatsapp').href = 'https://wa.me/' + wa.replace(/[^0-9]/g,'') + '?text=Hello%20' + encodeURIComponent(user.name) + '%2C%20I%20saw%20your%20profile%20on%20LookaGenius';
+            } else {
+                document.getElementById('tpWhatsapp').style.display = 'none';
+            }
+
+            // Courses
+            const courses = window.db.getCourses().filter(c => (c.teacherIds || []).includes(teacherId));
+            const grid = document.getElementById('tpCoursesGrid');
+            const noCourses = document.getElementById('tpNoCourses');
+
+            if (courses.length === 0) {
+                grid.innerHTML = '';
+                noCourses.style.display = 'block';
+                return;
+            }
+            noCourses.style.display = 'none';
+            grid.innerHTML = courses.map(c => {
+                const img = c.image || 'https://picsum.photos/seed/'+c.id+'/400/250';
+                return `
+                <a href="course-view.html?id=${c.id}" class="course-card" style="text-decoration:none;display:block;background:rgba(255,255,255,0.03);border:1px solid var(--border-color);border-radius:16px;overflow:hidden;transition:all 0.3s;">
+                    <div style="height:160px;overflow:hidden;">
+                        <img src="${img}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='https://picsum.photos/seed/${c.id}/400/250'">
+                    </div>
+                    <div style="padding:16px;">
+                        <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px;">${c.title}</h3>
+                        <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:8px;">${c.duration || ''}</p>
+                        <span style="color:var(--success);font-weight:700;font-size:0.9rem;">${window.getCurrencySymbol ? getCurrencySymbol(c.currency||'USD') : '$'}${c.price}</span>
+                    </div>
+                </a>`;
+            }).join('');
+        }
+
+        loadProfile();
+    </script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>

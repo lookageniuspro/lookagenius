@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.auth.currentUser || window.auth.currentUser.type !== 'student') return;
 
     const user = window.auth.currentUser;
-    const enrolledCourses = window.db.getCourses().filter(c => c.studentsEnrolled.includes(user.id));
+    const enrolledCourses = window.db.getCourses().filter(c => (c.studentsEnrolled || []).includes(user.id));
     
     const sidebar = `
         <li><a href="#" class="sidebar-link active" style="display: block; padding: 15px 20px;"><i class="fa-solid fa-home"></i> الرئيسية</a></li>

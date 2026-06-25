@@ -216,15 +216,17 @@
     <nav class="ag-header ag-glass" id="mainHeader">
         <div class="header-container">
             <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
-                <img src="assets/img/logo.png" alt="Logo" style="height: 45px; width: auto;">
+                <img src="assets/img/logo.png" alt="Logo" class="lg-logo">
                 <span class="logo-text">LookaGenius</span>
             </a>
             <ul class="nav-links">
-                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
-                <li><a href="index.html#courses" data-i18n="nav_courses">Courses</a></li>
-                <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
-                <li><a href="services.html" class="active" data-i18n="nav_services">Services</a></li>
-                <li><a href="index.html#scholarships" data-i18n="nav_scholarships">Scholarships</a></li>
+            <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="courses.html" data-i18n="nav_courses">Courses</a></li>
+            <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
+            <li><a href="services.html" class="active" data-i18n="nav_services">Services</a></li>
+            <li><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a></li>
+            <li><a href="join-us.html" data-i18n="nav_join">Join Us</a></li>
+            <li><a href="support.html" data-i18n="nav_about">About Us</a></li>
             </ul>
             <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
@@ -242,196 +244,8 @@
         </p>
     </section>
 
-    <div class="service-grid">
-        <!-- Service 1: Academics -->
-        <div class="service-card ag-glass" data-aos="fade-up">
-            <div class="service-category-tag" data-i18n="serv_1_cat">Academics & Teachers</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <h3 data-i18n="serv_1_t">Integrated Educational Platforms</h3>
-            <p data-i18n="serv_1_d">Turn your academic expertise into passive income. We build your platform in 48 hours.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_1_f1">LMS integrated with Zoom/Teams</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_1_f2">CRM & Student Communication System</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_1_f3">Course Store (Shopify/Woo)</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_1_p">1500 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_1_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 2: Engineers -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-category-tag" data-i18n="serv_2_cat">Engineers & Construction</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-helmet-safety"></i>
-            </div>
-            <h3 data-i18n="serv_2_t">Engineering Project Management</h3>
-            <p data-i18n="serv_2_d">Every project deserves a professional showcase. Build a site that reflects your quality.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_2_f1">Professional Portfolio (Webflow)</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_2_f2">Project Management (Asana/ClickUp)</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_2_f3">Cloud System for Quantities & Reports</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_2_p">1000 - 3000 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_2_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 3: Accountants -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-category-tag" data-i18n="serv_3_cat">Accounting Offices</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-calculator"></i>
-            </div>
-            <h3 data-i18n="serv_3_t">Accounting & Client Systems</h3>
-            <p data-i18n="serv_3_d">Automate your invoicing and client management. Focus on consulting while we handle the admin.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_3_f1">Specialized CRM for Accountants</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_3_f2">Secure Client Portal for Documents</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_3_f3">SEO Optimized Site & Lead Gen</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_3_p">800 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_3_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 4: Lawyers -->
-        <div class="service-card ag-glass" data-aos="fade-up">
-            <div class="service-category-tag" data-i18n="serv_4_cat">Law Firms</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-scale-balanced"></i>
-            </div>
-            <h3 data-i18n="serv_4_t">Case & Consultation Management</h3>
-            <p data-i18n="serv_4_d">Get found first on Google with a professional booking system and legal blog.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_4_f1">Automated Consultation Booking</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_4_f2">Case Management & File Tracking</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_4_f3">Professional Legal Site (SEO)</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_4_p">1000 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_4_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 5: Influencers -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-category-tag" data-i18n="serv_5_cat">Content Creators</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-clapperboard"></i>
-            </div>
-            <h3 data-i18n="serv_5_t">Digital Product Platforms</h3>
-            <p data-i18n="serv_5_d">Convert your followers into customers with a unified platform for your content and products.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_5_f1">Portfolio & Digital Store</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_5_f2">Sponsor & Deal Management</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_5_f3">Exclusive Subscription (Patreon-style)</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_5_p">800 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_5_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 6: Doctors -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-category-tag" data-i18n="serv_6_cat">Doctors & Clinics</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-user-doctor"></i>
-            </div>
-            <h3 data-i18n="serv_6_t">Medical Booking Systems</h3>
-            <p data-i18n="serv_6_d">Improve patient experience with one-click bookings and automated reminders.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_6_f1">Appointment System & Reminders</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_6_f2">Patient File Management (HIPAA)</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_6_f3">Tele-consultation Platform</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_6_p">1200 - 4000 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_6_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 7: Uni Professors -->
-        <div class="service-card ag-glass" data-aos="fade-up">
-            <div class="service-category-tag" data-i18n="serv_7_cat">University Professors</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-chalkboard-user"></i>
-            </div>
-            <h3 data-i18n="serv_7_t">University & Research Platforms</h3>
-            <p data-i18n="serv_7_d">Build an academic site to display your research and manage student assignments.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_7_f1">LMS with Attendance & Assignments</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_7_f2">Academic Site for Research DB</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_7_f3">E-Testing with Auto-Grading</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_7_p">1000 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_7_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 8: Retail Stores -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-category-tag" data-i18n="serv_8_cat">Retail Stores</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-basket-shopping"></i>
-            </div>
-            <h3 data-i18n="serv_8_t">E-commerce Stores</h3>
-            <p data-i18n="serv_8_d">Your competitors are online. Build your store to work 24/7 with delivery solutions.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_8_f1">Shopify Store with Delivery Integration</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_8_f2">ERP & Inventory Management</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_8_f3">Client Loyalty & Rewards System</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_8_p">800 - 2000 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_8_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 9: Pharmacies -->
-        <div class="service-card ag-glass" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-category-tag" data-i18n="serv_9_cat">Pharmacies</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-prescription-bottle-medical"></i>
-            </div>
-            <h3 data-i18n="serv_9_t">Online Pharmacies & Delivery</h3>
-            <p data-i18n="serv_9_d">Be the first in your area to offer digital services and prescription tracking.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_9_f1">Online Store & Prescription Booking</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_9_f2">Expiry Tracking & Stock MGMT</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_9_f3">Medicine Reminders for Patients</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_9_p">1000 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_9_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
-
-        <!-- Service 10: Gyms -->
-        <div class="service-card ag-glass" data-aos="fade-up">
-            <div class="service-category-tag" data-i18n="serv_10_cat">Gyms</div>
-            <div class="service-icon-wrapper">
-                <i class="fa-solid fa-dumbbell"></i>
-            </div>
-            <h3 data-i18n="serv_10_t">Gym Management Systems</h3>
-            <p data-i18n="serv_10_d">Transform your gym into an integrated digital platform for memberships and bookings.</p>
-            <ul class="service-features">
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_10_f1">Class Booking & Trainer Schedules</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_10_f2">Membership MGMT with Auto-Renewal</span></li>
-                <li><i class="fa-solid fa-circle-check"></i> <span data-i18n="serv_10_f3">Digital Supplement & Gear Store</span></li>
-            </ul>
-            <div style="margin-top: 15px; color: var(--success); font-weight: bold; font-size: 0.9rem;">
-                <span data-i18n="serv_pkg_prof">Professional Package: </span><span data-i18n="serv_10_p">1000 - 2500 USD</span>
-            </div>
-            <button class="ag-btn service-booking-btn" data-service-key="serv_10_t" data-i18n="serv_3_btn" style="width: 100%; font-size: 14px; margin-top: auto; cursor: pointer; border: none; border-radius: 50px; background: linear-gradient(135deg, var(--ag-primary), var(--ag-secondary)); color: white; padding: 12px;">Order Service Now</button>
-        </div>
+    <div class="service-grid" id="servicesContainer">
+        <!-- يتم ريندر الخدمات ديناميكياً من db.js عبر services.js -->
     </div>
 
     <!-- Workflow Section -->
@@ -472,7 +286,7 @@
 
     <!-- Footer Space -->
     <footer style="padding: 60px 8%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 60px; background: rgba(0,0,0,0.3);">
-        <img src="assets/img/logo.png" alt="Logo" style="height: 50px; margin-bottom: 20px;">
+        <img src="assets/img/logo.png" alt="Logo" class="lg-logo" style="height:50px;width:50px;margin-bottom:20px;">
         <p style="color: #666; font-size: 14px;">© 2026 LookaGenius Academy. جميع الحقوق محفوظة.</p>
     </section>
 
@@ -481,7 +295,7 @@
         <a href="https://youtube.com/@LookaGenius" class="social-btn youtube-btn" title="YouTube">
             <i class="fa-brands fa-youtube"></i>
         </a>
-        <a href="https://wa.me/1234567890" class="social-btn whatsapp-btn" title="WhatsApp">
+        <a href="https://wa.me/201098768356" class="social-btn whatsapp-btn" title="WhatsApp">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
     </div>
@@ -493,21 +307,17 @@
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/i18n.js"></script>
     <script src="script.js"></script>
+
+    <!-- Database & Auth (localStorage mock) -->
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+
+    <!-- Page-specific: Dynamic services rendering -->
+    <script src="js/pages/services.js"></script>
+
     <script>
-        document.querySelectorAll('.service-booking-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const serviceKey = btn.getAttribute('data-service-key');
-                const lang = localStorage.getItem('selectedLanguage') || 'en';
-                const prefix = translations[lang]['wa_service_prefix'] || 'I want to inquire about: ';
-                const serviceName = translations[lang][serviceKey] || 'Our Services';
-                
-                const message = encodeURIComponent(prefix + serviceName);
-                const whatsappUrl = `https://wa.me/201098768356?text=${message}`;
-                
-                window.open(whatsappUrl, '_blank');
-            });
-        });
         AOS.init({ duration: 1000, once: true });
     </script>
+    <script src="assets/js/chatbot.js"></script>
 </body>
 </html>

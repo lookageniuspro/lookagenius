@@ -107,14 +107,17 @@
     <nav class="ag-header ag-glass">
         <div class="header-container">
             <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 10px;">
-                <img src="assets/img/logo.png" alt="Logo" style="height: 40px;">
+                <img src="assets/img/logo.png" alt="Logo" class="lg-logo" style="height:40px;width:40px;">
                 <span class="logo-text">LookaGenius</span>
             </a>
             <ul class="nav-links">
-                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
-                <li><a href="index.html#courses" data-i18n="nav_courses">Courses</a></li>
-                <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
-                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+            <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="courses.html" data-i18n="nav_courses">Courses</a></li>
+            <li><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a></li>
+            <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
+            <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+            <li><a href="join-us.html" data-i18n="nav_join">Join Us</a></li>
+            <li><a href="support.html" data-i18n="nav_about">About Us</a></li>
             </ul>
             <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
@@ -126,19 +129,122 @@
 
     <div class="bg-particles"></div>
 
-    <div class="auth-container" id="loginBox" data-aos="zoom-in">
+    <div class="auth-container" id="loginBox" data-aos="zoom-in" style="max-width:520px;max-height:90vh;overflow-y:auto;">
         <div class="logo" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <img src="assets/img/logo.png" alt="LookaGenius Logo" style="height: 60px;">
+            <img src="assets/img/logo.png" alt="LookaGenius Logo" class="lg-logo" style="height:60px;width:60px;">
             <span class="logo-text">LookaGenius</span>
         </div>
         <h2 id="authTitle" data-i18n="login_title">Login</h2>
         
         <form id="authForm">
-            <div class="form-group" id="nameGroup" style="display: none;">
-                <label data-i18n="name_label">Full Name</label>
-                <input type="text" id="fullName" placeholder="...">
+            <!-- Signup-only fields -->
+            <div id="signupFields" style="display:none;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="form-group">
+                        <label data-i18n="label_first_name">First Name</label>
+                        <input type="text" id="firstName" placeholder="First">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_father_name">Father Name</label>
+                        <input type="text" id="fatherName" placeholder="Father">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_grandfather_name">Grandfather Name</label>
+                        <input type="text" id="grandfatherName" placeholder="Grandfather">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_family_name">Family Name</label>
+                        <input type="text" id="familyName" placeholder="Family">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="+20 100 000 0000">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_country">Country</label>
+                    <input type="text" id="country" placeholder="e.g. Egypt">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_address">Address</label>
+                    <input type="text" id="address" placeholder="City, Street...">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_whatsapp">WhatsApp Number</label>
+                    <div style="display:flex;gap:8px;">
+                        <select id="countryCode" style="width:130px;flex-shrink:0;padding:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:white;outline:none;">
+                            <option value="+20">🇪🇬 +20</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+974">🇶🇦 +974</option>
+                            <option value="+973">🇧🇭 +973</option>
+                            <option value="+968">🇴🇲 +968</option>
+                            <option value="+965">🇰🇼 +965</option>
+                            <option value="+962">🇯🇴 +962</option>
+                            <option value="+961">🇱🇧 +961</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+31">🇳🇱 +31</option>
+                            <option value="+46">🇸🇪 +46</option>
+                            <option value="+47">🇳🇴 +47</option>
+                            <option value="+45">🇩🇰 +45</option>
+                            <option value="+358">🇫🇮 +358</option>
+                            <option value="+30">🇬🇷 +30</option>
+                            <option value="+90">🇹🇷 +90</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+55">🇧🇷 +55</option>
+                            <option value="+52">🇲🇽 +52</option>
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+212">🇲🇦 +212</option>
+                            <option value="+216">🇹🇳 +216</option>
+                            <option value="+213">🇩🇿 +213</option>
+                        </select>
+                        <input type="tel" id="whatsapp" placeholder="100 000 0000" style="flex:1;">
+                    </div>
+                </div>
+                <div class="form-group" id="parentPhoneGroup">
+                    <label data-i18n="label_parent_phone">Parent / Guardian Phone</label>
+                    <div style="display:flex;gap:8px;">
+                        <select id="parentCode" style="width:130px;flex-shrink:0;padding:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:white;outline:none;">
+                            <option value="+20">🇪🇬 +20</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+974">🇶🇦 +974</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+49">🇩🇪 +49</option>
+                        </select>
+                        <input type="tel" id="parentPhone" placeholder="Parent phone" style="flex:1;">
+                    </div>
+                </div>
+                <div class="form-group" id="educationStageGroup">
+                    <label data-i18n="label_education_stage">Educational Stage</label>
+                    <select id="educationStage" style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:white;outline:none;">
+                        <option value="">-- Select --</option>
+                        <option value="kindergarten">Kindergarten</option>
+                        <option value="primary">Primary</option>
+                        <option value="middle">Middle School</option>
+                        <option value="high">High School</option>
+                        <option value="university">University</option>
+                        <option value="postgraduate">Postgraduate</option>
+                        <option value="career">Career Development</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_avatar">Profile Picture</label>
+                    <input type="file" id="avatarInput" accept="image/*" style="padding:8px;">
+                    <div id="avatarPreview" style="margin-top:8px;display:none;">
+                        <img id="avatarPreviewImg" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--neon-blue);object-fit:cover;">
+                    </div>
+                </div>
             </div>
-            
+
             <div class="form-group">
                 <label data-i18n="email_label">Email Address</label>
                 <input type="email" id="email" placeholder="example@lookagenius.com" required>
@@ -151,12 +257,12 @@
 
             <div class="form-group" id="roleGroup" style="display: none;">
                 <label data-i18n="role_label">Account Type</label>
-                <select id="role">
-                    <option value="student">طالب/متدرب</option>
-                    <option value="teacher">مدرس/أكاديمي</option>
-                    <option value="parent">ولي أمر</option>
-                    <option value="engineer">مهندس</option>
-                    <option value="accountant">محاسب</option>
+                <select id="role" style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:white;outline:none;">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="parent">Parent</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="accountant">Accountant</option>
                 </select>
             </div>
             
@@ -178,6 +284,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/i18n.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
     <script src="script.js"></script>
     <script>
         AOS.init({ duration: 800 });
@@ -187,42 +295,70 @@
         const authTitle = document.getElementById('authTitle');
         const submitBtn = document.getElementById('submitBtn');
         const switchText = document.getElementById('switchText');
-        const nameGroup = document.getElementById('nameGroup');
         const roleGroup = document.getElementById('roleGroup');
+        const signupFields = document.getElementById('signupFields');
+        const parentPhoneGroup = document.getElementById('parentPhoneGroup');
+        const educationStageGroup = document.getElementById('educationStageGroup');
         
         let isLogin = true;
+        let uploadedAvatar = '';
+
+        // Avatar preview
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                uploadedAvatar = ev.target.result;
+                document.getElementById('avatarPreviewImg').src = uploadedAvatar;
+                document.getElementById('avatarPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Show/hide student-specific fields based on role
+        document.getElementById('role').addEventListener('change', function() {
+            const isStudent = this.value === 'student';
+            parentPhoneGroup.style.display = isStudent ? 'block' : 'none';
+            educationStageGroup.style.display = isStudent ? 'block' : 'none';
+        });
 
         function updatePageSpecificI18n(lang) {
+            const t = translations[lang] || {};
             if (isLogin) {
                 authTitle.setAttribute('data-i18n', 'login_title');
                 submitBtn.setAttribute('data-i18n', 'login_btn');
                 switchText.setAttribute('data-i18n', 'no_account');
                 toggleAuth.setAttribute('data-i18n', 'toggle_signup');
+                authTitle.innerHTML = t.login_title || 'Login';
+                submitBtn.innerHTML = t.login_btn || 'Login';
+                switchText.innerHTML = t.no_account || "Don't have an account?";
+                toggleAuth.innerHTML = t.toggle_signup || 'Create new account';
             } else {
                 authTitle.setAttribute('data-i18n', 'signup_title');
                 submitBtn.setAttribute('data-i18n', 'signup_btn');
                 switchText.setAttribute('data-i18n', 'have_account');
                 toggleAuth.setAttribute('data-i18n', 'toggle_login');
+                authTitle.innerHTML = t.signup_title || 'Create Account';
+                submitBtn.innerHTML = t.signup_btn || 'Sign Up';
+                switchText.innerHTML = t.have_account || 'Already have an account?';
+                toggleAuth.innerHTML = t.toggle_login || 'Login here';
             }
-            // Trigger translation for these dynamic keys
-            document.querySelectorAll('#authTitle, #submitBtn, #switchText, #toggleAuth').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
-            });
         }
 
         toggleAuth.addEventListener('click', (e) => {
             e.preventDefault();
             isLogin = !isLogin;
-            nameGroup.style.display = isLogin ? "none" : "block";
-            roleGroup.style.display = isLogin ? "none" : "block";
-            document.getElementById('fullName').required = !isLogin;
+            signupFields.style.display = isLogin ? 'none' : 'block';
+            roleGroup.style.display = isLogin ? 'none' : 'block';
             updatePageSpecificI18n(currentLang);
+            // Show parent/education fields based on role
+            if (!isLogin) {
+                document.getElementById('role').dispatchEvent(new Event('change'));
+            }
         });
 
-        // Handle form submission via auth.js
+        // Handle form submission
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -231,18 +367,80 @@
             submitBtn.textContent = '...';
 
             if (isLogin) {
-                if(typeof login === "function") await login(email, password);
-                else console.warn("auth.js failed to load Supabase.");
+                try {
+                    if (typeof window.auth !== 'undefined' && window.db) {
+                        const result = window.auth.login(email, password);
+                        if (result && result.success) {
+                            const role = result.user.type || 'student';
+                            window.location.href = `dashboard-${role}.html`;
+                            return;
+                        }
+                    }
+                } catch(e) {}
+                if (typeof login === "function") await login(email, password);
+                else {
+                    alert('Login failed. Check your email and password.');
+                }
             } else {
-                const fullName = document.getElementById('fullName').value;
+                const firstName = document.getElementById('firstName').value.trim();
+                const fatherName = document.getElementById('fatherName').value.trim();
+                const grandfatherName = document.getElementById('grandfatherName').value.trim();
+                const familyName = document.getElementById('familyName').value.trim();
+                const fullName = [firstName, fatherName, grandfatherName, familyName].filter(Boolean).join(' ');
                 const role = document.getElementById('role').value;
-                if(typeof signUp === "function") await signUp(email, password, fullName, role);
-                else console.warn("auth.js failed to load Supabase.");
+                const phone = document.getElementById('phone').value.trim();
+                const country = document.getElementById('country').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const countryCode = document.getElementById('countryCode').value;
+                const whatsapp = document.getElementById('whatsapp').value.trim();
+                const parentCode = document.getElementById('parentCode').value;
+                const parentPhone = document.getElementById('parentPhone').value.trim();
+                const educationStage = document.getElementById('educationStage').value;
+
+                if (!firstName || !familyName) {
+                    alert('Please enter at least your first and family name.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = translations[currentLang]?.signup_btn || 'Sign Up';
+                    return;
+                }
+
+                try {
+                    if (typeof window.db !== 'undefined') {
+                        const newUser = window.db.addUser({
+                            name: fullName,
+                            firstName: firstName,
+                            fatherName: fatherName,
+                            grandfatherName: grandfatherName,
+                            familyName: familyName,
+                            email: email,
+                            password: password,
+                            type: role,
+                            phone: phone,
+                            avatar: uploadedAvatar,
+                            country: country,
+                            address: address,
+                            countryCode: countryCode,
+                            whatsapp: countryCode + whatsapp,
+                            parentPhone: role === 'student' ? parentCode + parentPhone : '',
+                            educationStage: role === 'student' ? educationStage : ''
+                        });
+                        const result = window.auth.login(email, password);
+                        if (result && result.success) {
+                            window.location.href = `dashboard-${role}.html`;
+                            return;
+                        }
+                    }
+                } catch(e) {}
+                if (typeof signUp === "function") await signUp(email, password, fullName, role);
+                else {
+                    alert('Registration complete! You can now log in.');
+                }
             }
 
             submitBtn.disabled = false;
-            updatePageSpecificI18n(currentLang); // Reset button text
+            updatePageSpecificI18n(currentLang);
         });
     </script>
+    <script src="assets/js/chatbot.js"></script>
 </body>
 </html>
