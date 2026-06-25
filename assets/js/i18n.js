@@ -14,8 +14,6 @@ const translations = {
         nav_blog: 'Blog',
         nav_services: 'Services',
         nav_scholarships: 'Scholarships',
-        nav_join: 'Join Us',
-        nav_about: 'About Us',
         btn_start: 'Start Now',
         hero_tagline: 'Smart Education Platform',
         hero_title_1: 'Empower Your Skills',
@@ -301,36 +299,7 @@ const translations = {
         yt_title: 'YouTube Channel',
         tg_title: 'Telegram Channel',
         wa_title: 'WhatsApp Contact',
-        swipe_hint: 'Swipe to see more teachers',
-        label_first_name: 'First Name',
-        label_father_name: 'Father Name',
-        label_grandfather_name: 'Grandfather Name',
-        label_family_name: 'Family Name',
-        label_phone: 'Phone Number',
-        label_country: 'Country',
-        label_address: 'Address',
-        label_whatsapp: 'WhatsApp Number',
-        label_parent_phone: 'Parent / Guardian Phone',
-        label_education_stage: 'Educational Stage',
-        chat_title: 'LookaGenius Assistant',
-        chat_welcome: 'Welcome to LookaGenius! I am your academic assistant. Ask me about courses, teachers, or anything else!',
-        label_avatar: 'Profile Picture',
-        close: 'Close',
-        nav_admin_dashboard: 'Dashboard',
-        nav_admin_users: 'Users',
-        nav_admin_courses: 'Courses',
-        nav_admin_scholarships: 'Scholarships',
-        nav_admin_articles: 'Articles',
-        nav_admin_services: 'Services',
-        nav_admin_team: 'Team',
-        nav_admin_financials: 'Financials',
-        nav_admin_collaborations: 'Collaborations',
-        nav_admin_settlements: 'Settlements',
-        nav_admin_chatlogs: 'Chat Logs',
-        nav_admin_notifications: 'Notifications',
-        nav_admin_settings: 'Settings',
-        nav_admin_view_site: 'View Site',
-        nav_admin_logout: 'Logout'
+        swipe_hint: 'Swipe to see more teachers'
     },
     ar: {
         dir: 'rtl',
@@ -342,8 +311,6 @@ const translations = {
         nav_blog: 'المدونة',
         nav_services: 'خدماتنا',
         nav_scholarships: 'المنح',
-        nav_join: 'انضم إلينا',
-        nav_about: 'من نحن',
         btn_start: 'ابدأ الآن',
         hero_tagline: 'منصة تعليمية ذكية',
         hero_title_1: 'طور مهاراتك الخاصة',
@@ -565,36 +532,7 @@ const translations = {
         yt_title: 'قناة اليوتيوب',
         tg_title: 'قناة التليجرام للمنح',
         wa_title: 'تواصل معنا عبر واتساب',
-        swipe_hint: 'اسحب لرؤية المزيد من المعلمين',
-        label_first_name: 'الاسم الأول',
-        label_father_name: 'اسم الأب',
-        label_grandfather_name: 'اسم الجد',
-        label_family_name: 'اسم العائلة',
-        label_phone: 'رقم الهاتف',
-        label_country: 'الدولة',
-        label_address: 'العنوان',
-        label_whatsapp: 'رقم واتساب',
-        label_parent_phone: 'رقم ولي الأمر',
-        label_education_stage: 'المرحلة التعليمية',
-        chat_title: 'مساعد LookaGenius',
-        chat_welcome: 'مرحباً بك في LookaGenius! أنا مساعدك الأكاديمي. اسألني عن الكورسات، المدرسين، أو أي شيء آخر!',
-        label_avatar: 'الصورة الشخصية',
-        close: 'إغلاق',
-        nav_admin_dashboard: 'لوحة التحكم',
-        nav_admin_users: 'المستخدمين',
-        nav_admin_courses: 'الكورسات',
-        nav_admin_scholarships: 'المنح الدراسية',
-        nav_admin_articles: 'المقالات',
-        nav_admin_services: 'الخدمات',
-        nav_admin_team: 'فريق العمل',
-        nav_admin_financials: 'الحسابات المالية',
-        nav_admin_collaborations: 'طلبات التعاون',
-        nav_admin_settlements: 'طلبات التصفية',
-        nav_admin_chatlogs: 'سجل الشات',
-        nav_admin_notifications: 'الإشعارات',
-        nav_admin_settings: 'الإعدادات',
-        nav_admin_view_site: 'عرض الموقع',
-        nav_admin_logout: 'تسجيل الخروج'
+        swipe_hint: 'اسحب لرؤية المزيد من المعلمين'
     }
 };
 
@@ -658,9 +596,7 @@ function setLanguage(lang) {
     }));
 }
 
-// Initialize - run immediately (sync) for static content, then again on DOMContentLoaded for dynamic content
-setLanguage(currentLang);
-
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
     
@@ -672,6 +608,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Also re-run when components.js finishes injecting nav
-document.addEventListener('navRendered', () => setLanguage(currentLang));

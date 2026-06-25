@@ -37,13 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const quotes = JSON.parse(quotesStr);
         setupCardTypewriter(el, quotes, index);
     });
-
-    // تهيئة المساعد الذكي (للموقع ولوحات التحكم)
-    setTimeout(() => {
-        if (window.AI_CHAT && !document.getElementById('lkg-chat-container')) {
-            AI_CHAT.init();
-        }
-    }, 3000);
 });
 
 /**

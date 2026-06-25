@@ -1,177 +1,1380 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LookaGenius Academy | منصة تعليمية متكاملة</title>
+    <title data-i18n="site_title">LookaGenius | Comprehensive Educational Platform</title>
+    <meta name="description" content="Looking for global education? LookaGenius is your gate." data-i18n="site_desc">
+    <meta property="og:title" content="LookaGenius" data-i18n="site_title">
+    <meta property="og:image" content="assets/img/logo.png">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     
-    <!-- Google Fonts -->
+    <!-- PWA & Apple Web App -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/img/logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LookaGenius">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- مكتبة الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- AOS Animation CSS -->
+
+    <!-- AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="LookaGenius | المنصة التعليمية الشاملة - طريقك نحو التميز الأكاديمي والمهني. منصة ذكية تقدم كورسات متنوعة ومنح دراسية عالمية.">
+    <meta name="keywords" content="تعليم, منح دراسية, كورسات, برمجة, لغات, رياضيات, علوم, ذكاء اصطناعي, LookaGenius">
+    <meta name="author" content="LookaGenius Team">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lookagenius.com/">
+    <meta property="og:title" content="LookaGenius | المنصة التعليمية الشاملة">
+    <meta property="og:description"
+        content="انضم إلى LookaGenius واستكشف عالمًا من المعرفة والفرص التعليمية المتميزة. طريقك للقبول في أفضل الجامعات.">
+    <meta property="og:image" content="assets/img/logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LookaGenius | المنصة التعليمية الشاملة">
+    <meta name="twitter:description"
+        content="انضم إلى LookaGenius واستكشف عالمًا من المعرفة والفرص التعليمية المتميزة.">
+    <meta name="twitter:image" content="assets/img/logo.png">
+
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Premium Anti-Gravity UI -->
+    <link rel="stylesheet" href="assets/css/anti-gravity.css">
 </head>
-<body class="dark-theme">
-    
-    <!-- Particles Background -->
-    <div id="particles-js"></div>
-    <div class="glass-bg-overlay"></div>
 
-    <!-- Main Navigation Bar -->
-    <nav class="navbar glass-nav">
-        <div class="container nav-content">
-            <a href="index.html" class="logo">
-                <span class="neon-text">Looka</span>Genius <i class="fa-solid fa-graduation-cap"></i>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <!-- Global Header -->
+    <nav class="ag-header ag-glass">
+        <div class="header-container">
+            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/img/logo.png" alt="LookaGenius Logo"
+                    style="height: 45px; width: auto; filter: drop-shadow(0 0 5px rgba(255,212,0,0.3));">
+                <span class="logo-text">LookaGenius</span>
             </a>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <div class="nav-links" id="navLinks">
-                <a href="index.html" class="nav-link active">الرئيسية</a>
-                <a href="courses.html" class="nav-link ">الكورسات</a>
-                <a href="scholarships.html" class="nav-link ">المنح الدراسية</a>
-                <a href="support.html" class="nav-link ">تواصل معنا</a>
-                
-                <div class="auth-buttons" id="authButtonsContainer">
-                    <a href="login.html" class="btn btn-outline">تسجيل الدخول</a>
-                    <a href="register.html" class="btn btn-neon">إنشاء حساب <i class="fa-solid fa-user-plus"></i></a>
-                </div>
-                <!-- Logged In User Nav Items (Hidden initially by CSS in auth.js) -->
-                <div class="user-menu hidden" id="userMenuContainer">
-                    <a href="#" class="btn btn-neon btn-dashboard" id="dashboardBtn">لوحة التحكم <i class="fa-solid fa-border-all"></i></a>
-                    <button class="btn btn-outline btn-logout" id="logoutBtn"><i class="fa-solid fa-sign-out-alt"></i></button>
-                    <a href="profile.html" class="btn btn-outline" title="الملف الشخصي"><i class="fa-solid fa-user"></i></a>
-                </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active" data-i18n="nav_home">Home</a></li>
+                <li><a href="#courses" data-i18n="nav_courses">Courses</a></li>
+                <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
+                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+                <li><a href="#scholarships" data-i18n="nav_scholarships">Scholarships</a></li>
+            </ul>
+            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
+                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
+                    <i class="fa-solid fa-globe"></i> العربية
+                </button>
+                <a href="login.html" class="ag-btn" data-i18n="btn_start">Start Now</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- 3D Network Background (Blue/Violet) -->
+        <div id="canvas-container"></div>
 
-        <!-- Hero Section -->
-        <main>
-        <section class="hero-section" style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 60px 20px;">
-            <div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                <h1 data-aos="zoom-in" style="font-size: 3.5rem; margin-bottom: 20px;">مرحباً بك في <span class="neon-text animate-pulse-glow">LookaGenius</span></h1>
-                <p data-aos="fade-up" data-aos-delay="100" style="font-size: 1.2rem; max-width: 600px; color: var(--text-secondary); margin-bottom: 40px;">
-                    منصتك التعليمية المستقبلية. اكتشف مسارات ذكية لتعلم اللغات، العلوم، التكنولوجيا والهندسة بأسلوب مبتكر.
+        <div class="hero-content">
+            <div class="tagline">
+                <i class="fa-solid fa-layer-group"></i>
+                <span data-i18n="hero_tagline">Smart Education Platform</span>
+            </div>
+            <h1>
+                <span id="typewriter" class="typewriter-text"
+                    style="color: var(--success); text-shadow: 0 0 10px rgba(0,255,170,0.5); border-left: 2px solid var(--success); padding-left: 5px;">Empower
+                    Your Skills</span><br>
+                <span data-i18n="hero_title_2">With</span> <span
+                    style="background: linear-gradient(135deg, var(--primary-blue), var(--accent-violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">LookaGenius</span>
+            </h1>
+            <p class="description" data-i18n="hero_desc">
+                The leading platform merging global academic curricula, exact sciences, and the latest web & AI
+                technologies in an integrated educational experience.
+            </p>
+            <div class="btn-group">
+                <a href="login.html" class="ag-btn hover-trigger ag-float" data-i18n="hero_btn_start">Start Journey <i
+                        class="fa-solid fa-rocket"></i></a>
+                <a href="#courses" class="ag-btn ag-btn-outline hover-trigger" data-i18n="hero_btn_courses">Explore
+                    Courses</a>
+            </div>
+        </div>
+        <!-- Futuristic Sci-Fi HUD Showcase -->
+        <div class="showcase-bar" data-aos="fade-up" style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; padding: 25px 5%; background: linear-gradient(0deg, rgba(5,5,15,0.9), transparent); z-index: 5; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+            <style>
+                .showcase-bar {
+                    perspective: 1500px;
+                }
+                .ag-showcase-card {
+                    background: rgba(5, 5, 20, 0.4);
+                    border: 1px solid rgba(0, 212, 255, 0.2);
+                    backdrop-filter: blur(20px);
+                    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+                    padding: 15px 35px;
+                    text-align: center;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 15px;
+                    cursor: pointer;
+                    position: relative;
+                    overflow: hidden;
+                    box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.05);
+                    transform: translateY(10px) rotateX(10deg);
+                    transform-style: preserve-3d;
+                }
+                
+                .ag-showcase-card::before {
+                    content: '';
+                    position: absolute;
+                    left: -100%; top: 0; width: 50%; height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                    transform: skewX(-20deg);
+                    animation: radar-sweep 4s infinite linear;
+                }
+                @keyframes radar-sweep {
+                    100% { left: 200%; }
+                }
+                
+                .ag-showcase-card:hover {
+                    transform: translateY(-5px) scale(1.05) translateZ(20px) rotateX(0deg);
+                    background: rgba(0, 212, 255, 0.1);
+                    border-color: rgba(0, 212, 255, 0.6);
+                    box-shadow: 0 0 30px rgba(0,212,255,0.3), inset 0 0 20px rgba(0,212,255,0.2);
+                }
+                
+                .ag-showcase-card i {
+                    font-size: 1.8rem;
+                    filter: drop-shadow(0 0 5px currentColor);
+                }
+                
+                .ag-showcase-card span {
+                    color: #fff;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+                }
+                
+                .sc-space i { color: #9333ea; }
+                .sc-inv i { color: #eab308; }
+                .sc-exp i { color: #22c55e; }
+                .sc-lang i { color: #ec4899; }
+                .sc-robot i { color: #06b6d4; }
+                
+                /* Layout modifications for mobile */
+                @media (max-width: 900px) {
+                    .ag-showcase-card {
+                        clip-path: none;
+                        border-radius: 10px;
+                        padding: 12px 20px;
+                        width: calc(50% - 15px);
+                        gap: 10px;
+                        transform: none;
+                    }
+                    .ag-showcase-card i { font-size: 1.5rem; }
+                    .ag-showcase-card span { font-size: 0.9rem; letter-spacing: 0; }
+                    .showcase-bar { background: transparent; padding-bottom: 20px; border: none; }
+                }
+            </style>
+            
+            <div class="ag-showcase-card sc-space">
+                <i class="fa-solid fa-user-astronaut"></i>
+                <span data-i18n="show_space">فضاء</span>
+            </div>
+            <div class="ag-showcase-card sc-inv">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span data-i18n="show_inv">ابتكار</span>
+            </div>
+            <div class="ag-showcase-card sc-exp">
+                <i class="fa-solid fa-vial-virus"></i>
+                <span data-i18n="show_exp">تجارب</span>
+            </div>
+            <div class="ag-showcase-card sc-lang">
+                <i class="fa-solid fa-language"></i>
+                <span data-i18n="show_lang">ثقافات</span>
+            </div>
+            <div class="ag-showcase-card sc-robot">
+                <i class="fa-solid fa-robot"></i>
+                <span data-i18n="show_robot">AI روبوتات</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subjects Section -->
+    <section id="subjects" class="section-container">
+        <div class="section-header">
+            <h2 data-i18n="subjects_title">Available Subjects</h2>
+            <p data-i18n="subjects_desc">Comprehensive classification covering all stages and specialties</p>
+        </div>
+
+        <div class="subjects-grid">
+
+            <div class="subject-card lang hover-trigger ag-glass ag-float">
+                <div class="subject-icon"><i class="fa-solid fa-language"></i></div>
+                <div class="subject-title" data-i18n="subj_lang">Global Languages</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--accent-pink); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["تعلم لغة جديدة، تفتح آفاقاً جديدة 🌍", "الإنجليزية والفرنسية والألمانية بأسلوب مبتكر 🎓"]'
+                        data-quotes-en='["Learning a new language opens new horizons 🌍", "English, French, and German in an innovative way 🎓"]'
+                        style="color: var(--accent-pink);">Communication and language skills development</span>
+                </div>
+                <ul class="subject-list">
+                    <li>اللغة العربية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>اللغة الإنجليزية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>اللغة الفرنسية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>اللغة الألمانية <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- 2. Core Sciences -->
+            <div class="subject-card sci hover-trigger">
+                <div class="subject-icon"><i class="fa-solid fa-flask"></i></div>
+                <div class="subject-title" data-i18n="subj_sci">Core Sciences</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--success); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["العلوم تجعلك ترى العالم بطريقة مختلفة 🔬", "استكشف أسرار الطبيعة والفيزياء 🌌"]'
+                        data-quotes-en='["Science makes you see the world differently 🔬", "Explore the secrets of nature and physics 🌌"]'
+                        style="color: var(--success);">Exploring the world around us</span>
+                </div>
+                <ul class="subject-list">
+                    <li>الفيزياء <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الكيمياء <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الأحياء <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الجيولوجيا <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- 3. Math -->
+            <div class="subject-card math hover-trigger" data-aos="fade-up">
+                <div class="subject-icon" style="color: #00D4FF; border-color: rgba(0,212,255,0.3);"><i
+                        class="fa-solid fa-square-root-variable"></i></div>
+                <div class="subject-title" data-i18n="subj_math">Mathematics</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--primary-blue); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["الرياضيات هي لغة الأذكياء 🔢", "التفكير المنطقي هو مفتاح النجاح 📐"]'
+                        data-quotes-en='["Mathematics is the language of minds 🔢", "Logical thinking is the key to success 📐"]'
+                        style="color: var(--primary-blue);">التفكير المنطقي والتحليل الرياضي</span>
+                </div>
+                <ul class="subject-list">
+                    <li>الرياضيات المتقدمة <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الجبر والتفاضل <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الاحصاء <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- History -->
+            <div class="subject-card hist hover-trigger" data-aos="fade-up" data-aos-delay="100"
+                style="border-color: rgba(251,191,36,0.3);">
+                <div class="subject-icon" style="color: #FBBF24; border-color: rgba(251,191,36,0.3);"><i
+                        class="fa-solid fa-earth-africa"></i></div>
+                <div class="subject-title" data-i18n="subj_hist">الدراسات والتاريخ</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid #FBBF24; padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["من لا يقرأ التاريخ لا يبصر المستقبل 🏛️", "سافر عبر الزمن واعرف العالم 🌍"]'
+                        data-quotes-en='["He who doesn\' t read history can\'t see the future
+                        🏛️", "Travel through time and know the world 🌍" ]' style="color: #FBBF24;">تاريخ، جغرافيا،
+                        وعلوم إنسانية</span>
+                </div>
+                <ul class="subject-list">
+                    <li>الدراسات الاجتماعية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>التاريخ الحديث <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الجغرافيا السياسية <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- Engineering -->
+            <div class="subject-card eng hover-trigger" data-aos="fade-up" data-aos-delay="200"
+                style="border-color: rgba(255,100,50,0.3);">
+                <div class="subject-icon" style="color: #FF6432; border-color: rgba(255,100,50,0.3);"><i
+                        class="fa-solid fa-compass-drafting"></i></div>
+                <div class="subject-title" data-i18n="subj_eng">الهندسة والمساحة</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid #FF6432; padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["المهندسون يصنعون العالم 🏗️", "صمم مستقبلك بدقة وإبداع 📐"]'
+                        data-quotes-en='["Engineers build the world 🏗️", "Design your future with precision and creativity 📐"]'
+                        style="color: #FF6432;">تطبيقات وبرامج التصميم الهندسي</span>
+                </div>
+                <ul class="subject-list">
+                    <li>AutoCAD & Revit <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>نظم GIS والمساحة <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>إدارة المشروعات <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- 4. ICT -->
+            <div class="subject-card tech hover-trigger">
+                <div class="subject-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <div class="subject-title" data-i18n="subj_ict">تكنولوجيا المعلومات</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--accent-violet); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["التكنولوجيا هي لغة العصر المتقدم 💻", "احمِ مستقبلك بالأمن السيبراني 🔒"]'
+                        data-quotes-en='["Technology is the language of the modern era 💻", "Protect your future with cybersecurity 🔒"]'
+                        style="color: var(--accent-violet);">ICT والرقمنة</span>
+                </div>
+                <ul class="subject-list">
+                    <li>أساسيات الكمبيوتر <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>تكنولوجيا المعلومات <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>الأمن السيبراني <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- 5. Web Dev -->
+            <div class="subject-card tech hover-trigger">
+                <div class="subject-icon"><i class="fa-solid fa-code"></i></div>
+                <div class="subject-title" data-i18n="subj_web">إنشاء المواقع</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--primary-blue); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["برمج أفكارك وانشر إبداعك 🌐", "تصميم الويب فن وهندسة 🎨"]'
+                        data-quotes-en='["Program your ideas and spread your creativity 🌐", "Web design is art and engineering 🎨"]'
+                        style="color: var(--primary-blue);">بناء وتصميم الويب</span>
+                </div>
+                <ul class="subject-list">
+                    <li>HTML & CSS <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>JavaScript <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>تطوير الواجهات <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+            <!-- 6. Computer Courses -->
+            <div class="subject-card tech hover-trigger">
+                <div class="subject-icon"><i class="fa-solid fa-terminal"></i></div>
+                <div class="subject-title" data-i18n="subj_comp">كورسات الكمبيوتر</div>
+                <div class="subject-desc"
+                    style="min-height: 48px; border-inline-start: 2px solid var(--primary-blue); padding-inline-start: 8px;">
+                    <span class="card-typewriter"
+                        data-quotes-ar='["البرمجة هي السحر في العصر الحديث ⌨️", "أنشئ أنظمة تغير العالم 📊"]'
+                        data-quotes-en='["Programming is magic in the modern age ⌨️", "Build systems that change the world 📊"]'
+                        style="color: var(--primary-blue);">برمجة وتحليل النظم</span>
+                </div>
+                <ul class="subject-list">
+                    <li>برمجة Python <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>قواعد البيانات <i class="fa-solid fa-chevron-left"></i></li>
+                    <li>إدارة الشبكات <i class="fa-solid fa-chevron-left"></i></li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Featured Courses Section -->
+    <section id="courses" class="section-container" style="background: rgba(0,0,0,0.2);">
+        <div class="section-header">
+            <h2 data-i18n="courses_title">Featured Courses</h2>
+            <div style="margin-top: 15px; font-size: 22px; font-weight: bold; min-height: 40px;">
+                <span id="quotes-typewriter"
+                    style="color: var(--success); text-shadow: 0 0 10px rgba(0,255,170,0.5); border-left: 2px solid var(--success); padding-left: 5px;"></span>
+            </div>
+        </div>
+
+        <!-- Course Global Filter -->
+        <div class="courses-filter" style="margin-bottom: 40px; text-align: center; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+            <div class="search-container" style="width: 100%; max-width: 500px; position: relative;">
+                <input type="text" id="courseSearch" data-i18n-placeholder="search_placeholder" placeholder="بحث عن كورس..." style="width: 100%; padding: 15px 45px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 30px; color: white; outline: none; transition: all 0.3s;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--neon-blue);"></i>
+            </div>
+            <div class="filter-tabs" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button class="filter-btn active" data-filter="all" data-i18n="filter_all">الكل</button>
+                <button class="filter-btn" data-filter="languages" data-i18n="filter_lang">لغات</button>
+                <button class="filter-btn" data-filter="science" data-i18n="filter_sci">علوم</button>
+                <button class="filter-btn" data-filter="secondary" data-i18n="filter_sec">المرحلة الثانوية</button>
+                <button class="filter-btn" data-filter="university" data-i18n="filter_uni">جامعي</button>
+                <button class="filter-btn" data-filter="career" data-i18n="filter_career">تطويري</button>
+                <button class="filter-btn" data-filter="tech" data-i18n="filter_tech">تكنولوجيا</button>
+            </div>
+        </div>
+
+        <div class="courses-wrapper">
+            <!-- NEW COURSE: English Curriculum -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="languages secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=400&q=80" alt="English Curriculum">
+                    <span class="course-badge">English Curriculum</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">اللغة الإنجليزية (منهج دراسي)</h3>
+                    <p class="subject-desc">شرح وافٍ للمناهج الدراسية مع التركيز على القواعد واللغويات.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 40 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: اللغة الإنجليزية (منهج دراسي)" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW COURSE: English General -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="languages">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=80" alt="English Course">
+                    <span class="course-badge">English Course</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">اللغة الإنجليزية (كورس شامل)</h3>
+                    <p class="subject-desc">تطوير مهارات التحدث والاستماع والقراءة بأسلوب تفاعلي.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 60 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: اللغة الإنجليزية (كورس شامل)" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW COURSE: Physics 3rd Sec -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1636466484362-d49d9de7c6fd?auto=format&fit=crop&w=400&q=80" alt="Physics 3 Sec">
+                    <span class="course-badge">Physics</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الفيزياء للصف الثالث الثانوي</h3>
+                    <p class="subject-desc">تغطية شاملة للمنهج مع تجارب محاكاة ذكية للفيزياء الحديثة.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 80 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: الفيزياء للصف الثالث الثانوي" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW COURSE: Physics 2nd Sec -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1516339901600-2e1a62986307?auto=format&fit=crop&w=400&q=80" alt="Physics 2 Sec">
+                    <span class="course-badge">Physics</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الفيزياء للصف الثاني الثانوي</h3>
+                    <p class="subject-desc">أساسيات الفيزياء الميكانيكية والضوئية بتبسيط واحترافية.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 70 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: الفيزياء للصف الثاني الثانوي" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIVERSITY: Engineering -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="university">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80" alt="Engineering">
+                    <span class="course-badge">Engineering</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الهندسة (مدني، كهرباء، ميكانيكا، عمارة)</h3>
+                    <p class="subject-desc" style="color: var(--success); font-weight: bold; font-size: 13px;">"مهندس اليوم يبني مدن الغد.. ابدأ التصميم الآن"</p>
+                    <p class="subject-desc">تخصصات الهندسة المختلفة بأيدي أمهر المهندسين والأكاديميين.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 120 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: الهندسة الجامعية" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIVERSITY: Medicine -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="university">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&w=400&q=80" alt="Medicine">
+                    <span class="course-badge">Medicine</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الطب البشري وطب الأسنان والصيدلة</h3>
+                    <p class="subject-desc" style="color: var(--success); font-weight: bold; font-size: 13px;">"بسمتك تبدأ من قلب طبيب متقن – ارتقِ برسالتك"</p>
+                    <p class="subject-desc">شرح المناهج الطبية المعقدة بأسلوب مبسط وتفاعلي للأطباء الصاعدين.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 150 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: الطب والصيدلة" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAREER: Python -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="career tech">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=400&q=80" alt="Python">
+                    <span class="course-badge">Career Development</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">بايثون (Python) من الصفر للاحتراف</h3>
+                    <p class="subject-desc" style="color: var(--ag-primary); font-weight: bold; font-size: 13px;">"بايثون لغة العصر.. أتقنها تتفوق على آلاف المتقدمين"</p>
+                    <p class="subject-desc">تعلم البرمجة بلغة بايثون وتطبيقاتها في الذكاء الاصطناعي وعلوم البيانات.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 45 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: بايثون" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAREER: Data Analysis -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="career tech">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&w=400&q=80" alt="Data Analysis">
+                    <span class="course-badge">Career Development</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">تحليل البيانات (Data Analysis)</h3>
+                    <p class="subject-desc" style="color: var(--ag-primary); font-weight: bold; font-size: 13px;">"البيانات هي النفط الجديد.. كن خبيراً في تنقيته واستخراجه"</p>
+                    <p class="subject-desc">احتراف أدوات تحليل البيانات واستخراج الأنماط لاتخاذ قرارات عمل ذكية.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 55 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: تحليل البيانات" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW COURSE: Chemistry 3rd Sec -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1532187863486-abf51ad98275?auto=format&fit=crop&w=400&q=80" alt="Chemistry 3 Sec">
+                    <span class="course-badge">Chemistry</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الكيمياء للصف الثالث الثانوي</h3>
+                    <p class="subject-desc">الكيمياء العضوية وغير العضوية بمنهجية الفهم لا الحفظ.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 85 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: الكيمياء للصف الثالث الثانوي" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Course 1 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="languages">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?auto=format&fit=crop&w=400&q=80"
+                        alt="Arabic Course">
+                    <span class="course-badge" data-i18n="c1_b">Arabic</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c1_t">Arabic: Foundations & Eloquence</h3>
+                    <p class="subject-desc" data-i18n="c1_d">Discover the magic of Arabic and dive into the secrets of
+                        eloquence.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 36 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: اللغة العربية" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="100" data-category="languages">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1543167653-ef32b3550275?auto=format&fit=crop&w=400&q=80"
+                        alt="English Course">
+                    <span class="course-badge" data-i18n="c2_b">English</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c2_t">Comprehensive English (A1-C1)</h3>
+                    <p class="subject-desc" data-i18n="c2_d">Speak English with confidence in all academic and
+                        professional situations.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 48 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: English Course" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="200" data-category="languages">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1503917988258-f19af5a49a17?auto=format&fit=crop&w=400&q=80"
+                        alt="French Course">
+                    <span class="course-badge" data-i18n="c3_b">French</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c3_t">French for Beginners</h3>
+                    <p class="subject-desc" data-i18n="c3_d">Learn the language of art and culture from scratch to
+                        conversation.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 24 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: French Course" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="300" data-category="languages">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1527866959252-deab85ef7d1b?auto=format&fit=crop&w=400&q=80"
+                        alt="German Course">
+                    <span class="course-badge">لغة ألمانية</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title">الألمانية: خطوتك نحو أوروبا</h3>
+                    <p class="subject-desc">تعلم الألمانية بمنهجية معتمدة للتحضير للدراسة بألمانيا.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 30 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: اللغة الألمانية" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1532094349884-543bb11783bb?auto=format&fit=crop&w=400&q=80"
+                        alt="Science Arabic">
+                    <span class="course-badge" data-i18n="c5_b">Science</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c5_t">Fun Basic Science</h3>
+                    <p class="subject-desc" data-i18n="c5_d">A journey into the world of science to explore how the
+                        universe works.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 20 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Science Arabic" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="100" data-category="science">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1554475900-0a0350e3fc7b?auto=format&fit=crop&w=400&q=80"
+                        alt="Science EN">
+                    <span class="course-badge" data-i18n="c6_b">Science</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c6_t">Science for Language Schools</h3>
+                    <p class="subject-desc" data-i18n="c6_d">Understand the world through exciting science lessons.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 20 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Science for Language Schools" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 7 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="200" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/integratedsci/400/250" alt="Integrated Science">
+                    <span class="course-badge" data-i18n="c7_b">Integrated Science</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c7_t">Integrated Science (High School)</h3>
+                    <p class="subject-desc" data-i18n="c7_d">Link chemistry, physics, and biology in an integrated
+                        curriculum.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 32 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Integrated Science" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 8 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="300" data-category="science">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/matharab/400/250" alt="Math Arabic">
+                    <span class="course-badge" data-i18n="c8_b">Math</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c8_t">Math Without Complexity</h3>
+                    <p class="subject-desc" data-i18n="c8_d">Simplified explanations and continuous training to ensure
+                        excellence.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 30 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Math Arabic" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 9 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/matheng/400/250" alt="Math EN">
+                    <span class="course-badge" data-i18n="c9_b">Math</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c9_t">Math: Numbers & Geometry</h3>
+                    <p class="subject-desc" data-i18n="c9_d">Master numbers, algebra, and geometry step-by-step.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 30 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Math EN" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 10 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="100" data-category="science">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/mentalmath/400/250" alt="Mental Math">
+                    <span class="course-badge" data-i18n="c10_b">Mental Math</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c10_t">Mental Math (Abacus)</h3>
+                    <p class="subject-desc" data-i18n="c10_d">Train your brain to be faster than a calculator.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 20 ساعة</span>
+                        <a href="https://wa.me/201098768356?text=أريد حجز كورس: Mental Math" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 11 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="200" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/physics/400/250" alt="Physics">
+                    <span class="course-badge" data-i18n="c11_b">Physics</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c11_t">Physics: Language of the Universe</h3>
+                    <p class="subject-desc" data-i18n="c11_d">Understand the deepest laws of the universe simply.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 40 ساعة</span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Physics" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 12 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="300" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://picsum.photos/seed/chemistry/400/250" alt="Chemistry">
+                    <span class="course-badge" data-i18n="c12_b">Chemistry</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c12_t">Analytical & Organic Chemistry</h3>
+                    <p class="subject-desc" data-i18n="c12_d">Discover the reactions that build our world.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 35 ساعة</span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Chemistry" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 13 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1530210124550-912dc1381cb8?auto=format&fit=crop&w=400&q=80"
+                        alt="Biology">
+                    <span class="course-badge" data-i18n="c13_b">Biology</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c13_t">Advanced Biology</h3>
+                    <p class="subject-desc" data-i18n="c13_d">Journey inside the human body and the secrets of cells.
+                    </p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 30 ساعة</span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Biology" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 14 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="100" data-category="science secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1544413647-ad34827be953?auto=format&fit=crop&w=400&q=80"
+                        alt="Geology">
+                    <span class="course-badge" data-i18n="c14_b">Geology</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c14_t">Physical Geology</h3>
+                    <p class="subject-desc" data-i18n="c14_d">Read the history of the Earth written in its rocks.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 25 ساعة</span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Geology" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 15 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="200" data-category="secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=400&q=80"
+                        alt="Social Studies">
+                    <span class="course-badge" data-i18n="c15_b">Social Studies</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c15_t">Social Studies: History & Geography</h3>
+                    <p class="subject-desc" data-i18n="c15_d">History is stories told and geography is journeys
+                        explored.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-regular fa-clock"></i> 24 ساعة</span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Social Studies" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 16 -->
+            <div class="course-card hover-trigger" data-aos="fade-up" data-aos-delay="300" data-category="secondary">
+                <div class="course-img">
+                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=400&q=80"
+                        alt="Quran">
+                    <span class="course-badge" data-i18n="c16_b">Quran</span>
+                </div>
+                <div class="course-body">
+                    <h3 class="course-title" data-i18n="c16_t">Quran Recitation & Tajweed</h3>
+                    <p class="subject-desc" data-i18n="c16_d">Beautify your voice with the Quran and learn Tajweed
+                        simply.</p>
+                    <div class="course-meta">
+                        <span><i class="fa-solid fa-infinity"></i> <span data-i18n="continuing">Continuous</span></span>
+                        <a href="https://wa.me/201234567890?text=أريد حجز كورس: Quran" target="_blank" class="ag-btn ag-btn-sm" style="background: #25D366; border: none; font-size: 12px; padding: 5px 10px;">حجز واتساب <i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- European Scholarships Section -->
+    <section id="scholarships" class="section-container" style="background: rgba(0,0,0,0.2);">
+        <div class="section-header" data-aos="fade-up">
+            <h2 data-i18n="schol_title">European University Scholarships <i class="fa-solid fa-star"
+                    style="color:#FBBF24;"></i></h2>
+            <p data-i18n="schol_desc">Highlighting fully and partially funded opportunities at top universities. Updated
+                regularly.</p>
+        </div>
+        <div class="subjects-grid">
+
+            <!-- 1. Erasmus -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-solid fa-earth-europe" style="font-size:30px; color:var(--accent-violet);"></i>
+                    <div>
+                        <h3 style="color:#fff;" data-i18n="schol_1_t">Erasmus Mundus Scholarship</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;" data-i18n="schol_1_s">Erasmus Mundus - EU
+                        </p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_1_f">Full Funding
+                            (Salary, Tickets, Fees)</span></p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_1_s">Joint
+                            Master</span></p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> <span
+                            data-i18n="schol_1_deadline">Deadline: January</span></p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;"
+                    data-i18n="schol_apply">Apply Now</a>
+            </div>
+
+            <!-- 2. DAAD -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="100"
+                style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-brands fa-font-awesome" style="font-size:30px; color:#FBBF24;"></i>
+                    <div>
+                        <h3 style="color:#fff;" data-i18n="schol_2_t">DAAD German Scholarship</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;" data-i18n="schol_2_s">Germany</p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_2_f">Full Funding
+                            + Monthly Stipend</span></p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_2_s2">Master & PhD
+                            (EPOS)</span></p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> <span
+                            data-i18n="schol_2_deadline">Deadline: Varies</span></p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;"
+                    data-i18n="schol_apply">Apply Now</a>
+            </div>
+
+            <!-- 3. Eiffel -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="200"
+                style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-brands fa-fort-awesome" style="font-size:30px; color:var(--primary-blue);"></i>
+                    <div>
+                        <h3 style="color:#fff;" data-i18n="schol_3_t">Eiffel Excellence Scholarship</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;" data-i18n="schol_3_s">Eiffel Excellence -
+                            France</p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_3_f">Excellent
+                            Salary + Insurance + Travel</span></p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_3_s2">Master &
+                            PhD</span></p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> <span
+                            data-i18n="schol_3_deadline">Deadline: Early January</span></p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;"
+                    data-i18n="schol_apply">Apply Now</a>
+            </div>
+
+            <!-- 4. Politecnico di Milano -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="300"
+                style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-solid fa-building-columns" style="font-size:30px; color:var(--success);"></i>
+                    <div>
+                        <h3 style="color:#fff;" data-i18n="schol_4_t">Politecnico di Milano</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;" data-i18n="schol_4_s">Politecnico di
+                            Milano - Italy</p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_4_f">Fee Waiver +
+                            Gold/Silver Scholarship</span></p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> <span data-i18n="schol_4_s2">Master in
+                            Engineering & Design</span></p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> <span
+                            data-i18n="schol_4_deadline">Deadline: February</span></p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;"
+                    data-i18n="schol_apply">Apply Now</a>
+            </div>
+
+            <!-- 5. Amsterdam -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="400"
+                style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-solid fa-water" style="font-size:30px; color:var(--accent-pink);"></i>
+                    <div>
+                        <h3 style="color:#fff;">منحة أمستردام للتميز</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;">AES - هولندا</p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> 25,000 يورو ميزانية</p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> الماجستير (لخارج أوروبا)</p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> الموعد:
+                        منتصف يناير</p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;">تقدم
+                    الآن</a>
+            </div>
+
+            <!-- 6. Chevening -->
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="500"
+                style="border-color: rgba(168,85,247,0.3);">
+                <div
+                    style="display:flex; align-items:center; gap:15px; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; width:100%;">
+                    <i class="fa-brands fa-uk" style="font-size:30px; color:#012169;"></i>
+                    <div>
+                        <h3 style="color:#fff;">منحة تشيفنينج</h3>
+                        <p style="color:var(--primary-blue); font-size:12px;">Chevening - بريطانيا/الدول الاسكندنافية
+                        </p>
+                    </div>
+                </div>
+                <div class="subject-desc" style="flex-grow:1; width:100%;">
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-sack-dollar"
+                            style="color:var(--accent-pink); width:20px;"></i> تمويل شامل كلياً</p>
+                    <p style="margin-bottom:8px;"><i class="fa-solid fa-user-graduate"
+                            style="color:var(--accent-pink); width:20px;"></i> الماجستير للقياديين والمؤثرين</p>
+                    <p><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-pink); width:20px;"></i> الموعد:
+                        نوفمبر</p>
+                </div>
+                <a href="#" class="btn btn-secondary" style="width:100%; border-radius:12px; height: 50px;">تقدم
+                    الآن</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admission Tips Section -->
+    <section class="section-container">
+        <div class="section-header" data-aos="fade-up">
+            <h2>دليلك الذهبي للقبول <i class="fa-solid fa-key" style="color:var(--success);"></i></h2>
+            <p>أهم 4 نصائح لزيادة فرصتك في الفوز بالمنح الدراسية الأوروبية والعالمية.</p>
+        </div>
+        <div class="subjects-grid">
+            <div class="subject-card hover-trigger" data-aos="zoom-in"
+                style="text-align:center; align-items:center; border-color:rgba(0,255,170,0.3);">
+                <i class="fa-regular fa-file-pdf" style="font-size:40px; color:var(--success); margin-bottom:15px;"></i>
+                <h3 style="color:#fff; margin-bottom:10px;" data-i18n="tip_cv_t">سيرة ذاتية احترافية</h3>
+                <p class="subject-desc" style="text-align:center;" data-i18n="tip_cv_d">استخدم نموذج Europass وأبرز خبراتك التطوعية
+                    والأكاديمية.</p>
+            </div>
+            <div class="subject-card hover-trigger" data-aos="zoom-in" data-aos-delay="100"
+                style="text-align:center; align-items:center; border-color:rgba(0,255,170,0.3);">
+                <i class="fa-solid fa-pen-nib" style="font-size:40px; color:var(--success); margin-bottom:15px;"></i>
+                <h3 style="color:#fff; margin-bottom:10px;" data-i18n="tip_mot_t">خطاب الدافع</h3>
+                <p class="subject-desc" style="text-align:center;" data-i18n="tip_mot_d">ابتعد عن النسخ! اشرح أهدافك وتأثيرك المستقبلي بوضوح.
                 </p>
-                <div data-aos="fade-up" data-aos-delay="200" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-                    <a href="register.html" class="btn btn-neon" style="padding: 15px 40px; font-size: 1.2rem;">ابدأ رحلتك الآن <i class="fa-solid fa-rocket"></i></a>
-                    <a href="courses.html" class="btn btn-outline" style="padding: 15px 40px; font-size: 1.2rem;">استكشف الكورسات <i class="fa-solid fa-compass"></i></a>
-                </div>
             </div>
-        </section>
-
-        <!-- Features / Why US -->
-        <section style="padding: 80px 0; background: rgba(5, 6, 8, 0.4);">
-            <div class="container">
-                <h2 class="text-center mb-4 neon-text" data-aos="fade-down">لماذا LookaGenius؟</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                    <div class="glass-card text-center" data-aos="fade-up" data-aos-delay="100">
-                        <i class="fa-solid fa-laptop-code" style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 20px;"></i>
-                        <h3>تعلم بأحدث التقنيات</h3>
-                        <p style="color: var(--text-secondary); margin-top: 10px;">نقدم مناهج تفاعلية حديثة تواكب متطلبات العصر في كل المجالات.</p>
-                    </div>
-                    <div class="glass-card text-center" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fa-solid fa-users" style="font-size: 3rem; color: var(--neon-purple); margin-bottom: 20px;"></i>
-                        <h3>لوحات تحكم مخصصة</h3>
-                        <p style="color: var(--text-secondary); margin-top: 10px;">نظام متكامل يربط الطالب بالمعلم وولي الأمر في بيئة واحدة.</p>
-                    </div>
-                    <div class="glass-card text-center" data-aos="fade-up" data-aos-delay="300">
-                        <i class="fa-solid fa-award" style="font-size: 3rem; color: var(--neon-pink); margin-bottom: 20px;"></i>
-                        <h3>شهادات ومنح عالمية</h3>
-                        <p style="color: var(--text-secondary); margin-top: 10px;">نؤهلك للحصول على منح دراسية مجانية في كبرى الجامعات الأوروبية.</p>
-                    </div>
-                </div>
+            <div class="subject-card hover-trigger" data-aos="zoom-in" data-aos-delay="200"
+                style="text-align:center; align-items:center; border-color:rgba(0,255,170,0.3);">
+                <i class="fa-solid fa-language" style="font-size:40px; color:var(--success); margin-bottom:15px;"></i>
+                <h3 style="color:#fff; margin-bottom:10px;" data-i18n="tip_lang_t">اختبارات اللغة</h3>
+                <p class="subject-desc" style="text-align:center;" data-i18n="tip_lang_d">احصل على IELTS (6.5+) أو TOEFL مبكراً لضمان قبولك
+                    الجامعي.</p>
             </div>
-        </section>
-
-        <!-- Featured Courses (Preview) -->
-        <section style="padding: 80px 0;">
-            <div class="container">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;" data-aos="fade-right">
-                    <h2 class="neon-text">أبرز الكورسات</h2>
-                    <a href="courses.html" class="btn btn-outline">عرض الكل</a>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;" id="homeCourses">
-                <!-- Injected via JS -->
-                </div>
-            </div>
-        </section>
-        
-        <!-- CTA Section -->
-        <section style="padding: 100px 0; text-align: center; background: linear-gradient(0deg, rgba(9, 10, 15, 1) 0%, rgba(188, 19, 254, 0.1) 100%);">
-            <div class="container" data-aos="fade-up">
-                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">جاهز لصناعة مستقبلك؟</h2>
-                <a href="register.html" class="btn btn-neon" style="padding: 15px 50px; font-size: 1.3rem;">سجل الآن مجاناً</a>
-            </div>
-        </section>
-        </main>
-        
-    <!-- Footer -->
-    <footer class="glass-footer">
-        <div class="container footer-content">
-            <div class="footer-col" data-aos="fade-up">
-                <h3><span class="neon-text">Looka</span>Genius</h3>
-                <p>منصتك الأولى للتعلم الذكي، استكشف عالم المعرفة والتكنولوجيا بخطوات مبسطة وتصميم استثنائي.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-            </div>
-            <div class="footer-col" data-aos="fade-up" data-aos-delay="100">
-                <h4>روابط سريعة</h4>
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="courses.html">الكورسات</a></li>
-                    <li><a href="scholarships.html">المنح الدراسية</a></li>
-                </ul>
-            </div>
-            <div class="footer-col" data-aos="fade-up" data-aos-delay="200">
-                <h4>الدعم والمساعدة</h4>
-                <ul>
-                    <li><a href="support.html">تواصل معنا</a></li>
-                    <li><a href="support.html">الأسئلة الشائعة</a></li>
-                </ul>
-            </div>
-            <div class="footer-col" data-aos="fade-up" data-aos-delay="300">
-                <h4>تواصل مباشر</h4>
-                <p><i class="fa-solid fa-envelope"></i> info@lookagenius.com</p>
-                <p><i class="fa-solid fa-phone"></i> +1 234 567 8900</p>
-                <button class="btn btn-neon btn-full mt-1">تحدث عبر واتساب <i class="fa-brands fa-whatsapp"></i></button>
+            <div class="subject-card hover-trigger" data-aos="zoom-in" data-aos-delay="300"
+                style="text-align:center; align-items:center; border-color:rgba(0,255,170,0.3);">
+                <i class="fa-solid fa-handshake-angle"
+                    style="font-size:40px; color:var(--success); margin-bottom:15px;"></i>
+                <h3 style="color:#fff; margin-bottom:10px;" data-i18n="tip_rec_t">التوصية الأكاديمية</h3>
+                <p class="subject-desc" style="text-align:center;" data-i18n="tip_rec_d">اختر أساتذة يعرفونك جيداً، بدلاً من ذوي المناصب فقط.
+                </p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 LookaGenius Academy. جميع الحقوق محفوظة.</p>
+    </section>
+
+    <!-- Platform Benefits -->
+    <section class="section-container" style="background: rgba(0,0,0,0.2);">
+        <div class="section-header" data-aos="fade-up">
+            <h2 data-i18n="benefits_title">فوائد الانضمام للمنصة</h2>
+            <p data-i18n="benefits_desc">نحن لا نقدم كورسات وحسب، بل نبني لك مستقبلاً مشرقاً.</p>
         </div>
+        <div class="subjects-grid">
+            <div class="subject-card hover-trigger" data-aos="fade-up"
+                style="flex-direction:row; align-items:center; gap:20px;">
+                <i class="fa-solid fa-medal"
+                    style="font-size:30px; color:var(--primary-blue); padding:15px; background:rgba(0,212,255,0.1); border-radius:50%; box-shadow: 0 0 15px rgba(0,212,255,0.3);"></i>
+                <div>
+                    <h3 style="color:#fff; font-size:18px;" data-i18n="bene_cert_t">شهادات معتمدة عالمياً</h3>
+                    <p class="subject-desc" style="margin:0;" data-i18n="bene_cert_d">من أقوى المنظمات الأكاديمية.</p>
+                </div>
+            </div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="100"
+                style="flex-direction:row; align-items:center; gap:20px;">
+                <i class="fa-solid fa-user-tie"
+                    style="font-size:30px; color:var(--primary-blue); padding:15px; background:rgba(0,212,255,0.1); border-radius:50%; box-shadow: 0 0 15px rgba(0,212,255,0.3);"></i>
+                <div>
+                    <h3 style="color:#fff; font-size:18px;" data-i18n="bene_train_t">مدربون خبراء</h3>
+                    <p class="subject-desc" style="margin:0;" data-i18n="bene_train_d">خلاصة تجارب وسوق عمل حقيقي.</p>
+                </div>
+            </div>
+            <div class="subject-card hover-trigger" data-aos="fade-up" data-aos-delay="200"
+                style="flex-direction:row; align-items:center; gap:20px;">
+                <i class="fa-solid fa-scale-balanced"
+                    style="font-size:30px; color:var(--primary-blue); padding:15px; background:rgba(0,212,255,0.1); border-radius:50%; box-shadow: 0 0 15px rgba(0,212,255,0.3);"></i>
+                <div>
+                    <h3 style="color:#fff; font-size:18px;" data-i18n="bene_guid_t">إرشاد ومتابعة</h3>
+                    <p class="subject-desc" style="margin:0;" data-i18n="bene_guid_d">نراجع معك أوراق العمل التقديمية.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academy Team Section -->
+    <section id="team" class="section-container" style="background: rgba(255,255,255,0.01); overflow: hidden; padding-bottom: 80px;">
+        <div class="section-header" data-aos="fade-up" style="margin-bottom: 45px;">
+            <h2 data-i18n="academy_team_title" style="font-size: clamp(26px, 4vw, 38px); font-weight: 900; background: linear-gradient(135deg, var(--primary-blue), var(--accent-violet)); -webkit-background-clip: text; background-clip: text; color: transparent;">فريق عمل أكاديمية LookaGenius</h2>
+            <p style="color: var(--text-secondary);" data-i18n="academy_team_desc">نخبة موحدة من القادة الأكاديميين وكبار المعلمين لإرشادك نحو النجاح.</p>
+        </div>
+        
+        <div class="team-scroll-container" style="position: relative; width: 100%; overflow: hidden;">
+            <style>
+                .team-track {
+                    display: flex;
+                    gap: 20px;
+                    width: max-content;
+                    animation: scrollTeam 40s linear infinite;
+                    padding: 20px 0 50px;
+                }
+                .team-track:hover {
+                    animation-play-state: paused;
+                }
+                @keyframes scrollTeam {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .team-card {
+                    flex: 0 0 260px;
+                    background: rgba(15, 15, 35, 0.7);
+                    backdrop-filter: blur(15px);
+                    border: 1px solid rgba(0, 212, 255, 0.1);
+                    border-radius: 25px;
+                    padding: 35px 25px;
+                    text-align: center;
+                    position: relative;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+                    overflow: hidden;
+                }
+                .team-card::before {
+                    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+                    background: linear-gradient(90deg, var(--primary-blue), var(--accent-violet));
+                }
+                .team-card:hover { 
+                    transform: translateY(-12px) scale(1.03);
+                    border-color: var(--primary-blue);
+                    box-shadow: 0 20px 50px rgba(0, 212, 255, 0.25);
+                }
+                .team-img-wrapper {
+                    width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 25px;
+                    padding: 5px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-violet));
+                    position: relative;
+                    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+                }
+                .team-img-wrapper::after {
+                    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+                    border: 1px dashed rgba(0, 212, 255, 0.2); animation: rotateCircle 15s linear infinite;
+                }
+                @keyframes rotateCircle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                .team-img-wrapper img { 
+                    width: 100%; height: 100%; border-radius: 50%; object-fit: cover; 
+                    background: #050510; position: relative; z-index: 2;
+                    border: 2px solid rgba(255,255,255,0.1);
+                }
+                .team-name { font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+                .team-role { 
+                    font-size: 0.85rem; font-weight: 600; color: var(--primary-blue); 
+                    background: rgba(0,212,255,0.08); padding: 6px 15px; border-radius: 50px; 
+                    display: inline-block; border: 1px solid rgba(0, 212, 255, 0.1);
+                }
+                [dir="rtl"] .team-track {
+                    animation: scrollTeamRtl 40s linear infinite;
+                }
+                @keyframes scrollTeamRtl {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(50%); }
+                }
+            </style>
+            
+            <div class="team-track">
+                <!-- Group 1 -->
+                <!-- Leadership -->
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed"></div>
+                    <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
+                    <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed"></div>
+                    <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
+                    <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud"></div>
+                    <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
+                    <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef"></div>
+                    <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
+                    <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk"></div>
+                    <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
+                    <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah"></div>
+                    <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
+                    <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar"></div>
+                    <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
+                    <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada"></div>
+                    <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
+                    <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                </div>
+                <!-- Teachers -->
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad"></div>
+                    <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
+                    <div class="team-role" data-i18n="t_saad_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya"></div>
+                    <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
+                    <div class="team-role" data-i18n="t_somaya_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer"></div>
+                    <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
+                    <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa"></div>
+                    <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
+                    <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag"></div>
+                    <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
+                    <div class="team-role" data-i18n="t_farag_s">French</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman"></div>
+                    <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
+                    <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat"></div>
+                    <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
+                    <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam"></div>
+                    <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
+                    <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy"></div>
+                    <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
+                    <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally"></div>
+                    <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
+                    <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                </div>
+
+                <!-- Duplicate for Infinite Scroll -->
+                <!-- Leadership (Duplicate) -->
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed"></div>
+                    <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
+                    <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed"></div>
+                    <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
+                    <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud"></div>
+                    <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
+                    <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef"></div>
+                    <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
+                    <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk"></div>
+                    <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
+                    <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah"></div>
+                    <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
+                    <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar"></div>
+                    <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
+                    <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada"></div>
+                    <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
+                    <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                </div>
+                <!-- Teachers (Duplicate) -->
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad"></div>
+                    <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
+                    <div class="team-role" data-i18n="t_saad_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya"></div>
+                    <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
+                    <div class="team-role" data-i18n="t_somaya_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer"></div>
+                    <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
+                    <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa"></div>
+                    <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
+                    <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag"></div>
+                    <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
+                    <div class="team-role" data-i18n="t_farag_s">French</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman"></div>
+                    <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
+                    <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat"></div>
+                    <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
+                    <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam"></div>
+                    <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
+                    <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy"></div>
+                    <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
+                    <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally"></div>
+                    <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
+                    <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer (Simple) -->
+    <footer
+        style="padding: 50px 8%; text-align: center; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 14px;">
+        <p data-i18n="footer_rights">© 2026 LookaGenius Academy. All rights reserved.</p>
     </footer>
 
-    <!-- Libraries -->
-    <!-- Chart.js for Dashboards -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- AOS Animation JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- Particles.js for background effect -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- Floating Buttons (Consistent across pages) -->
+    <div class="floating-container">
+        <a href="https://youtube.com/@LookaGenius" class="social-btn youtube-btn hover-trigger ag-float" target="_blank"
+            data-i18n-title="yt_title" title="YouTube Channel">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+        <a href="#" class="social-btn telegram-btn hover-trigger" data-i18n-title="tg_title" title="Telegram Channel">
+            <i class="fa-brands fa-telegram"></i>
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=201098768356" class="social-btn whatsapp-btn hover-trigger"
+            target="_blank" data-i18n-title="wa_title" title="WhatsApp Contact">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
 
-    <!-- App Scripts -->
-    <script src="js/db.js" defer></script>
-    <script src="js/auth.js" defer></script>
-    <script src="js/app.js" defer></script>
-    <script src="js/pages/home.js" defer></script>
+    <!-- Libraries -->
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <!-- Chatbot Widget -->
+    <script src="assets/js/chatbot.js"></script>
+
+    <!-- Custom Logic -->
+    <script src="assets/js/i18n.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

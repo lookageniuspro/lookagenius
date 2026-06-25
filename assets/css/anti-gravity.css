@@ -159,21 +159,6 @@
     text-decoration: none;
 }
 
-/* Circular Logo Style */
-.lg-logo {
-    width: 45px; height: 45px;
-    border-radius: 50% !important;
-    object-fit: cover;
-    border: 2px solid rgba(0, 212, 255, 0.3);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
-    transition: 0.3s;
-}
-.lg-logo:hover {
-    border-color: var(--ag-primary);
-    box-shadow: 0 0 25px rgba(0, 212, 255, 0.3);
-    transform: scale(1.05);
-}
-
 .nav-links {
     display: flex;
     gap: 30px;

@@ -51,10 +51,9 @@
             height: 220px;
             background: #222;
             position: relative;
-            overflow: hidden;
         }
 
-        .post-image img { width: 100%; height: 100%; object-fit: cover; }
+        .post-image img { width: 100%; height: 100%; object-fit: crop; }
 
         .post-content { padding: 25px; }
 
@@ -84,26 +83,19 @@
     <nav class="ag-header ag-glass">
         <div class="header-container">
             <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
-                <img src="assets/img/logo.png" alt="Logo" class="lg-logo">
+                <img src="assets/img/logo.png" alt="Logo" style="height: 40px;">
                 <span class="logo-text">LookaGenius</span>
             </a>
             <ul class="nav-links">
-            <li><a href="index.html" data-i18n="nav_home">Home</a></li>
-            <li><a href="courses.html" data-i18n="nav_courses">Courses</a></li>
-            <li><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a></li>
-            <li><a href="blog.html" class="active" data-i18n="nav_blog">Blog</a></li>
-            <li><a href="services.html" data-i18n="nav_services">Services</a></li>
-            <li><a href="join-us.html" data-i18n="nav_join">Join Us</a></li>
-            <li><a href="support.html" data-i18n="nav_about">About Us</a></li>
+                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                <li><a href="blog.html" class="active" data-i18n="nav_blog">Blog</a></li>
+                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
             </ul>
             <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
                     <i class="fa-solid fa-globe"></i> العربية
                 </button>
             </div>
-            <button class="mobile-menu-btn" onclick="const n=this.closest('.ag-header').querySelector('.nav-links'),i=this.querySelector('i');n.classList.toggle('active');i.className=n.classList.contains('active')?'fa-solid fa-xmark':'fa-solid fa-bars';">
-                <i class="fa-solid fa-bars"></i>
-            </button>
         </div>
     </nav>
 
@@ -112,50 +104,63 @@
         <p style="font-size: 1.2rem; color: #aaa;" data-i18n="blog_hero_d">Daily articles to enrich your knowledge and guide you to the top.</p>
     </section>
 
-    <div class="posts-grid" id="articlesContainer">
-        <!-- ريندر ديناميكي من db.js -->
+    <div class="posts-grid">
+        <!-- Post 1: Education -->
+        <article class="post-card" data-aos="fade-up">
+            <div class="post-image">
+                <img src="assets/img/edu_article.png" alt="Education">
+            </div>
+            <div class="post-content">
+                <span class="post-date">10 أبريل 2026</span>
+                <h3>مستقبل التعليم والواقع الافتراضي</h3>
+                <p style="color: #aaa; font-size: 15px;">كيف تساهم تقنيات الهولوجرام والواقع الافتراضي في خلق بيئات تعليمية غامرة تعزز من تركيز الطلاب واستيعابهم...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 2: Tech -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="post-image">
+                <img src="assets/img/tech_article.png" alt="Tech">
+            </div>
+            <div class="post-content">
+                <span class="post-date">8 أبريل 2026</span>
+                <h3>إدارة البيانات عبر السيرفرات السحابية</h3>
+                <p style="color: #aaa; font-size: 15px;">تعرف على أحدث أنظمة حفظ البيانات وطرق عمل المطورين في غرف السيرفرات المتقدمة لتوفير أمان تام لمعلوماتك...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 3: Languages -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="post-image">
+                <img src="assets/img/lang_article.png" alt="Languages">
+            </div>
+            <div class="post-content">
+                <span class="post-date">5 أبريل 2026</span>
+                <h3>التواصل عبر حواجز اللغة</h3>
+                <p style="color: #aaa; font-size: 15px;">اكتشف كيف أن تقنيات الترجمة الفورية الهولوغرافية تزيل قيود التواصل وتبني جسوراً بين الثقافات المختلفة...</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
+
+        <!-- Post 4: Programming -->
+        <article class="post-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="post-image">
+                <img src="assets/img/prog_article.png" alt="Programming">
+            </div>
+            <div class="post-content">
+                <span class="post-date">1 أبريل 2026</span>
+                <h3>بيئة المبرمج المثالية في 2026</h3>
+                <p style="color: #aaa; font-size: 15px;">من الشاشات المتعددة لتنظيم الأكواد المعقدة إلى الإنارات المحفزة، ما الذي يحتاجه المبرمج العصري لإنجاز مهامه بذكاء؟</p>
+                <a href="#" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+        </article>
     </div>
 
-    <!-- Static fallback -->
-    <noscript>
-        <div class="posts-grid">
-            <article class="post-card"><div class="post-content"><h3>مستقبل التعليم والواقع الاف??تراضي</h3></div></article>
-            <article class="post-card"><div class="post-content"><h3>إدارة البيانات عبر السيرف??رات السحابية</h3></div></article>
-        </div>
-    </noscript>
-
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase.js"></script>
-    <script src="js/db.js"></script>
-    <script src="js/auth.js"></script>
     <script src="assets/js/i18n.js"></script>
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('articlesContainer');
-            if (!container || typeof window.db === 'undefined') return;
-            const articles = window.db.getArticles();
-            if (articles.length === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:60px;color:#aaa;grid-column:1/-1;"><i class="fa-solid fa-newspaper" style="font-size:3rem;margin-bottom:15px;display:block;"></i><p>لا توجد مقالات حالياً. ترقبوا جديدنا!</p></div>';
-                return;
-            }
-            container.innerHTML = articles.map((a, i) => `
-                <article class="post-card" data-aos="fade-up" data-aos-delay="${(i%4)*100}">
-                    <div class="post-image">
-                        <img src="${a.image || 'assets/img/edu_article.png'}" alt="${a.title}" onerror="this.src='https://ui-avatars.com/api/?name=Article&background=0D8ABC&color=fff&size=400'">
-                    </div>
-                    <div class="post-content">
-                        <span class="post-date">${a.date || ''}</span>
-                        <h3>${a.title}</h3>
-                        <p style="color: #aaa; font-size: 15px;">${a.excerpt || a.content ? (a.excerpt || a.content).substring(0,120) + '...' : ''}</p>
-                        <a href="article.html?id=${a.id}" class="read-more">اقرأ المزيد <i class="fa-solid fa-arrow-left"></i></a>
-                    </div>
-                </article>
-            `).join('');
-            AOS.init({ duration: 1000, once: true });
-        });
-    </script>
-    <script src="assets/js/chatbot.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
 </body>
 </html>

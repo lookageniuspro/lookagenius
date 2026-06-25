@@ -28,13 +28,10 @@ const renderNavbar = () => {
         </div>
 
         <nav class="nav-links">
-            <a href="index.html" class="nav-link ${currentPath === 'index.html' ? 'active' : ''}" data-i18n="nav_home">الرئيسية</a>
-            <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}" data-i18n="nav_courses">الكورسات</a>
-            <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}" data-i18n="nav_scholarships">المنح</a>
-            <a href="blog.html" class="nav-link ${currentPath === 'blog.html' ? 'active' : ''}" data-i18n="nav_blog">المدونة</a>
-            <a href="services.html" class="nav-link ${currentPath === 'services.html' ? 'active' : ''}" data-i18n="nav_services">خدماتنا</a>
-            <a href="join-us.html" class="nav-link ${currentPath === 'join-us.html' ? 'active' : ''}" data-i18n="nav_join">انضم إلينا</a>
-            <a href="support.html" class="nav-link ${currentPath === 'support.html' ? 'active' : ''}" data-i18n="nav_about">من نحن</a>
+            <a href="index.html" class="nav-link ${currentPath === 'index.html' ? 'active' : ''}">الرئيسية</a>
+            <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}">الكورسات</a>
+            <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}">المنح</a>
+            <a href="support.html" class="nav-link">من نحن</a>
         </nav>
 
         ${logoHtml}
@@ -56,13 +53,10 @@ const renderNavbar = () => {
         </div>
 
         <nav style="display: flex; flex-direction: column; gap: 20px; text-align: right;">
-            <a href="index.html" class="nav-link ${currentPath === 'index.html' ? 'active' : ''}" data-i18n="nav_home">الرئيسية</a>
-            <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}" data-i18n="nav_courses">الكورسات</a>
-            <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}" data-i18n="nav_scholarships">المنح</a>
-            <a href="blog.html" class="nav-link ${currentPath === 'blog.html' ? 'active' : ''}" data-i18n="nav_blog">المدونة</a>
-            <a href="services.html" class="nav-link ${currentPath === 'services.html' ? 'active' : ''}" data-i18n="nav_services">خدماتنا</a>
-            <a href="join-us.html" class="nav-link ${currentPath === 'join-us.html' ? 'active' : ''}" data-i18n="nav_join">انضم إلينا</a>
-            <a href="support.html" class="nav-link ${currentPath === 'support.html' ? 'active' : ''}" data-i18n="nav_about">من نحن</a>
+            <a href="index.html" class="nav-link ${currentPath === 'index.html' ? 'active' : ''}">الرئيسية</a>
+            <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}">الكورسات</a>
+            <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}">المنح</a>
+            <a href="support.html" class="nav-link">من نحن</a>
             <hr style="border: none; border-top: 1px solid var(--border-color);">
             ${user ? `
             <a href="dashboard-${user.type}.html" class="btn btn-primary" style="width: 100%; justify-content: center;">لوحة التحكم</a>
@@ -102,9 +96,6 @@ const renderNavbar = () => {
         if (window.scrollY > 50) header.classList.add('scrolled');
         else header.classList.remove('scrolled');
     });
-
-    // Notify i18n that nav is rendered
-    document.dispatchEvent(new CustomEvent('navRendered'));
 };
 
 const renderFooter = () => {

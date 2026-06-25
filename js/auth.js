@@ -1,36 +1,12 @@
 /**
  * auth.js (MPA Version)
  * Handles Authentication and Session tracking
- * Supports both Supabase Auth and localStorage fallback.
  */
 
 window.auth = {
     currentUser: null,
 
-    init: async () => {
-        // Try Supabase session first
-        const supabase = window.__supabase ? window.__supabase.client : null;
-        if (supabase) {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    const meta = session.user.user_metadata || {};
-                    const supabaseUser = {
-                        id: session.user.id,
-                        email: session.user.email,
-                        name: meta.full_name || meta.name || session.user.email,
-                        type: meta.role || 'student',
-                        avatar: meta.avatar || ''
-                    };
-                    localStorage.setItem('lookagenius_session', JSON.stringify(supabaseUser));
-                    window.auth.currentUser = supabaseUser;
-                    window.auth.updateUI();
-                    window.auth.protectRoutes();
-                    return;
-                }
-            } catch (e) { /* fall through to localStorage */ }
-        }
-        // Fallback: localStorage session
+    init: () => {
         const session = localStorage.getItem('lookagenius_session');
         if (session) {
             window.auth.currentUser = JSON.parse(session);
@@ -39,29 +15,7 @@ window.auth = {
         window.auth.protectRoutes();
     },
 
-    login: async (email, password) => {
-        // Try Supabase Auth first
-        const supabase = window.__supabase ? window.__supabase.client : null;
-        if (supabase) {
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (!error && data.user) {
-                    const meta = data.user.user_metadata || {};
-                    const safeUser = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: meta.full_name || email,
-                        type: meta.role || 'student',
-                        avatar: data.user.identities?.[0]?.identity_data?.avatar_url || ''
-                    };
-                    window.auth.currentUser = safeUser;
-                    localStorage.setItem('lookagenius_session', JSON.stringify(safeUser));
-                    window.auth.updateUI();
-                    return { success: true, user: safeUser };
-                }
-            } catch (e) { /* fall through to localStorage */ }
-        }
-        // Fallback: localStorage-based auth
+    login: (email, password) => {
         const users = window.db.getUsers();
         const user = users.find(u => u.email === email && u.password === password);
         if (user) {
@@ -74,40 +28,7 @@ window.auth = {
         return { success: false, message: 'Invalid email or password' };
     },
 
-    register: async (userData) => {
-        // Try Supabase Auth first
-        const supabase = window.__supabase ? window.__supabase.client : null;
-        if (supabase) {
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: userData.email,
-                    password: userData.password,
-                    options: {
-                        data: {
-                            full_name: userData.name,
-                            role: userData.type || 'student'
-                        }
-                    }
-                });
-                if (!error && data.user) {
-                    // Also save to localStorage DB for sync
-                    window.db.addUser(userData);
-                    const safeUser = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: userData.name,
-                        type: userData.type || 'student',
-                        avatar: userData.avatar || ''
-                    };
-                    window.auth.currentUser = safeUser;
-                    localStorage.setItem('lookagenius_session', JSON.stringify(safeUser));
-                    window.auth.updateUI();
-                    return { success: true, user: safeUser };
-                }
-                if (error) return { success: false, message: error.message };
-            } catch (e) { /* fall through to localStorage */ }
-        }
-        // Fallback: localStorage-based registration
+    register: (userData) => {
         const users = window.db.getUsers();
         if (users.find(u => u.email === userData.email)) {
             return { success: false, message: 'Email already registered' };
@@ -116,11 +37,7 @@ window.auth = {
         return window.auth.login(newUser.email, newUser.password);
     },
 
-    logout: async () => {
-        const supabase = window.__supabase ? window.__supabase.client : null;
-        if (supabase) {
-            try { await supabase.auth.signOut(); } catch (e) { /* ignore */ }
-        }
+    logout: () => {
         window.auth.currentUser = null;
         localStorage.removeItem('lookagenius_session');
         window.location.href = 'index.html';
@@ -172,18 +89,6 @@ window.auth = {
             'admin': 'Admin'
         };
         return roles[role] || 'User';
-    },
-
-    getRoleAr: (role) => {
-        const roles = {
-            'student': 'طالب',
-            'parent': 'ولي أمر',
-            'teacher': 'مدرس',
-            'engineer': 'مهندس',
-            'accountant': 'محاسب',
-            'admin': 'مدير'
-        };
-        return roles[role] || 'مستخدم';
     }
 };
 
@@ -197,7 +102,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-// Expose async auth functions for HTML inline usage
-window.__authLogin = window.auth.login;
-window.__authRegister = window.auth.register;
