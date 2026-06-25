@@ -2,80 +2,165 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LookaGenius Academy | إنشاء حساب جديد</title>
-    
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-<body>
-    <main id="app-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px;">
-        <div class="glass-card" style="width: 100%; max-width: 500px; padding: 40px;" data-aos="zoom-in">
-            <h2 style="text-align: center; margin-bottom: 30px; font-weight: 800;">إنشاء حساب جديد</h2>
-            <form id="regForm">
-                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">الاسم الكامل</label>
-                    <input type="text" id="regName" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <style>
+        body { min-height: 100vh; display: flex; flex-direction: column; }
+        .auth-page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 120px 20px 60px; }
+        .auth-card { width: 100%; max-width: 500px; padding: 40px; }
+        .auth-card .logo { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .auth-card .logo img { height: 60px; }
+        .auth-card .logo span { font-size: 1.5rem; font-weight: 800; }
+        .auth-form .form-group { margin-bottom: 20px; text-align: right; }
+        .auth-form .form-group label { display: block; margin-bottom: 8px; color: var(--neon-blue); font-weight: bold; }
+        .auth-form .form-group input,
+        .auth-form .form-group select { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; font-family: inherit; }
+        .btn-auth { width: 100%; padding: 14px; background: linear-gradient(90deg, #00D4FF, #A855F7); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1rem; }
+        .switch-auth { margin-top: 20px; font-size: 0.9rem; color: #aaa; text-align: center; }
+        .switch-auth a { color: #00D4FF; font-weight: bold; text-decoration: none; }
+        .error-msg { color: #ff4d4d; text-align: center; margin-bottom: 15px; font-size: 0.85rem; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <div id="particles-js"></div>
+    <div class="glass-bg-overlay"></div>
+
+    <nav class="navbar glass-nav">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="neon-text">Looka</span>Genius <i class="fa-solid fa-graduation-cap"></i>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="courses.html" class="nav-link">الكورسات</a>
+                <a href="scholarships.html" class="nav-link">المنح الدراسية</a>
+                <a href="support.html" class="nav-link">تواصل معنا</a>
+                <div class="auth-buttons" id="authButtonsContainer">
+                    <a href="login.html" class="btn btn-outline">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-neon">إنشاء حساب <i class="fa-solid fa-user-plus"></i></a>
                 </div>
-                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">البريد الإلكتروني</label>
-                    <input type="email" id="regEmail" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
+                <div class="user-menu hidden" id="userMenuContainer">
+                    <a href="#" class="btn btn-neon btn-dashboard" id="dashboardBtn">لوحة التحكم <i class="fa-solid fa-border-all"></i></a>
+                    <button class="btn btn-outline btn-logout" id="logoutBtn"><i class="fa-solid fa-sign-out-alt"></i></button>
+                    <a href="profile.html" class="btn btn-outline" title="الملف الشخصي"><i class="fa-solid fa-user"></i></a>
                 </div>
-                <div class="form-group" style="text-align: right; margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">كلمة المرور</label>
-                    <input type="password" id="regPass" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff;" required>
-                </div>
-                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">نوع الحساب</label>
-                    <select id="regType" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid var(--border-color); color: #fff;">
-                        <option value="student">طالب</option>
-                        <option value="parent">ولي أمر</option>
-                        <option value="teacher">معلم / دكتور</option>
-                    </select>
-                </div>
-                <div id="regErrorMsg" style="color: var(--accent-pink); text-align: center; margin-bottom: 15px; font-size: 0.85rem; display: none;"></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; border-radius: 50px; font-size: 1.1rem;">إنشاء الحساب <i class="fa-solid fa-user-plus"></i></button>
-            </form>
-            <div style="text-align: center; margin-top: 25px; color: var(--text-secondary); font-size: 0.9rem;">
-                لديك حساب بالفعل؟ <a href="login.html" style="color: var(--primary-blue); font-weight: 700;">تسجيل دخول</a>
             </div>
         </div>
-    </main>
+    </nav>
 
-    <!-- Scripts -->
+    <div class="auth-page" data-aos="zoom-in">
+        <div class="glass-card auth-card">
+            <div class="logo">
+                <img src="assets/img/logo.png" alt="LookaGenius Logo">
+                <span class="neon-text">إنشاء حساب جديد</span>
+            </div>
+
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label>نوع الحساب</label>
+                    <select id="regType" class="form-select" required>
+                        <option value="" disabled selected>اختر نوع الحساب</option>
+                        <option value="student">طالب (Student)</option>
+                        <option value="parent">ولي أمر (Parent)</option>
+                        <option value="teacher">معلم / دكتور (Teacher/Doctor)</option>
+                        <option value="engineer">مهندس (Engineer)</option>
+                        <option value="accountant">محاسب (Accountant)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div id="dynamicFields"></div>
+                <div id="regErrorMsg" class="error-msg hidden"></div>
+                <button type="submit" class="btn-auth" id="regSubmitBtn" disabled>إنشاء حساب <i class="fa-solid fa-user-plus"></i></button>
+            </form>
+
+            <div class="switch-auth">
+                لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+            </div>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="index.html" style="color: #666; font-size: 0.8rem; text-decoration: none;">العودة للرئيسية</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="glass-footer">
+        <div class="container footer-content">
+            <div class="footer-col" data-aos="fade-up">
+                <h3><span class="neon-text">Looka</span>Genius</h3>
+                <p>منصتك الأولى للتعلم الذكي، استكشف عالم المعرفة والتكنولوجيا بخطوات مبسطة وتصميم استثنائي.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="100">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="courses.html">الكورسات</a></li>
+                    <li><a href="scholarships.html">المنح الدراسية</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="200">
+                <h4>الدعم والمساعدة</h4>
+                <ul>
+                    <li><a href="support.html">تواصل معنا</a></li>
+                    <li><a href="support.html">الأسئلة الشائعة</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="300">
+                <h4>تواصل مباشر</h4>
+                <p><i class="fa-solid fa-envelope"></i> info@lookagenius.com</p>
+                <p><i class="fa-solid fa-phone"></i> +1 234 567 8900</p>
+                <button class="btn btn-neon btn-full mt-1">تحدث عبر واتساب <i class="fa-brands fa-whatsapp"></i></button>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LookaGenius Academy. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
     <script src="js/db.js" defer></script>
-    <script src="js/components.js" defer></script>
     <script src="js/auth.js" defer></script>
     <script src="js/app.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-             const form = document.getElementById('regForm');
-             if (form) {
-                 form.onsubmit = (e) => {
-                     e.preventDefault();
-                     const userData = {
-                         name: document.getElementById('regName').value,
-                         email: document.getElementById('regEmail').value,
-                         password: document.getElementById('regPass').value,
-                         type: document.getElementById('regType').value
-                     };
-                     const res = window.auth.register(userData);
-                     if (res.success) {
-                         window.location.href = `dashboard-${res.user.type}.html`;
-                     } else {
-                         const err = document.getElementById('regErrorMsg');
-                         err.textContent = res.message;
-                         err.style.display = 'block';
-                     }
-                 };
-             }
-        });
-    </script>
+    <script src="js/pages/authForms.js" defer></script>
 </body>
 </html>

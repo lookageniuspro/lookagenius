@@ -10,14 +10,14 @@ const SUPABASE_URL = 'https://ofnzazrtgpmaekqtcejf.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UDT1nwvbwivUijDYcGMImQ_WHn4L-Q_';
 
 // Initialize Supabase Client (Using CDN script in HTML)
-let supabase;
+let supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Check for both 'supabase' and 'supabasejs' globals depending on CDN version
     const lib = window.supabase || window.supabasejs;
     
     if (lib) {
-        supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
+        supabaseClient = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
         checkSession();
     } else {
         console.error("Supabase library not loaded. Ensure the CDN script is included in the HTML.");
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Check if a user is already logged in
  */
 async function checkSession() {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabaseClient.auth.getSession();
     
     if (session) {
         console.log("User logged in:", session.user);
@@ -55,7 +55,7 @@ async function checkSession() {
  * Sign Up Logic
  */
 async function signUp(email, password, fullName, role = 'student') {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: {
@@ -80,7 +80,7 @@ async function signUp(email, password, fullName, role = 'student') {
  * Login Logic
  */
 async function login(email, password) {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password
     });
@@ -97,7 +97,7 @@ async function login(email, password) {
  * Logout Logic
  */
 async function logout() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabaseClient.auth.signOut();
     if (!error) window.location.href = 'index.html';
 }
 
