@@ -2,75 +2,167 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>LookaGenius Academy | Ã˜Â§Ã˜Â³Ã˜ÂªÃ™Æ’Ã˜Â´Ã™Â Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookaGenius Academy | منصة تعليمية متكاملة</title>
     
-    <!-- SEO & Social Sharing (Open Graph) -->
-    <meta name="description" content="Ã˜ÂªÃ˜ÂµÃ™ÂÃ˜Â­ Ã˜Â¬Ã™â€¦Ã™Å Ã˜Â¹ Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜ÂªÃ˜Â§Ã˜Â­Ã˜Â© Ã™ÂÃ™Å  LookaGenius Academy. Ã™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª Ã™â€¦Ã˜Â¹Ã˜ÂªÃ™â€¦Ã˜Â¯Ã˜Â© Ã™ÂÃ™Å  Ã˜Â§Ã™â€žÃ˜Â¨Ã˜Â±Ã™â€¦Ã˜Â¬Ã˜Â©Ã˜Å’ Ã˜Â§Ã™â€žÃ™â€žÃ˜ÂºÃ˜Â§Ã˜ÂªÃ˜Å’ Ã™Ë†Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€žÃ™Ë†Ã™â€¦.">
-    <meta property="og:title" content="LookaGenius Academy | Ã™Æ’Ã˜ÂªÃ˜Â§Ã™â€žÃ™Ë†Ã˜Â¬ Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª">
-    <meta property="og:description" content="Ã˜Â§Ã˜Â®Ã˜ÂªÃ˜Â± Ã™â€¦Ã˜Â³Ã˜Â§Ã˜Â±Ã™Æ’ Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â¹Ã™â€žÃ™Å Ã™â€¦Ã™Å  Ã™â€¦Ã™â€  Ã˜Â¨Ã™Å Ã™â€  Ã˜Â¹Ã˜Â´Ã˜Â±Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜ÂªÃ˜Â®Ã˜ÂµÃ˜ÂµÃ˜Â©.">
-    <meta property="og:image" content="assets/img/logo.png">
-    <meta property="og:type" content="website">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
 </head>
+<body class="dark-theme">
+    
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    <div class="glass-bg-overlay"></div>
 
-<body>
-    <div id="global-nav"></div>
-    <main id="app-container" style="padding-top: 120px;">
-        <section class="section-container" data-aos="fade-up">
-            <div class="section-header mb-4">
-                <h1 style="font-size: clamp(28px, 5vw, 45px); font-weight: 800;">Ã˜Â§Ã˜Â³Ã˜ÂªÃ™Æ’Ã˜Â´Ã™Â Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª</h1>
-                <p style="color: var(--text-secondary);">Ã˜Â§Ã˜Â®Ã˜ÂªÃ˜Â± Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â³Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â°Ã™Å  Ã™Å Ã™â€ Ã˜Â§Ã˜Â³Ã˜Â¨ Ã˜Â·Ã™â€¦Ã™Ë†Ã˜Â­Ã™Æ’ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€¡Ã™â€ Ã™Å  Ã™Ë†Ã˜Â§Ã™â€žÃ˜Â£Ã™Æ’Ã˜Â§Ã˜Â¯Ã™Å Ã™â€¦Ã™Å </p>
+    <!-- Main Navigation Bar -->
+    <nav class="navbar glass-nav">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="neon-text">Looka</span>Genius <i class="fa-solid fa-graduation-cap"></i>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link ">الرئيسية</a>
+                <a href="courses.html" class="nav-link active">الكورسات</a>
+                <a href="scholarships.html" class="nav-link ">المنح الدراسية</a>
+                <a href="support.html" class="nav-link ">تواصل معنا</a>
+                
+                <div class="auth-buttons" id="authButtonsContainer">
+                    <a href="login.html" class="btn btn-outline">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-neon">إنشاء حساب <i class="fa-solid fa-user-plus"></i></a>
+                </div>
+                <!-- Logged In User Nav Items (Hidden initially by CSS in auth.js) -->
+                <div class="user-menu hidden" id="userMenuContainer">
+                    <a href="#" class="btn btn-neon btn-dashboard" id="dashboardBtn">لوحة التحكم <i class="fa-solid fa-border-all"></i></a>
+                    <button class="btn btn-outline btn-logout" id="logoutBtn"><i class="fa-solid fa-sign-out-alt"></i></button>
+                    <a href="profile.html" class="btn btn-outline" title="الملف الشخصي"><i class="fa-solid fa-user"></i></a>
+                </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Stage Filter -->
-            <div class="filter-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
-                <button class="btn btn-outline active filter-stage-btn" data-stage="all" style="white-space: nowrap;">Ã™Æ’Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â§Ã˜Â­Ã™â€ž</button>
-                <button class="btn btn-outline filter-stage-btn" data-stage="primary" style="white-space: nowrap;">Ã°Å¸ÂÂ« Ã˜Â§Ã˜Â¨Ã˜ÂªÃ˜Â¯Ã˜Â§Ã˜Â¦Ã™Å </button>
-                <button class="btn btn-outline filter-stage-btn" data-stage="middle" style="white-space: nowrap;">Ã°Å¸â€œÅ¡ Ã˜Â¥Ã˜Â¹Ã˜Â¯Ã˜Â§Ã˜Â¯Ã™Å </button>
-                <button class="btn btn-outline filter-stage-btn" data-stage="high" style="white-space: nowrap;">Ã°Å¸Å½â€œ Ã˜Â«Ã˜Â§Ã™â€ Ã™Ë†Ã™Å </button>
+    <!-- Main Content -->
+
+        <main style="padding-top: 100px; padding-bottom: 60px;">
+            <div class="container page-fade-in">
+                <h1 class="text-center neon-text mb-4" data-aos="fade-down">قائمة الكورسات</h1>
+                
+                <!-- Search & Filters -->
+                <div class="glass-card mb-5" data-aos="fade-up" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <input type="text" class="form-control" placeholder="ابحث عن كورس...">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <select class="form-select">
+                            <option value="">جميع التخصصات</option>
+                            <option value="tech">تكنولوجيا وبرمجة</option>
+                            <option value="science">علوم</option>
+                            <option value="design">تصميم</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-neon">بحث <i class="fa-solid fa-search"></i></button>
+                </div>
+
+                <div id="coursesCatalog" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+                    <!-- JS Injected -->
+                </div>
             </div>
-
-            <!-- Category Filter -->
-            <div class="filter-container" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 40px; scrollbar-width: none;">
-                <button class="btn btn-outline active filter-btn" data-filter="all" style="white-space: nowrap;">Ã˜Â¬Ã™â€¦Ã™Å Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜ÂªÃ˜ÂµÃ™â€ Ã™Å Ã™ÂÃ˜Â§Ã˜Âª</button>
-                <button class="btn btn-outline filter-btn" data-filter="languages" style="white-space: nowrap;">Ã°Å¸Å’Â Ã˜Â§Ã™â€žÃ™â€žÃ˜ÂºÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â¹Ã˜Â§Ã™â€žÃ™â€¦Ã™Å Ã˜Â©</button>
-                <button class="btn btn-outline filter-btn" data-filter="physics" style="white-space: nowrap;">Ã¢Å¡Â¡ Ã˜Â§Ã™â€žÃ™ÂÃ™Å Ã˜Â²Ã™Å Ã˜Â§Ã˜Â¡</button>
-                <button class="btn btn-outline filter-btn" data-filter="chemistry" style="white-space: nowrap;">Ã°Å¸Â§Âª Ã˜Â§Ã™â€žÃ™Æ’Ã™Å Ã™â€¦Ã™Å Ã˜Â§Ã˜Â¡</button>
-                <button class="btn btn-outline filter-btn" data-filter="math" style="white-space: nowrap;">Ã°Å¸â€œÂ Ã˜Â§Ã™â€žÃ˜Â±Ã™Å Ã˜Â§Ã˜Â¶Ã™Å Ã˜Â§Ã˜Âª</button>
-                <button class="btn btn-outline filter-btn" data-filter="science" style="white-space: nowrap;">Ã°Å¸â€Â¬ Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€žÃ™Ë†Ã™â€¦</button>
-                <button class="btn btn-outline filter-btn" data-filter="social" style="white-space: nowrap;">Ã°Å¸Å’Â Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â¬Ã˜ÂªÃ™â€¦Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â§Ã˜Âª</button>
-                <button class="btn btn-outline filter-btn" data-filter="tech" style="white-space: nowrap;">Ã°Å¸â€™Â» Ã˜Â§Ã™â€žÃ˜Â¨Ã˜Â±Ã™â€¦Ã˜Â¬Ã˜Â© Ã™Ë†Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€šÃ™â€ Ã™Å Ã˜Â©</button>
+        </main>
+        
+        <!-- Mock Payment Modal Overlay -->
+        <div id="paymentModalOverlay" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+            <div class="glass-card" style="width: 100%; max-width: 500px; padding: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 class="neon-text">إتمام الدفع</h3>
+                    <button class="close-modal-btn" style="background: none; border: none; font-size: 1.5rem; color: white;"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <div id="paymentDetails" style="margin-bottom: 20px;"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">طريقة الدفع</label>
+                    <select class="form-select" id="payMethod">
+                        <option value="visa">بطاقة ائتمان (Visa/Mastercard)</option>
+                        <option value="bank">تحويل بنكي</option>
+                    </select>
+                </div>
+                
+                <div class="form-group credit-card-fields">
+                    <label class="form-label">رقم البطاقة الوهمي</label>
+                    <input type="text" class="form-control" placeholder="1234 5678 9101 1121" value="4000 0000 0000 0000">
+                </div>
+                
+                <button class="btn btn-neon btn-full mt-3" id="confirmPaymentBtn">تأكيد ودفع</button>
             </div>
-
-            <div id="courses-container" class="subjects-grid">
-                <!-- Courses injected here using courses.js -->
+        </div>
+        
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="container footer-content">
+            <div class="footer-col" data-aos="fade-up">
+                <h3><span class="neon-text">Looka</span>Genius</h3>
+                <p>منصتك الأولى للتعلم الذكي، استكشف عالم المعرفة والتكنولوجيا بخطوات مبسطة وتصميم استثنائي.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
             </div>
-        </section>
-    </main>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="100">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="courses.html">الكورسات</a></li>
+                    <li><a href="scholarships.html">المنح الدراسية</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="200">
+                <h4>الدعم والمساعدة</h4>
+                <ul>
+                    <li><a href="support.html">تواصل معنا</a></li>
+                    <li><a href="support.html">الأسئلة الشائعة</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" data-aos="fade-up" data-aos-delay="300">
+                <h4>تواصل مباشر</h4>
+                <p><i class="fa-solid fa-envelope"></i> info@lookagenius.com</p>
+                <p><i class="fa-solid fa-phone"></i> +1 234 567 8900</p>
+                <button class="btn btn-neon btn-full mt-1">تحدث عبر واتساب <i class="fa-brands fa-whatsapp"></i></button>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LookaGenius Academy. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
 
-    <!-- Social Tools -->
-    <div class="float-wrapper">
-        <a href="#" class="float-btn telegram hover-trigger" title="Ã™â€šÃ™â€ Ã˜Â§Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ™â€žÃ™Å Ã˜Â¬Ã˜Â±Ã˜Â§Ã™â€¦ Ã™â€žÃ™â€žÃ™â€¦Ã™â€ Ã˜Â­"><i class="fa-brands fa-telegram"></i></a>
-        <a href="https://wa.me/201098768356" class="float-btn whatsapp hover-trigger" target="_blank" title="Ã˜ÂªÃ™Ë†Ã˜Â§Ã˜ÂµÃ™â€ž Ã˜Â¹Ã˜Â¨Ã˜Â± Ã™Ë†Ã˜Â§Ã˜ÂªÃ˜Â³Ã˜Â§Ã˜Â¨"><i class="fa-brands fa-whatsapp"></i></a>
-    </div>
-
-    <!-- Scripts -->
+    <!-- Libraries -->
+    <!-- Chart.js for Dashboards -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="js/supabase.js" defer></script>
+    <!-- Particles.js for background effect -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- App Scripts -->
     <script src="js/db.js" defer></script>
-    <script src="js/components.js" defer></script>
     <script src="js/auth.js" defer></script>
     <script src="js/app.js" defer></script>
     <script src="js/pages/courses.js" defer></script>
-    <script src="assets/js/i18n.js"></script>
-    <script src="assets/js/chatbot.js"></script>
 </body>
 </html>

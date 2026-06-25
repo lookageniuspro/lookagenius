@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LookaGenius | Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž</title>
+    <title>LookaGenius | المقال</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -201,13 +201,13 @@
                 <span class="logo-text">LookaGenius</span>
             </a>
             <ul class="nav-links">
-            <li><a href="index.html" data-i18n="nav_home">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a></li>
-            <li><a href="courses.html" data-i18n="nav_courses">Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â±Ã˜Â³Ã˜Â§Ã˜Âª</a></li>
-            <li><a href="scholarships.html" data-i18n="nav_scholarships">Ã˜Â§Ã™â€žÃ™â€¦Ã™â€ Ã˜Â­</a></li>
-            <li><a href="blog.html" class="active" data-i18n="nav_blog">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></li>
-            <li><a href="services.html" data-i18n="nav_services">Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜ÂªÃ™â€ Ã˜Â§</a></li>
-            <li><a href="join-us.html" data-i18n="nav_join">Ã˜Â§Ã™â€ Ã˜Â¶Ã™â€¦ Ã˜Â¥Ã™â€žÃ™Å Ã™â€ Ã˜Â§</a></li>
-            <li><a href="support.html" data-i18n="nav_about">Ã™â€¦Ã™â€  Ã™â€ Ã˜Â­Ã™â€ </a></li>
+            <li><a href="index.html" data-i18n="nav_home">الرئيسية</a></li>
+            <li><a href="courses.html" data-i18n="nav_courses">الكورسات</a></li>
+            <li><a href="scholarships.html" data-i18n="nav_scholarships">المنح</a></li>
+            <li><a href="blog.html" class="active" data-i18n="nav_blog">المدونة</a></li>
+            <li><a href="services.html" data-i18n="nav_services">خدماتنا</a></li>
+            <li><a href="join-us.html" data-i18n="nav_join">انضم إلينا</a></li>
+            <li><a href="support.html" data-i18n="nav_about">من نحن</a></li>
             </ul>
             <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
@@ -223,7 +223,7 @@
     <div id="articleContent">
         <div style="text-align:center;padding:100px 20px;color:#aaa;">
             <i class="fa-solid fa-spinner fa-spin" style="font-size:3rem;margin-bottom:20px;display:block;"></i>
-            Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Å  Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž...
+            جاري تحميل المقال...
         </div>
     </div>
 
@@ -241,7 +241,7 @@
             const container = document.getElementById('articleContent');
 
             if (!articleId || !window.db) {
-                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã™Ë†Ã˜Â¬Ã™Ë†Ã˜Â¯</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></div>';
+                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>المقال غير موجود</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> العودة للمدونة</a></div>';
                 return;
             }
 
@@ -249,7 +249,7 @@
             const article = articles.find(a => a.id === articleId);
 
             if (!article) {
-                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã™Ë†Ã˜Â¬Ã™Ë†Ã˜Â¯</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a></div>';
+                container.innerHTML = '<div style="text-align:center;padding:100px 20px;color:#aaa;"><i class="fa-solid fa-exclamation-triangle" style="font-size:3rem;margin-bottom:20px;display:block;"></i><p>المقال غير موجود</p><a href="blog.html" class="back-to-blog" style="display:inline-flex;justify-content:center;margin-top:20px;"><i class="fa-solid fa-arrow-right"></i> العودة للمدونة</a></div>';
                 return;
             }
 
@@ -258,26 +258,26 @@
             container.innerHTML = `
                 <div class="article-banner" style="background-image:url('${article.image || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80'}')">
                     <div class="article-banner-info">
-                        <a href="blog.html" class="back-to-blog"><i class="fa-solid fa-arrow-right"></i> Ã˜Â§Ã™â€žÃ˜Â¹Ã™Ë†Ã˜Â¯Ã˜Â© Ã™â€žÃ™â€žÃ™â€¦Ã˜Â¯Ã™Ë†Ã™â€ Ã˜Â©</a>
+                        <a href="blog.html" class="back-to-blog"><i class="fa-solid fa-arrow-right"></i> العودة للمدونة</a>
                         <h1 class="ag-text-gradient">${article.title}</h1>
                         <div class="article-meta">
                             <span><i class="fa-regular fa-calendar"></i> ${article.date || ''}</span>
                             <span><i class="fa-regular fa-user"></i> ${article.author || 'LookaGenius'}</span>
-                            <span><i class="fa-regular fa-folder-open"></i> ${article.category === 'education' ? 'Ã˜ÂªÃ˜Â¹Ã™â€žÃ™Å Ã™â€¦' : article.category === 'tech' ? 'Ã˜ÂªÃ™Æ’Ã™â€ Ã™Ë†Ã™â€žÃ™Ë†Ã˜Â¬Ã™Å Ã˜Â§' : article.category || 'Ã˜Â¹Ã˜Â§Ã™â€¦'}</span>
+                            <span><i class="fa-regular fa-folder-open"></i> ${article.category === 'education' ? 'تعليم' : article.category === 'tech' ? 'تكنولوجيا' : article.category || 'عام'}</span>
                         </div>
                     </div>
                 </div>
                 <div class="article-body">
-                    ${article.content || '<p>Ã™â€žÃ˜Â§ Ã™Å Ã™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã˜Â¨Ã˜Â¹Ã˜Â¯</p>'}
+                    ${article.content || '<p>لا يوجد محتوى بعد</p>'}
                 </div>
                 <div class="share-section">
-                    <h3>Ã˜Â´Ã˜Â§Ã˜Â±Ã™Æ’ Ã˜Â§Ã™â€žÃ™â€¦Ã™â€šÃ˜Â§Ã™â€ž</h3>
+                    <h3>شارك المقال</h3>
                     <div class="share-buttons">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-x-twitter"></i></a>
                         <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' ' + window.location.href)}" target="_blank" class="share-btn"><i class="fa-brands fa-whatsapp"></i></a>
                         <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(article.title)}" target="_blank" class="share-btn"><i class="fa-brands fa-telegram-plane"></i></a>
-                        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('Ã˜ÂªÃ™â€¦ Ã™â€ Ã˜Â³Ã˜Â® Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â§Ã˜Â¨Ã˜Â·'))" class="share-btn"><i class="fa-solid fa-link"></i></button>
+                        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ الرابط'))" class="share-btn"><i class="fa-solid fa-link"></i></button>
                     </div>
                 </div>
             `;
