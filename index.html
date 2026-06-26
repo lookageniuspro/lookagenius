@@ -75,6 +75,8 @@
                 <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
                 <li><a href="services.html" data-i18n="nav_services">Services</a></li>
                 <li><a href="#scholarships" data-i18n="nav_scholarships">Scholarships</a></li>
+                <li><a href="support.html" data-i18n="nav_about_us">About Us</a></li>
+                <li><a href="join-us.html" data-i18n="nav_join_us">Join Us</a></li>
             </ul>
             <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
@@ -1094,47 +1096,47 @@
                 }
                 .team-card {
                     flex: 0 0 260px;
-                    background: rgba(15, 15, 35, 0.7);
-                    backdrop-filter: blur(15px);
-                    border: 1px solid rgba(0, 212, 255, 0.1);
                     border-radius: 25px;
-                    padding: 35px 25px;
-                    text-align: center;
                     position: relative;
                     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     box-shadow: 0 15px 35px rgba(0,0,0,0.4);
                     overflow: hidden;
+                    height: 350px;
+                    display: flex;
+                    align-items: flex-end;
                 }
-                .team-card::before {
-                    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
-                    background: linear-gradient(90deg, var(--primary-blue), var(--accent-violet));
+                .team-card-img {
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.6s ease;
+                }
+                .team-card:hover .team-card-img {
+                    transform: scale(1.1);
+                }
+                .team-card-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(0deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0.4) 50%, rgba(5,5,16,0.1) 100%);
+                }
+                .team-card-content {
+                    position: relative;
+                    z-index: 2;
+                    padding: 25px 20px;
+                    width: 100%;
+                    text-align: center;
                 }
                 .team-card:hover { 
                     transform: translateY(-12px) scale(1.03);
-                    border-color: var(--primary-blue);
                     box-shadow: 0 20px 50px rgba(0, 212, 255, 0.25);
                 }
-                .team-img-wrapper {
-                    width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 25px;
-                    padding: 5px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-violet));
-                    position: relative;
-                    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-                }
-                .team-img-wrapper::after {
-                    content: ''; position: absolute; inset: -8px; border-radius: 50%;
-                    border: 1px dashed rgba(0, 212, 255, 0.2); animation: rotateCircle 15s linear infinite;
-                }
-                @keyframes rotateCircle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-                .team-img-wrapper img { 
-                    width: 100%; height: 100%; border-radius: 50%; object-fit: cover; 
-                    background: #050510; position: relative; z-index: 2;
-                    border: 2px solid rgba(255,255,255,0.1);
-                }
-                .team-name { font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+                .team-name { font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
                 .team-role { 
                     font-size: 0.85rem; font-weight: 600; color: var(--primary-blue); 
-                    background: rgba(0,212,255,0.08); padding: 6px 15px; border-radius: 50px; 
-                    display: inline-block; border: 1px solid rgba(0, 212, 255, 0.1);
+                    background: rgba(0,212,255,0.12); padding: 6px 15px; border-radius: 50px; 
+                    display: inline-block; border: 1px solid rgba(0, 212, 255, 0.15);
                 }
                 [dir="rtl"] .team-track {
                     animation: scrollTeamRtl 40s linear infinite;
@@ -1149,189 +1151,297 @@
                 <!-- Group 1 -->
                 <!-- Leadership -->
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed"></div>
-                    <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
-                    <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
+                        <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed"></div>
-                    <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
-                    <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
+                        <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud"></div>
-                    <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
-                    <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
+                        <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef"></div>
-                    <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
-                    <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
+                        <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk"></div>
-                    <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
-                    <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
+                        <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah"></div>
-                    <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
-                    <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
+                        <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar"></div>
-                    <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
-                    <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
+                        <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada"></div>
-                    <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
-                    <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
+                        <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                    </div>
                 </div>
                 <!-- Teachers -->
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad"></div>
-                    <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
-                    <div class="team-role" data-i18n="t_saad_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
+                        <div class="team-role" data-i18n="t_saad_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya"></div>
-                    <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
-                    <div class="team-role" data-i18n="t_somaya_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
+                        <div class="team-role" data-i18n="t_somaya_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer"></div>
-                    <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
-                    <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
+                        <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa"></div>
-                    <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
-                    <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
+                        <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag"></div>
-                    <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
-                    <div class="team-role" data-i18n="t_farag_s">French</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
+                        <div class="team-role" data-i18n="t_farag_s">French</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman"></div>
-                    <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
-                    <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
+                        <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat"></div>
-                    <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
-                    <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
+                        <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam"></div>
-                    <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
-                    <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
+                        <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy"></div>
-                    <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
-                    <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
+                        <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally"></div>
-                    <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
-                    <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
+                        <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                    </div>
                 </div>
 
                 <!-- Duplicate for Infinite Scroll -->
                 <!-- Leadership (Duplicate) -->
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed"></div>
-                    <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
-                    <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150" alt="Ahmed">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_1_n">Dr. Ahmed Khalil</div>
+                        <div class="team-role" data-i18n="team_1_r">Academic Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed"></div>
-                    <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
-                    <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150" alt="Mohamed">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_mahran_n">Mr. Mohamed Mahran</div>
+                        <div class="team-role" data-i18n="t_mahran_r">Academic Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud"></div>
-                    <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
-                    <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150" alt="Mahmoud">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_mahmoud_n">Mahmoud Abo-Taleb</div>
+                        <div class="team-role" data-i18n="l_mahmoud_r">Financial Director</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef"></div>
-                    <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
-                    <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150" alt="Atef">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_atef_n">Mr. Ahmed Atef</div>
+                        <div class="team-role" data-i18n="l_atef_r">Legal Manager</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk"></div>
-                    <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
-                    <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150" alt="Farouk">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="l_farouk_n">Ahmed Farouk</div>
+                        <div class="team-role" data-i18n="l_farouk_r">Business Development</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah"></div>
-                    <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
-                    <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150" alt="Sarah">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_2_n">Sarah Mahmoud</div>
+                        <div class="team-role" data-i18n="team_2_r">Scholarship Consultant</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar"></div>
-                    <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
-                    <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150" alt="Omar">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_3_n">Omar El Shamy</div>
+                        <div class="team-role" data-i18n="team_3_r">Tech Manager</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada"></div>
-                    <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
-                    <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150" alt="Nada">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="team_4_n">Nada Tarek</div>
+                        <div class="team-role" data-i18n="team_4_r">Support Officer</div>
+                    </div>
                 </div>
                 <!-- Teachers (Duplicate) -->
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad"></div>
-                    <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
-                    <div class="team-role" data-i18n="t_saad_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150" alt="Saad">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_saad_n">Mr. Saad El-Din</div>
+                        <div class="team-role" data-i18n="t_saad_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya"></div>
-                    <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
-                    <div class="team-role" data-i18n="t_somaya_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150" alt="Somaya">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_somaya_n">Miss Somaya Mohamed</div>
+                        <div class="team-role" data-i18n="t_somaya_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer"></div>
-                    <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
-                    <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150" alt="Hadeer">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_hadeer_n">Miss Hadeer El-Sayed</div>
+                        <div class="team-role" data-i18n="t_hadeer_s">English</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa"></div>
-                    <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
-                    <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150" alt="Marwa">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_marwa_n">Miss Marwa Hamdy</div>
+                        <div class="team-role" data-i18n="t_marwa_s">Arabic</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag"></div>
-                    <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
-                    <div class="team-role" data-i18n="t_farag_s">French</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150" alt="Farag">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_farag_n">Mr. Farag El-Senoussi</div>
+                        <div class="team-role" data-i18n="t_farag_s">French</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman"></div>
-                    <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
-                    <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150" alt="Iman">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_iman_n">Miss Iman Omar</div>
+                        <div class="team-role" data-i18n="t_iman_s">Physics</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat"></div>
-                    <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
-                    <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150" alt="Ashraqat">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_ashraqat_n">Miss Ashraqat Hassan</div>
+                        <div class="team-role" data-i18n="t_ashraqat_s">Chemistry</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam"></div>
-                    <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
-                    <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150" alt="Islam">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_islam_n">Mr. Islam Mohamed</div>
+                        <div class="team-role" data-i18n="t_islam_s">Biology</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy"></div>
-                    <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
-                    <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150" alt="Magdy">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_magdy_n">Mr. Ahmed Magdy</div>
+                        <div class="team-role" data-i18n="t_magdy_s">History & Social Studies</div>
+                    </div>
                 </div>
                 <div class="team-card">
-                    <div class="team-img-wrapper"><img src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally"></div>
-                    <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
-                    <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                    <img class="team-card-img" src="https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150" alt="Sally">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name" data-i18n="t_sally_n">Mrs. Sally Youssef</div>
+                        <div class="team-role" data-i18n="t_sally_s">Mental Math</div>
+                    </div>
                 </div>
             </div>
         </div>

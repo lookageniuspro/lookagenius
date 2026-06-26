@@ -12,30 +12,67 @@ const defaultData = {
         { id: 3, name: 'Admin User', email: 'admin@lookagenius.com', password: 'password123', type: 'admin', active: true }
     ],
     courses: [
-        { id: 101, title: "Arabic: Foundation & Eloquence", description: "Discover the magic of the Arabic language and master grammar and rhetoric.", category: "languages", price: 25, duration: "36 hours", badge: "Arabic", image: "https://picsum.photos/seed/arabic/400/250" },
-        { id: 102, title: "Comprehensive English (A1-C1)", description: "Speak English confidently with certified international curricula.", category: "languages", price: 40, duration: "48 hours", badge: "English", image: "https://picsum.photos/seed/english/400/250" },
-        { id: 103, title: "French for Beginners", description: "Learn the language of art and culture from scratch.", category: "languages", price: 25, duration: "24 hours", badge: "French", image: "https://picsum.photos/seed/french/400/250" },
-        { id: 104, title: "German: Your Step to Europe", description: "Certified methodology to prepare for Goethe exams.", category: "languages", price: 40, duration: "30 hours", badge: "German", image: "https://picsum.photos/seed/german/400/250" },
-        { id: 105, title: "Fun Basic Science", description: "An interactive journey into the world of science for foundational stages.", category: "science", price: 20, duration: "20 hours", badge: "Science", image: "https://picsum.photos/seed/science/400/250" },
-        { id: 106, title: "Science for Language Schools", description: "International curriculum for global students.", category: "science", price: 25, duration: "20 hours", badge: "Science", image: "https://picsum.photos/seed/biology/400/250" },
-        { id: 107, title: "Integrated Science (High School)", description: "Intensive explanation of Chemistry, Physics, and Biology.", category: "science", price: 30, duration: "32 hours", badge: "Integrated Science", image: "https://picsum.photos/seed/integratedsci/400/250" },
-        { id: 108, title: "Mathematics Without Fears", description: "Simplifying complex mathematical concepts.", category: "math", price: 20, duration: "30 hours", badge: "Math", image: "https://picsum.photos/seed/matharab/400/250" },
-        { id: 109, title: "Math: Numbers & Geometry", description: "Mastering competitive mathematics.", category: "math", price: 25, duration: "30 hours", badge: "Math", image: "https://picsum.photos/seed/matheng/400/250" },
-        { id: 110, title: "Mental Math (Abacus)", description: "Developing mental abilities and speed in calculation.", category: "math", price: 45, duration: "20 hours", badge: "Mental Math", image: "https://picsum.photos/seed/mentalmath/400/250" },
-        { id: 111, title: "Physics: Power of the Universe", description: "Understanding the laws of mechanics and electricity simply.", category: "physics", price: 35, duration: "40 hours", badge: "Physics", image: "https://picsum.photos/seed/physics/400/250" },
-        { id: 112, title: "Analytical & Organic Chemistry", description: "Experiments and reactions that build the future.", category: "chemistry", price: 35, duration: "35 hours", badge: "Chemistry", image: "https://picsum.photos/seed/chemistry/400/250" },
-        { id: 113, title: "Advanced Biology", description: "Exploring the secrets of the cell and genetics.", category: "science", price: 30, duration: "30 hours", badge: "Biology", image: "https://picsum.photos/seed/biologyhs/400/250" },
-        { id: 114, title: "Geology & Environmental Science", description: "Studying Earth's layers and the planet's history.", category: "science", price: 25, duration: "25 hours", badge: "Geology", image: "https://picsum.photos/seed/geology/400/250" },
-        { id: 115, title: "Social Studies: History & Geography", description: "Stories of the past and geography of the present.", category: "social", price: 15, duration: "24 hours", badge: "Social Studies", image: "https://picsum.photos/seed/history/400/250" },
-        { id: 116, title: "ICT & Future Tech", description: "Mastering the tools of the digital age.", category: "tech", price: 15, duration: "30 hours", badge: "ICT", image: "https://picsum.photos/seed/ict/400/250" }
+        { id: 101, title: "Arabic: Foundation & Eloquence", description: "Discover the magic of the Arabic language and master grammar and rhetoric.", category: "languages", price: 25, duration: "36 hours", badge: "Arabic", image: "https://picsum.photos/seed/arabic/400/250", stage: "all", currency: "USD" },
+        { id: 102, title: "Comprehensive English (A1-C1)", description: "Speak English confidently with certified international curricula.", category: "languages", price: 40, duration: "48 hours", badge: "English", image: "https://picsum.photos/seed/english/400/250", stage: "all", currency: "USD" },
+        { id: 103, title: "French for Beginners", description: "Learn the language of art and culture from scratch.", category: "languages", price: 25, duration: "24 hours", badge: "French", image: "https://picsum.photos/seed/french/400/250", stage: "all", currency: "USD" },
+        { id: 104, title: "German: Your Step to Europe", description: "Certified methodology to prepare for Goethe exams.", category: "languages", price: 40, duration: "30 hours", badge: "German", image: "https://picsum.photos/seed/german/400/250", stage: "all", currency: "USD" },
+        { id: 105, title: "Fun Basic Science", description: "An interactive journey into the world of science for foundational stages.", category: "science", price: 20, duration: "20 hours", badge: "Science", image: "https://picsum.photos/seed/science/400/250", stage: "primary", currency: "USD" },
+        { id: 106, title: "Science for Language Schools", description: "International curriculum for global students.", category: "science", price: 25, duration: "20 hours", badge: "Science", image: "https://picsum.photos/seed/biology/400/250", stage: "primary", currency: "USD" },
+        { id: 107, title: "Integrated Science (High School)", description: "Intensive explanation of Chemistry, Physics, and Biology.", category: "science", price: 30, duration: "32 hours", badge: "Integrated Science", image: "https://picsum.photos/seed/integratedsci/400/250", stage: "high", currency: "USD" },
+        { id: 108, title: "Mathematics Without Fears", description: "Simplifying complex mathematical concepts.", category: "math", price: 20, duration: "30 hours", badge: "Math", image: "https://picsum.photos/seed/matharab/400/250", stage: "primary", currency: "USD" },
+        { id: 109, title: "Math: Numbers & Geometry", description: "Mastering competitive mathematics.", category: "math", price: 25, duration: "30 hours", badge: "Math", image: "https://picsum.photos/seed/matheng/400/250", stage: "middle", currency: "USD" },
+        { id: 110, title: "Mental Math (Abacus)", description: "Developing mental abilities and speed in calculation.", category: "math", price: 45, duration: "20 hours", badge: "Mental Math", image: "https://picsum.photos/seed/mentalmath/400/250", stage: "all", currency: "USD" },
+        { id: 111, title: "Physics: Power of the Universe", description: "Understanding the laws of mechanics and electricity simply.", category: "physics", price: 35, duration: "40 hours", badge: "Physics", image: "https://picsum.photos/seed/physics/400/250", stage: "high", currency: "USD" },
+        { id: 112, title: "Analytical & Organic Chemistry", description: "Experiments and reactions that build the future.", category: "chemistry", price: 35, duration: "35 hours", badge: "Chemistry", image: "https://picsum.photos/seed/chemistry/400/250", stage: "high", currency: "USD" },
+        { id: 113, title: "Advanced Biology", description: "Exploring the secrets of the cell and genetics.", category: "science", price: 30, duration: "30 hours", badge: "Biology", image: "https://picsum.photos/seed/biologyhs/400/250", stage: "high", currency: "USD" },
+        { id: 114, title: "Geology & Environmental Science", description: "Studying Earth's layers and the planet's history.", category: "science", price: 25, duration: "25 hours", badge: "Geology", image: "https://picsum.photos/seed/geology/400/250", stage: "high", currency: "USD" },
+        { id: 115, title: "Social Studies: History & Geography", description: "Stories of the past and geography of the present.", category: "social", price: 15, duration: "24 hours", badge: "Social Studies", image: "https://picsum.photos/seed/history/400/250", stage: "middle", currency: "USD" },
+        { id: 116, title: "ICT & Future Tech", description: "Mastering the tools of the digital age.", category: "tech", price: 15, duration: "30 hours", badge: "ICT", image: "https://picsum.photos/seed/ict/400/250", stage: "all", currency: "USD" },
+        { id: 117, title: "Engineering (Civil, Elec, Mech, Arch)", description: "University engineering specialties by top experts.", category: "engineering", price: 50, duration: "48 hours", badge: "Engineering", image: "https://picsum.photos/seed/engineering/400/250", stage: "university", currency: "USD" },
+        { id: 118, title: "Medicine, Dentistry & Pharmacy", description: "Explaining complex medical curricula in a simple way.", category: "science", price: 60, duration: "60 hours", badge: "Medicine", image: "https://picsum.photos/seed/medicine/400/250", stage: "university", currency: "USD" },
+        { id: 119, title: "Python from Scratch to Pro", description: "Learn Python and its applications in AI and Data Science.", category: "tech", price: 45, duration: "40 hours", badge: "Python", image: "https://picsum.photos/seed/python/400/250", stage: "career", currency: "USD" },
+        { id: 120, title: "Data Analysis", description: "Mastering data analysis tools to make smart business decisions.", category: "tech", price: 40, duration: "35 hours", badge: "Data Analysis", image: "https://picsum.photos/seed/data/400/250", stage: "career", currency: "USD" },
+        { id: 121, title: "Physics: 3rd Secondary", description: "Comprehensive coverage with smart simulations for modern physics.", category: "physics", price: 35, duration: "40 hours", badge: "Physics", image: "https://picsum.photos/seed/physics3/400/250", stage: "high", currency: "USD" },
+        { id: 122, title: "Physics: 2nd Secondary", description: "Basics of mechanical and light physics with simplicity.", category: "physics", price: 30, duration: "35 hours", badge: "Physics", image: "https://picsum.photos/seed/physics2/400/250", stage: "high", currency: "USD" },
+        { id: 123, title: "Chemistry: 3rd Secondary", description: "Organic and inorganic chemistry through understanding, not memorization.", category: "chemistry", price: 35, duration: "40 hours", badge: "Chemistry", image: "https://picsum.photos/seed/chem3/400/250", stage: "high", currency: "USD" }
     ],
     scholarships: [
-        { id: 201, title: 'Erasmus Mundus', country: 'Europe', funding: 'Full Funding', university: 'Multiple' },
-        { id: 202, title: 'DAAD Scholarship', country: 'Germany', funding: 'Full Funding', university: 'Multiple' }
+        { id: 201, title: 'Erasmus Mundus', country: 'Europe', funding: 'Full Funding', university: 'Multiple', deadline: 'January', image: 'https://picsum.photos/seed/erasmus/400/250' },
+        { id: 202, title: 'DAAD Scholarship', country: 'Germany', funding: 'Full Funding + Stipend', university: 'Multiple', deadline: 'Varies', image: 'https://picsum.photos/seed/daad/400/250' },
+        { id: 203, title: 'Eiffel Scholarship', country: 'France', funding: 'Salary + Insurance', university: 'Multiple', deadline: 'January', image: 'https://picsum.photos/seed/eiffel/400/250' },
+        { id: 204, title: 'Politecnico di Milano', country: 'Italy', funding: 'Fee Waiver + Gold Scholarship', university: 'Politecnico di Milano', deadline: 'February', image: 'https://picsum.photos/seed/politecnico/400/250' }
     ],
-    articles: [],
-    services: [],
-    team: [],
+    articles: [
+        { id: 301, title: 'Top 5 Tech Skills Needed in 2026', description: 'Discover the technical skills that make you an ideal candidate for major global companies.', category: 'tech', image: 'https://picsum.photos/seed/techskills/400/250', date: '2026-03-22', author: 'LookaGenius Team' },
+        { id: 302, title: 'How to Choose the Right Scholarship', description: 'Your comprehensive guide to scholarship selection criteria in Europe and America.', category: 'scholarships', image: 'https://picsum.photos/seed/scholarship/400/250', date: '2026-03-21', author: 'Sarah Mahmoud' },
+        { id: 303, title: 'Future of AI in Academic Education', description: 'Will AI change the traditional role of the teacher? Explore our predictions.', category: 'tech', image: 'https://picsum.photos/seed/ai-edu/400/250', date: '2026-03-20', author: 'Omar El Shamy' }
+    ],
+    services: [
+        { id: 401, title: 'Academic Guidance', description: 'We pave the way for you to reach the best global universities through a strong professional academic file.', icon: 'graduation-cap', price: 1500, category: 'academic' },
+        { id: 402, title: 'Professional Training', description: 'Intensive programs for companies and teams to learn the latest web technologies, programming, and AI.', icon: 'laptop-code', price: 2000, category: 'tech' },
+        { id: 403, title: 'Innovation Lab', description: 'Transform your innovative idea into a real product (MVP) that competes in the global market.', icon: 'flask', price: 2500, category: 'tech' },
+        { id: 404, title: 'University Admission Consulting', description: 'Comprehensive guidance for university applications, personal statements, and interview preparation.', icon: 'school', price: 800, category: 'academic' }
+    ],
+    team: [
+        { id: 501, name: 'Dr. Ahmed Khalil', role: 'Academic Director', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Ahmed+Khalil&background=0D8ABC&color=fff&size=150' },
+        { id: 502, name: 'Mr. Mohamed Mahran', role: 'Academic Director', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Mohamed+Mahran&background=4f46e5&color=fff&size=150' },
+        { id: 503, name: 'Mahmoud Abo-Taleb', role: 'Financial Director', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Mahmoud+Taleb&background=020617&color=fff&size=150' },
+        { id: 504, name: 'Mr. Ahmed Atef', role: 'Legal Manager', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Ahmed+Atef&background=1e293b&color=fff&size=150' },
+        { id: 505, name: 'Ahmed Farouk', role: 'Business Development', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Ahmed+Farouk&background=334155&color=fff&size=150' },
+        { id: 506, name: 'Sarah Mahmoud', role: 'Scholarship Consultant', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Sarah+Mahmoud&background=ec4899&color=fff&size=150' },
+        { id: 507, name: 'Omar El Shamy', role: 'Tech Manager', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Omar+Shamy&background=06b6d4&color=fff&size=150' },
+        { id: 508, name: 'Nada Tarek', role: 'Support Officer', category: 'leadership', image: 'https://ui-avatars.com/api/?name=Nada+Tarek&background=a855f7&color=fff&size=150' },
+        { id: 509, name: 'Mr. Saad El-Din', role: 'English Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Saad+Eldin&background=0D8ABC&color=fff&size=150' },
+        { id: 510, name: 'Miss Somaya Mohamed', role: 'English Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Somaya+Mohamed&background=8b5cf6&color=fff&size=150' },
+        { id: 511, name: 'Miss Hadeer El-Sayed', role: 'English Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Hadeer+Sayed&background=c026d3&color=fff&size=150' },
+        { id: 512, name: 'Miss Marwa Hamdy', role: 'Arabic Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Marwa+Hamdy&background=10b981&color=fff&size=150' },
+        { id: 513, name: 'Mr. Farag El-Senoussi', role: 'French Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Farag+Senoussi&background=4f46e5&color=fff&size=150' },
+        { id: 514, name: 'Miss Iman Omar', role: 'Physics Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Iman+Omar&background=a855f7&color=fff&size=150' },
+        { id: 515, name: 'Miss Ashraqat Hassan', role: 'Chemistry Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Ashraqat+Hassan&background=FF3366&color=fff&size=150' },
+        { id: 516, name: 'Mr. Islam Mohamed', role: 'Biology Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Islam+Mohamed&background=22c55e&color=fff&size=150' },
+        { id: 517, name: 'Mr. Ahmed Magdy', role: 'History & Social Studies Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Ahmed+Magdy&background=eab308&color=fff&size=150' },
+        { id: 518, name: 'Mrs. Sally Youssef', role: 'Mental Math Teacher', category: 'teacher', image: 'https://ui-avatars.com/api/?name=Sally+Youssef&background=06b6d4&color=fff&size=150' }
+    ],
     courseCategories: [],
     currencies: [],
     settings: {
@@ -53,8 +90,29 @@ const defaultData = {
 };
 
 function initDB() {
-    if (!localStorage.getItem(DB_KEY)) {
-        localStorage.setItem(DB_KEY, JSON.stringify(defaultData));
+    const existing = localStorage.getItem(DB_KEY)
+    if (!existing) {
+        localStorage.setItem(DB_KEY, JSON.stringify(defaultData))
+        return
+    }
+    try {
+        const data = JSON.parse(existing)
+        let changed = false
+        for (const key of ['courses', 'scholarships', 'articles', 'services', 'team']) {
+            if (!data[key] || data[key].length === 0) {
+                data[key] = JSON.parse(JSON.stringify(defaultData[key] || []))
+                changed = true
+            }
+        }
+        for (const key of ['courseCategories', 'currencies', 'settings', 'notifications', 'financials', 'settlementRequests', 'collaborations']) {
+            if (!data[key]) {
+                data[key] = JSON.parse(JSON.stringify(defaultData[key] || (key === 'settings' ? defaultData.settings : [])))
+                changed = true
+            }
+        }
+        if (changed) saveData(data)
+    } catch(e) {
+        localStorage.setItem(DB_KEY, JSON.stringify(defaultData))
     }
 }
 

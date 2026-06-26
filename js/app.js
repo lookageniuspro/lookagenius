@@ -26,17 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Three.js Network Background (Restored)
     if (document.getElementById('canvas-container')) initNetworkBackground();
 
-    // 4. Typewriter Effects (Restored Engines)
-    setupTypewriter('typewriter', ["التعليم هو جواز السفر للمستقبل 🌍", "استثمر في نفسك اليوم 🚀", "طريقك للجامعات العالمية 🏆", "منح دراسية وإرشاد أكاديمي 🌟"], 2500, 35, 15);
-    setupTypewriter('quotes-typewriter', ["تعلم الإنجليزية بطلاقة 📚", "احصل على شهادة معتمدة في البرمجة 💻", "اكتشف أسرار الفيزياء 🌌", "منح دراسية تنتظرك 🎓", "تطوير مهاراتك بلا حدود 🔥"], 2200, 30, 15);
-    
-    // Card Typewriter
-    document.querySelectorAll('.card-typewriter').forEach((el, index) => {
-        const quotesStr = el.getAttribute('data-quotes');
-        if(!quotesStr) return;
-        const quotes = JSON.parse(quotesStr);
-        setupCardTypewriter(el, quotes, index);
-    });
+    // 4. Typewriter Effects - handled by script.js
 });
 
 /**

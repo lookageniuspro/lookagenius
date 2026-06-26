@@ -68,7 +68,7 @@
         let displayContent = currentPhrase.substring(0, type_j);
         textDisplay.innerHTML = displayContent;
 
-        let delta = isDeleting ? 50 : 100;
+        let delta = isDeleting ? 80 : 150;
 
         if (!isDeleting && type_j < currentPhrase.length) {
             type_j++;
@@ -102,7 +102,7 @@
 
         quotesDisplay.innerHTML = currentQuote.substring(0, qc_j);
 
-        let delta = quoteDeleting ? 30 : 70;
+        let delta = quoteDeleting ? 60 : 120;
 
         if (!quoteDeleting && qc_j < currentQuote.length) {
             qc_j++;
@@ -136,7 +136,7 @@
                 const q = quotes[ci];
                 card.innerHTML = q.substring(0, cj);
 
-                let d = del ? 30 : 80;
+                let d = del ? 60 : 120;
                 if (!del && cj < q.length) { cj++; }
                 else if (del && cj > 0) { cj--; }
                 else if (!del && cj === q.length) { del = true; d = 2000; }
@@ -184,6 +184,9 @@
                 }
             });
         }
+        renderHomeTeam();
+        renderHomeCourses();
+        renderHomeScholarships();
     });
 
     // 4. Cursor Logic
@@ -286,15 +289,15 @@
     function initCourseFilter() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const courseSearch = document.getElementById('courseSearch');
-        const courseCards = document.querySelectorAll('.course-card');
 
-        const filterCourses = () => {
-            const query = courseSearch.value.toLowerCase().trim();
-            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+        function filterCourses() {
+            const query = (courseSearch ? courseSearch.value.toLowerCase().trim() : '');
+            const activeBtn = document.querySelector('.filter-btn.active');
+            const activeFilter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
 
-            courseCards.forEach(card => {
-                const title = card.querySelector('.course-title').innerText.toLowerCase();
-                const desc = card.querySelector('.subject-desc').innerText.toLowerCase();
+            document.querySelectorAll('.course-card').forEach(card => {
+                const title = (card.querySelector('.course-title')?.innerText || '').toLowerCase();
+                const desc = (card.querySelector('.subject-desc')?.innerText || '').toLowerCase();
                 const categories = card.getAttribute('data-category') || '';
                 
                 const matchesSearch = title.includes(query) || desc.includes(query);
@@ -308,7 +311,7 @@
                 }
             });
             AOS.refresh();
-        };
+        }
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -323,6 +326,76 @@
         }
     }
 
+    // 7. Dynamic Homepage Rendering from Database
+    function renderHomeTeam() {
+        const track = document.querySelector('.team-track')
+        if (!track || !window.db) return
+        const members = window.db.getTeam()
+        if (!members.length) return
+        const html = members.map(m => `
+                <div class="team-card">
+                    <img class="team-card-img" src="${escHtml(m.image || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.name) + '&background=0D8ABC&color=fff&size=150')}" alt="${escHtml(m.name)}">
+                    <div class="team-card-overlay"></div>
+                    <div class="team-card-content">
+                        <div class="team-name">${escHtml(m.name)}</div>
+                        <div class="team-role">${escHtml(m.role)}</div>
+                    </div>
+                </div>
+        `).join('')
+        track.innerHTML = html + html
+    }
+
+    function escHtml(str) {
+        const d = document.createElement('div')
+        d.textContent = str
+        return d.innerHTML
+    }
+
+    function renderHomeCourses() {
+        const wrapper = document.querySelector('.courses-wrapper')
+        if (!wrapper || !window.db) return
+        const courses = window.db.getCourses()
+        if (!courses.length) return
+        wrapper.innerHTML = courses.map(c => `
+            <div class="course-card glass-card" data-category="${escHtml(c.category || '')} ${escHtml(c.stage || '')}" data-aos="fade-up">
+                <div class="course-badge" style="background: ${c.category === 'languages' ? '#0D8ABC' : c.category === 'science' || c.category === 'physics' || c.category === 'chemistry' ? '#10b981' : c.category === 'math' ? '#f59e0b' : c.category === 'tech' ? '#8b5cf6' : '#ec4899'}">${escHtml(c.badge || c.category)}</div>
+                <div class="course-img"><img src="${escHtml(c.image || 'https://picsum.photos/seed/' + c.id + '/400/250')}" alt="${escHtml(c.title)}" loading="lazy"></div>
+                <div class="course-content">
+                    <h3 class="course-title">${escHtml(c.title)}</h3>
+                    <p class="subject-desc">${escHtml(c.description || '')}</p>
+                    <div class="course-footer" style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+                        <span style="color:var(--success);font-weight:700;">${c.currency || '$'}${c.price || 0}</span>
+                        <a href="login.html" class="ag-btn ag-btn-sm hover-trigger" data-i18n="course_btn">View Details</a>
+                    </div>
+                </div>
+            </div>
+        `).join('')
+        AOS.refresh()
+    }
+
+    function renderHomeScholarships() {
+        const grid = document.querySelector('#scholarships .subjects-grid')
+        if (!grid || !window.db) return
+        const items = window.db.getScholarships()
+        if (!items.length) return
+        grid.innerHTML = items.map(s => `
+            <div class="subject-card glass-card" data-aos="fade-up">
+                <div class="subject-icon" style="background:rgb(251,191,36,0.12); color:#FBBF24;">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3>${escHtml(s.title)}</h3>
+                <div class="scholarship-details">
+                    <span><i class="fa-solid fa-location-dot"></i> ${escHtml(s.country || '')}</span>
+                    <span><i class="fa-solid fa-university"></i> ${escHtml(s.university || '')}</span>
+                    <span><i class="fa-solid fa-money-bill-wave"></i> ${escHtml(s.funding || '')}</span>
+                    <span><i class="fa-solid fa-calendar"></i> ${s.deadline ? escHtml(s.deadline) : ''}</span>
+                </div>
+                <a href="login.html" class="ag-btn hover-trigger ag-float" style="width:100%;justify-content:center;margin-top:15px;" data-i18n="schol_apply">Apply Now</a>
+            </div>
+        `).join('')
+        AOS.refresh()
+    }
+
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {
         loopTypewriter();
@@ -332,5 +405,10 @@
         initCursor();
         initMobileMenu();
         initCourseFilter();
+        renderHomeTeam();
+        renderHomeCourses();
+        renderHomeScholarships();
+        const lang = localStorage.getItem('lookagenius_lang') || 'ar'
+        if (typeof setLanguage === 'function') setLanguage(lang)
     });
 })();

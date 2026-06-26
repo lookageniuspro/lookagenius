@@ -31,7 +31,8 @@ const renderNavbar = () => {
             <a href="index.html" class="nav-link ${currentPath === 'index.html' ? 'active' : ''}">الرئيسية</a>
             <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}">الكورسات</a>
             <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}">المنح</a>
-            <a href="support.html" class="nav-link">من نحن</a>
+            <a href="support.html" class="nav-link ${currentPath === 'support.html' ? 'active' : ''}">من نحن</a>
+            <a href="join-us.html" class="nav-link ${currentPath === 'join-us.html' ? 'active' : ''}">انضم لنا</a>
         </nav>
 
         ${logoHtml}
@@ -57,6 +58,7 @@ const renderNavbar = () => {
             <a href="courses.html" class="nav-link ${currentPath === 'courses.html' ? 'active' : ''}">الكورسات</a>
             <a href="scholarships.html" class="nav-link ${currentPath === 'scholarships.html' ? 'active' : ''}">المنح</a>
             <a href="support.html" class="nav-link">من نحن</a>
+            <a href="join-us.html" class="nav-link">انضم لنا</a>
             <hr style="border: none; border-top: 1px solid var(--border-color);">
             ${user ? `
             <a href="dashboard-${user.type}.html" class="btn btn-primary" style="width: 100%; justify-content: center;">لوحة التحكم</a>
@@ -112,6 +114,8 @@ const renderFooter = () => {
                     <li><a href="index.html" class="nav-link">الرئيسية</a></li>
                     <li><a href="courses.html" class="nav-link">الكورسات</a></li>
                     <li><a href="scholarships.html" class="nav-link">المنح الدراسية</a></li>
+                    <li><a href="support.html" class="nav-link">من نحن</a></li>
+                    <li><a href="join-us.html" class="nav-link">انضم لنا</a></li>
                 </ul>
             </div>
         </div>
