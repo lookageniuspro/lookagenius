@@ -263,6 +263,10 @@ window.db = {
     },
 
     // Course Categories
+    getCourseById: (id) => getData().courses.find(c => c.id === parseInt(id)),
+
+    getPayments: () => (getData().invoices || []).filter(i => i.status === 'paid'),
+
     getCourseCategories: () => getData().courseCategories || [],
     addCourseCategory: (item) => crudFor('courseCategories').add(item),
     deleteCourseCategory: (id) => crudFor('courseCategories').delete(id),
@@ -392,7 +396,75 @@ window.db = {
         saveData(data)
         return true
     },
-    deleteAttendanceSession: (id) => crudFor('attendance').delete(id)
+    deleteAttendanceSession: (id) => crudFor('attendance').delete(id),
+
+    /* ========= Supabase Adapter (async, used when Supabase is available) ========= */
+    supabase: {
+        async getCourses() {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getCourses()
+            return sb.getPublishedCourses()
+        },
+        async getAllCourses() {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getCourses()
+            return sb.getAllCourses()
+        },
+        async getCourseById(id) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getCourseById(id)
+            return sb.getCourseById(id)
+        },
+        async getTeacherCourses(teacherId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getCourses().filter(c => c.instructor_id === teacherId)
+            return sb.getTeacherCourses(teacherId)
+        },
+        async getEnrollments(studentId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getStudentEnrollments(studentId)
+        },
+        async getModules(courseId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getCourseModules(courseId)
+        },
+        async getLessons(moduleId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getModuleLessons(moduleId)
+        },
+        async getAssessments(courseId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getCourseAssessments(courseId)
+        },
+        async getQuestions(assessmentId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getAssessmentQuestions(assessmentId)
+        },
+        async getAttempts(studentId, assessmentId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getStudentAttempts(studentId, assessmentId)
+        },
+        async getCertificates(studentId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return []
+            return sb.getStudentCertificates(studentId)
+        },
+        async getNotifications(userId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getNotifications()
+            return sb.getNotifications(userId)
+        },
+        async getSettings() {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return window.db.getSettings()
+            return sb.getSettings()
+        },
+        async enrollStudent(studentId, courseId, amount, status) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return null
+            return sb.enrollStudent(studentId, courseId, amount, status)
+        },
+        async markComplete(studentId, lessonId, courseId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return null
+            return sb.markLessonComplete(studentId, lessonId, courseId)
+        },
+        async issueCert(studentId, courseId) {
+            const sb = window.supabaseApp; if (!sb || !sb.isReady()) return null
+            return sb.issueCertificate(studentId, courseId)
+        }
+    }
 }
 
 initDB()

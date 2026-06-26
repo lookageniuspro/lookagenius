@@ -1,73 +1,88 @@
-/**
- * dashboard-accountant.js
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     if (!window.auth.currentUser || window.auth.currentUser.type !== 'accountant') return;
 
-    const sidebar = `
-        <li><a href="#" class="sidebar-link active" style="display: block; padding: 15px 20px;"><i class="fa-solid fa-chart-pie"></i> نظرة عامة</a></li>
-        <li><a href="#" class="sidebar-link" style="display: block; padding: 15px 20px;"><i class="fa-solid fa-file-invoice"></i> الفواتير</a></li>
-        <li><a href="#" class="sidebar-link" style="display: block; padding: 15px 20px;"><i class="fa-solid fa-money-bill-wave"></i> المدفوعات</a></li>
-    `;
+    const user = window.auth.currentUser;
 
-    const content = `
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
-            <div class="glass-card text-center" style="border-top: 3px solid var(--neon-green);">
-                <h3>$5,400</h3><p>الإيرادات</p>
+    function renderUI(section) {
+        section = section || 'invoices';
+
+        const sidebar = `
+            <li><a href="#" class="${section === 'invoices' ? 'active' : ''}" data-section="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> الفواتير</a></li>
+            <li><a href="#" class="${section === 'payments' ? 'active' : ''}" data-section="payments"><i class="fa-solid fa-money-bill-transfer"></i> المدفوعات</a></li>
+            <li><a href="#" class="${section === 'stats' ? 'active' : ''}" data-section="stats"><i class="fa-solid fa-chart-pie"></i> التقارير المالية</a></li>
+        `;
+
+        let content = '';
+        if (section === 'invoices') content = renderInvoices();
+        else if (section === 'payments') content = renderPayments();
+        else if (section === 'stats') content = renderStats();
+
+        const container = document.getElementById('dashboardContent');
+        if (!container) return;
+        container.innerHTML = renderDashboardLayout('لوحة تحكم المحاسب', sidebar, content);
+        bindLogout();
+        bindNav();
+    }
+
+    function bindNav() {
+        document.querySelectorAll('.dash-sidebar .nav-list a[data-section]').forEach(link => {
+            link.addEventListener('click', e => { e.preventDefault(); renderUI(link.dataset.section); });
+        });
+    }
+
+    function renderInvoices() {
+        const invoices = window.db.getInvoices();
+        const users = window.db.getUsers();
+        const totalPending = invoices.filter(i => i.status === 'pending').reduce((s, i) => s + (i.amount || 0), 0);
+        const totalPaid = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.amount || 0), 0);
+        return `
+            <div class="stats-grid" style="margin-bottom:20px;">
+                <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">$${totalPending}</div><p class="label">إجمالي المستحق</p></div>
+                <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">$${totalPaid}</div><p class="label">إجمالي المدفوعات</p></div>
+                <div class="stat-card" style="border-top:3px solid #00D4FF;"><div class="num" style="color:#00D4FF;">${invoices.length}</div><p class="label">عدد الفواتير</p></div>
             </div>
-            <div class="glass-card text-center" style="border-top: 3px solid var(--neon-blue);">
-                <h3>120</h3><p>الطلاب</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>#</th><th>الطالب</th><th>الوصف</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+                    <tbody>${invoices.length ? invoices.map((inv, i) => {
+                        const student = users.find(u => u.id === inv.userId);
+                        return `<tr><td>${i+1}</td><td>${escHtml(student ? student.name : '#' + inv.userId)}</td><td style="color:rgba(255,255,255,0.5);">${escHtml(inv.description || '')}</td><td style="font-weight:700;">${inv.currency || '$'}${inv.amount || 0}</td><td>${inv.status === 'paid' ? '<span style="color:#10b981;">مدفوع</span>' : '<span style="color:#FBBF24;">غير مدفوع</span>'}</td><td style="color:rgba(255,255,255,0.4);font-size:0.75rem;">${inv.issuedAt || '-'}</td></tr>`;
+                    }).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد فواتير</td></tr>'}</tbody>
+                </table>
             </div>
-            <div class="glass-card text-center" style="border-top: 3px solid var(--neon-pink);">
-                <h3>$800</h3><p>فواتير مستحقة</p>
+        `;
+    }
+
+    function renderPayments() {
+        const payments = window.db.getPayments();
+        const users = window.db.getUsers();
+        if (!payments.length) return '<div class="empty-state"><i class="fa-solid fa-money-bill-wave"></i><p>لا توجد مدفوعات مسجلة</p></div>';
+        return `
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>#</th><th>الطالب</th><th>المبلغ</th><th>طريقة الدفع</th><th>التاريخ</th></tr></thead>
+                    <tbody>${payments.map((p, i) => {
+                        const student = users.find(u => u.id === p.userId);
+                        return `<tr><td>${i+1}</td><td>${escHtml(student ? student.name : '#' + p.userId)}</td><td style="font-weight:700;color:#10b981;">${p.currency || '$'}${p.amount || 0}</td><td style="color:rgba(255,255,255,0.5);">${escHtml(p.method || 'نقدي')}</td><td style="color:rgba(255,255,255,0.4);font-size:0.75rem;">${p.date || '-'}</td></tr>`;
+                    }).join('')}</tbody>
+                </table>
             </div>
-        </div>
+        `;
+    }
 
-        <div class="glass-card">
-            <h3 class="mb-3">التحليل المالي</h3>
-            <canvas id="financeChart" style="width: 100%; height: 250px;"></canvas>
-        </div>
+    function renderStats() {
+        const invoices = window.db.getInvoices();
+        const payments = window.db.getPayments();
+        const totalRevenue = payments.reduce((s, p) => s + (p.amount || 0), 0);
+        const totalPending = invoices.filter(i => i.status === 'pending').reduce((s, i) => s + (i.amount || 0), 0);
+        return `
+            <div class="stats-grid">
+                <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">$${totalRevenue}</div><p class="label">الإيرادات</p></div>
+                <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">$${totalPending}</div><p class="label">المستحقات</p></div>
+                <div class="stat-card" style="border-top:3px solid #00D4FF;"><div class="num" style="color:#00D4FF;">${payments.length}</div><p class="label">عدد المعاملات</p></div>
+            </div>
+        `;
+    }
 
-        <h3 class="mt-4 mb-3">السجل المالي</h3>
-        <table style="width: 100%; text-align: right; border-collapse: collapse;">
-            <thead>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <th style="padding: 10px;">الكورس</th>
-                    <th style="padding: 10px;">المبلغ</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${window.db.getPayments().map(p => `
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td style="padding: 10px;">${window.db.getCourseById(p.courseId)?.title || '-'}</td>
-                        <td style="padding: 10px;">$${p.amount}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
-
-    document.getElementById('dashboardContent').innerHTML = renderDashboardLayout('اللوحة المالية', sidebar, content);
-
-    // Init Chart
-    setTimeout(() => {
-        const ctx = document.getElementById('financeChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل'],
-                    datasets: [{
-                        label: 'الإيرادات',
-                        data: [1200, 1900, 800, 1500],
-                        backgroundColor: 'rgba(188, 19, 254, 0.5)',
-                        borderColor: '#bc13fe',
-                        borderWidth: 1
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-    }, 100);
+    renderUI();
 });

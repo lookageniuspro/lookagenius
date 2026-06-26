@@ -1,522 +1,70 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (!window.auth.currentUser || window.auth.currentUser.type !== 'student') return;
+/**
+ * dashboard-student.js — Supabase + localStorage dual source
+ * Sections: Home | Catalog | My Courses | Lesson Player | Quizzes | Certificates
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!window.auth.currentUser || window.auth.currentUser.type !== 'student') return
 
-    const user = window.auth.currentUser;
-    const CART_KEY = 'lookagenius_cart';
+    const user = window.auth.currentUser
+    const sb = window.supabaseApp
+    const CART_KEY = 'lookagenius_cart'
+    let currentCourseId = null, currentLessonId = null, currentAssessmentId = null, quizState = null
 
-    function escHtml(str) {
-        const d = document.createElement('div');
-        d.textContent = str;
-        return d.innerHTML;
+    function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML }
+    function getCart() { try { return JSON.parse(localStorage.getItem(CART_KEY)) || [] } catch(e) { return [] } }
+    function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)) }
+    function cartCount() { return getCart().length }
+
+    async function ensureSb() {
+        if (sb && sb.isReady()) return true
+        return false
     }
 
-    function getCart() {
-        try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; }
-    }
+    async function renderUI(section) {
+        const hasSb = await ensureSb()
+        section = section || 'home'
 
-    function saveCart(cart) {
-        localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    }
-
-    function addToCart(courseId) {
-        const cart = getCart();
-        if (cart.includes(courseId)) return false;
-        cart.push(courseId);
-        saveCart(cart);
-        return true;
-    }
-
-    function removeFromCart(courseId) {
-        saveCart(getCart().filter(id => id !== courseId));
-    }
-
-    function clearCart() {
-        localStorage.removeItem(CART_KEY);
-    }
-
-    function cartCount() {
-        return getCart().length;
-    }
-
-    function getEnrolledCourses() {
-        return window.db.getCourses().filter(c => {
-            const enrolled = c.studentsEnrolled || [];
-            return enrolled.includes(user.id);
-        });
-    }
-
-    function renderStudentUI(section) {
-        section = section || 'home';
-        const enrolled = getEnrolledCourses();
-        const invoices = window.db.getInvoicesForUser(user.id);
-        const attStats = window.db.getStudentAttendanceStats(user.id);
-        const allCourses = window.db.getCourses();
-        const cart = getCart();
-        const cartCourses = allCourses.filter(c => cart.includes(c.id));
-
-        const container = document.getElementById('dashboardContent');
-        if (!container) return;
-
-        container.innerHTML = `
-            <style>
-                .dash-wrap { display: flex; gap: 25px; padding: 20px 30px 60px; max-width: 1400px; margin: 0 auto; min-height: 80vh; }
-                .dash-sidebar { width: 260px; flex-shrink: 0; align-self: flex-start; position: sticky; top: 100px; border-radius: 20px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.8); overflow: hidden; }
-                .dash-sidebar .profile { text-align: center; padding: 30px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-                .dash-sidebar .profile .avatar { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #00D4FF, #A855F7); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; box-shadow: 0 0 30px rgba(0,212,255,0.3); }
-                .dash-sidebar .profile h4 { font-size: 1rem; font-weight: 800; margin: 0 0 4px; }
-                .dash-sidebar .profile p { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin: 0; }
-                .dash-sidebar .nav-list { list-style: none; padding: 10px 0; margin: 0; }
-                .dash-sidebar .nav-list li a { display: flex; align-items: center; gap: 12px; padding: 14px 24px; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.2s; border-right: 3px solid transparent; }
-                .dash-sidebar .nav-list li a:hover { background: rgba(255,255,255,0.04); color: white; }
-                .dash-sidebar .nav-list li a.active { background: rgba(0,212,255,0.08); color: #00D4FF; border-right-color: #00D4FF; }
-                .dash-sidebar .nav-list li a .badge { background: #FF3366; color: white; font-size: 0.65rem; padding: 2px 7px; border-radius: 20px; margin-right: auto; }
-                .dash-sidebar .nav-list li a.logout { border-top: 1px solid rgba(255,255,255,0.06); margin-top: 10px; padding-top: 18px; color: #ff4d4d; }
-                .dash-sidebar .nav-list li a.logout:hover { background: rgba(255,77,77,0.08); }
-                .dash-main { flex: 1; min-width: 0; }
-                .dash-header { margin-bottom: 30px; }
-                .dash-header h2 { font-size: 1.6rem; font-weight: 900; margin: 0 0 5px; background: linear-gradient(135deg, #00D4FF, #A855F7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-                .dash-header p { color: rgba(255,255,255,0.4); margin: 0; font-size: 0.85rem; }
-                .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 30px; }
-                .stat-card { padding: 22px; border-radius: 16px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); text-align: center; transition: 0.3s; }
-                .stat-card:hover { border-color: var(--ag-primary); transform: translateY(-3px); box-shadow: 0 0 30px rgba(0,212,255,0.1); }
-                .stat-card .num { font-size: 2rem; font-weight: 900; margin: 0 0 4px; }
-                .stat-card .label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin: 0; }
-                .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-                .course-card-dash { border-radius: 16px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; transition: 0.3s; }
-                .course-card-dash:hover { border-color: var(--ag-primary); transform: translateY(-4px); box-shadow: 0 10px 40px rgba(0,212,255,0.12); }
-                .course-card-dash .img-wrap { height: 160px; overflow: hidden; position: relative; }
-                .course-card-dash .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-                .course-card-dash .img-wrap .badge { position: absolute; top: 12px; right: 12px; padding: 4px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; background: rgba(0,212,255,0.2); backdrop-filter: blur(10px); color: #00D4FF; border: 1px solid rgba(0,212,255,0.3); }
-                .course-card-dash .body { padding: 18px; }
-                .course-card-dash .body h4 { font-size: 1rem; font-weight: 800; margin: 0 0 8px; }
-                .course-card-dash .body .meta { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin: 0 0 4px; }
-                .course-card-dash .body .meta i { width: 16px; }
-                .course-card-dash .body .price { font-size: 1.1rem; font-weight: 900; color: #00D4FF; margin: 12px 0 0; }
-                .course-card-dash .body .actions { display: flex; gap: 10px; margin-top: 14px; }
-                .course-card-dash .body .actions .ag-btn { padding: 8px 16px; font-size: 0.8rem; border-radius: 30px; flex: 1; justify-content: center; }
-                .course-card-dash .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 12px; }
-                .course-card-dash .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #00D4FF, #A855F7); border-radius: 10px; }
-                .table-wrap { overflow-x: auto; border-radius: 16px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
-                .table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-                .table-wrap th { padding: 14px 16px; text-align: right; font-weight: 700; color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
-                .table-wrap td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-                .table-wrap tr:last-child td { border-bottom: none; }
-                .table-wrap tr:hover td { background: rgba(255,255,255,0.02); }
-                .empty-state { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.3); }
-                .empty-state i { font-size: 3rem; margin-bottom: 15px; display: block; }
-                .empty-state p { font-size: 0.9rem; margin: 0; }
-                .cart-sidebar { position: fixed; top: 0; left: 0; width: 380px; height: 100vh; background: rgba(5,5,16,0.98); backdrop-filter: blur(30px); border-right: 1px solid rgba(255,255,255,0.08); z-index: 9999; transform: translateX(-100%); transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1); padding: 25px; display: flex; flex-direction: column; }
-                .cart-sidebar.open { transform: translateX(0); }
-                .cart-sidebar h3 { font-size: 1.2rem; font-weight: 800; margin: 0 0 20px; display: flex; align-items: center; gap: 10px; }
-                .cart-sidebar .close-cart { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.5rem; cursor: pointer; margin-right: auto; }
-                .cart-sidebar .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-                .cart-sidebar .cart-item { display: flex; gap: 12px; padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
-                .cart-sidebar .cart-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
-                .cart-sidebar .cart-item .info { flex: 1; }
-                .cart-sidebar .cart-item .info h5 { margin: 0 0 4px; font-size: 0.85rem; font-weight: 700; }
-                .cart-sidebar .cart-item .info .p { font-size: 0.8rem; color: #00D4FF; font-weight: 700; }
-                .cart-sidebar .cart-item .remove-btn { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 1rem; align-self: center; }
-                .cart-sidebar .cart-footer { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px; margin-top: 15px; }
-                .cart-sidebar .cart-footer .total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; }
-                .cart-sidebar .cart-footer .total span:last-child { color: #00D4FF; }
-                .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; display: none; }
-                .cart-overlay.show { display: block; }
-                .cart-btn-float { position: fixed; bottom: 30px; left: 30px; z-index: 999; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #00D4FF, #A855F7); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 40px rgba(0,212,255,0.3); display: none; align-items: center; justify-content: center; transition: 0.3s; }
-                .cart-btn-float:hover { transform: scale(1.1); }
-                .cart-btn-float .count { position: absolute; top: -5px; right: -5px; background: #FF3366; width: 24px; height: 24px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 0 20px rgba(255,51,102,0.4); }
-                .search-bar { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-                .search-bar input { flex: 1; min-width: 200px; padding: 12px 20px; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: white; font-size: 0.9rem; outline: none; }
-                .search-bar input:focus { border-color: #00D4FF; }
-                .search-bar select { padding: 12px 20px; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); font-size: 0.85rem; outline: none; }
-                .toast-notif { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(5,5,16,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(0,212,255,0.3); padding: 12px 28px; border-radius: 50px; color: white; font-weight: 600; z-index: 99999; opacity: 0; transition: 0.3s; pointer-events: none; font-size: 0.85rem; }
-                .toast-notif.show { opacity: 1; bottom: 120px; }
-                @media (max-width: 768px) { .dash-wrap { flex-direction: column; padding: 15px; } .dash-sidebar { width: 100%; position: static; } .cart-sidebar { width: 100%; } }
-            </style>
-
-            <div class="dash-wrap">
-                <aside class="dash-sidebar">
-                    <div class="profile">
-                        <div class="avatar">${user.name ? user.name.charAt(0).toUpperCase() : 'S'}</div>
-                        <h4>${escHtml(user.name)}</h4>
-                        <p>${window.auth.getRoleAr ? window.auth.getRoleAr('student') : 'طالب'}</p>
-                    </div>
-                    <ul class="nav-list">
-                        <li><a href="#" class="${section === 'home' ? 'active' : ''}" data-section="home"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
-                        <li><a href="#" class="${section === 'catalog' ? 'active' : ''}" data-section="catalog"><i class="fa-solid fa-store"></i> المتجر</a></li>
-                        <li><a href="#" class="${section === 'library' ? 'active' : ''}" data-section="library"><i class="fa-solid fa-book"></i> مكتبتي ${enrolled.length ? `<span class="badge">${enrolled.length}</span>` : ''}</a></li>
-                        <li><a href="#" class="${section === 'cart' ? 'active' : ''}" data-section="cart"><i class="fa-solid fa-cart-shopping"></i> السلة ${cartCount() ? `<span class="badge">${cartCount()}</span>` : ''}</a></li>
-                        <li><a href="#" class="${section === 'invoices' ? 'active' : ''}" data-section="invoices"><i class="fa-solid fa-file-invoice"></i> الفواتير ${invoices.filter(i => i.status === 'pending').length ? `<span class="badge" style="background:#ff4d4d;">${invoices.filter(i => i.status === 'pending').length}</span>` : ''}</a></li>
-                        <li><a href="#" class="${section === 'attendance' ? 'active' : ''}" data-section="attendance"><i class="fa-solid fa-calendar-check"></i> الحضور</a></li>
-                        <li><a href="#" class="logout" id="studentLogoutBtn"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</a></li>
-                    </ul>
-                </aside>
-                <main class="dash-main">
-                    <div class="dash-header">
-                        <h2>${sectionTitles[section] || 'لوحة التحكم'}</h2>
-                        <p>${sectionDescriptions[section] || ''}</p>
-                    </div>
-                    ${renderSection(section, enrolled, invoices, attStats, allCourses, cartCourses)}
-                </main>
-            </div>
-
-            <div class="cart-overlay" id="cartOverlay"></div>
-            <aside class="cart-sidebar" id="cartSidebar">
-                <h3><i class="fa-solid fa-cart-shopping" style="color:#00D4FF;"></i> سلة المشتريات <button class="close-cart" id="closeCartBtn">&times;</button></h3>
-                <div class="cart-items" id="cartItemsContainer">
-                    ${renderCartItems(cartCourses)}
-                </div>
-                <div class="cart-footer">
-                    <div class="total"><span>المجموع</span><span>${cartCourses.length ? '$' + cartCourses.reduce((s, c) => s + (c.price || 0), 0) : '$0'}</span></div>
-                    <button class="ag-btn" style="width:100%;justify-content:center;${!cartCourses.length ? 'opacity:0.4;pointer-events:none;' : ''}" id="checkoutBtn"><i class="fa-solid fa-lock"></i> إتمام الشراء</button>
-                </div>
-            </aside>
-
-            <button class="cart-btn-float" id="cartFloatBtn" style="${cartCount() ? 'display:flex;' : 'display:none;'}">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span class="count">${cartCount()}</span>
-            </button>
-
-            <div class="toast-notif" id="dashToast"></div>
-        `;
-
-        bindEvents(section, enrolled, allCourses, cartCourses);
-    }
-
-    const sectionTitles = {
-        home: 'لوحة التحكم',
-        catalog: 'المتجر التعليمي',
-        library: 'مكتبتي',
-        cart: 'سلة المشتريات',
-        invoices: 'الفواتير',
-        attendance: 'الحضور والغياب'
-    };
-
-    const sectionDescriptions = {
-        home: 'مرحباً! إليك ملخص حسابك التعليمي.',
-        catalog: 'تصفح جميع الكورسات المتاحة وأضفها إلى سلة المشتريات.',
-        library: 'الكورسات التي قمت بالتسجيل فيها.',
-        cart: 'الكورسات التي اخترتها للشراء.',
-        invoices: 'سجل الفواتير والمدفوعات.',
-        attendance: 'سجل حضورك وغيابك في الكورسات.'
-    };
-
-    function renderSection(section, enrolled, invoices, attStats, allCourses, cartCourses) {
-        switch (section) {
-            case 'home': return renderHome(enrolled, invoices, attStats);
-            case 'catalog': return renderCatalog(allCourses, enrolled, cartCourses);
-            case 'library': return renderLibrary(enrolled);
-            case 'cart': return '';
-            case 'invoices': return renderInvoices(invoices);
-            case 'attendance': return renderAttendance(enrolled);
-            default: return renderHome(enrolled, invoices, attStats);
+        /* Get enrolled courses both from Supabase and localStorage */
+        let enrolledSupabase = [], enrolledLocal = []
+        if (hasSb) {
+            const enrolls = await sb.getStudentEnrollments(user.id)
+            enrolledSupabase = enrolls.map(e => e.course).filter(Boolean)
         }
-    }
+        enrolledLocal = window.db.getCourses().filter(c => (c.studentsEnrolled || []).includes(user.id))
 
-    function renderHome(enrolled, invoices, attStats) {
-        const paid = invoices.filter(i => i.status === 'paid');
-        const totalPaid = paid.reduce((s, i) => s + (i.amount || 0), 0);
-        return `
-            <div class="stats-grid">
-                <div class="stat-card" style="border-top: 3px solid #00D4FF;">
-                    <div class="num" style="color:#00D4FF;">${enrolled.length}</div>
-                    <p class="label">الكورسات المسجلة</p>
-                </div>
-                <div class="stat-card" style="border-top: 3px solid #10b981;">
-                    <div class="num" style="color:#10b981;">${attStats.rate}%</div>
-                    <p class="label">نسبة الحضور</p>
-                </div>
-                <div class="stat-card" style="border-top: 3px solid #FF3366;">
-                    <div class="num" style="color:#FF3366;">${invoices.filter(i => i.status === 'pending').length}</div>
-                    <p class="label">الفواتير غير المدفوعة</p>
-                </div>
-                <div class="stat-card" style="border-top: 3px solid #FBBF24;">
-                    <div class="num" style="color:#FBBF24;">$${totalPaid}</div>
-                    <p class="label">إجمالي المدفوعات</p>
-                </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;">
-                <div class="course-card-dash" style="padding:20px;">
-                    <h4 style="margin:0 0 15px;font-size:1rem;"><i class="fa-solid fa-chart-line" style="color:#00D4FF;"></i> مخطط التقدم</h4>
-                    <canvas id="studentProgressChart" style="width:100%;height:220px;"></canvas>
-                </div>
-                <div class="course-card-dash" style="padding:20px;">
-                    <h4 style="margin:0 0 15px;font-size:1rem;"><i class="fa-solid fa-clock" style="color:#A855F7;"></i> آخر النشاطات</h4>
-                    ${enrolled.slice(0, 4).map(c => `
-                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.85rem;">
-                            <span>${escHtml(c.title)}</span>
-                            <span style="color:rgba(255,255,255,0.3);font-size:0.75rem;">${Math.floor(Math.random() * 7) + 1} أيام</span>
-                        </div>
-                    `).join('') || '<p style="color:rgba(255,255,255,0.3);font-size:0.85rem;">لا توجد نشاطات حديثة</p>'}
-                </div>
-            </div>
-            <h4 style="font-size:1rem;font-weight:800;margin:0 0 15px;"><i class="fa-solid fa-book-open" style="color:#00D4FF;"></i> كورساتي الحالية</h4>
-            <div class="course-grid">
-                ${enrolled.length ? enrolled.slice(0, 6).map(c => courseCard(c, 'library')).join('') : '<div class="empty-state"><i class="fa-solid fa-book"></i><p>لم تشترك في أي كورس بعد. تصفح <a href="#" onclick="renderStudentUI(\'catalog\');return false;" style="color:#00D4FF;">المتجر</a> لبدء التعلم.</p></div>'}
-            </div>
-        `;
-    }
+        const allCourses = hasSb ? await sb.getPublishedCourses() : window.db.getCourses()
+        const enrolled = enrolledSupabase.length ? enrolledSupabase : enrolledLocal
+        const invoices = window.db.getInvoicesForUser(user.id)
+        const attStats = window.db.getStudentAttendanceStats(user.id)
 
-    function renderCatalog(allCourses, enrolled, cartCourses) {
-        const enrolledIds = enrolled.map(c => c.id);
-        const cartIds = cartCourses.map(c => c.id);
-        return `
-            <div class="search-bar">
-                <input type="text" id="catalogSearch" placeholder="ابحث عن كورس..." oninput="window._filterCatalog()">
-                <select id="catalogFilter" onchange="window._filterCatalog()">
-                    <option value="all">جميع التصنيفات</option>
-                    <option value="languages">لغات</option>
-                    <option value="science">علوم</option>
-                    <option value="math">رياضيات</option>
-                    <option value="tech">تقنية</option>
-                    <option value="physics">فيزياء</option>
-                    <option value="chemistry">كيمياء</option>
-                    <option value="engineering">هندسة</option>
-                    <option value="social">اجتماعيات</option>
-                </select>
-            </div>
-            <div class="course-grid" id="catalogGrid">
-                ${allCourses.map(c => {
-                    const inCart = cartIds.includes(c.id);
-                    const isEnrolled = enrolledIds.includes(c.id);
-                    return `
-                        <div class="course-card-dash" data-category="${c.category || ''}" data-title="${escHtml(c.title).toLowerCase()}" data-desc="${(c.description || '').toLowerCase()}">
-                            <div class="img-wrap">
-                                <img src="${escHtml(c.image || 'https://picsum.photos/seed/' + c.id + '/400/250')}" alt="" loading="lazy">
-                                <span class="badge">${escHtml(c.badge || c.category)}</span>
-                            </div>
-                            <div class="body">
-                                <h4>${escHtml(c.title)}</h4>
-                                <p class="meta"><i class="fa-solid fa-tag"></i> ${escHtml(c.category)} <i class="fa-solid fa-clock" style="margin-right:10px;"></i> ${escHtml(c.duration || '')}</p>
-                                <div class="price">${c.currency || '$'}${c.price || 0}</div>
-                                <div class="actions">
-                                    ${isEnrolled ? '<span class="ag-btn" style="background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.3);pointer-events:none;"><i class="fa-solid fa-check"></i> مسجل</span>' :
-                                    inCart ? '<button class="ag-btn ag-btn-outline in-cart-btn" disabled style="opacity:0.6;"><i class="fa-solid fa-check"></i> في السلة</button>' :
-                                    `<button class="ag-btn add-to-cart-btn" data-id="${c.id}"><i class="fa-solid fa-cart-plus"></i> أضف للسلة</button>`}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-    }
+        const sidebar = `
+            <li><a href="#" class="${section === 'home' ? 'active' : ''}" data-section="home"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+            <li><a href="#" class="${section === 'catalog' ? 'active' : ''}" data-section="catalog"><i class="fa-solid fa-store"></i> المتجر</a></li>
+            <li><a href="#" class="${section === 'mycourses' ? 'active' : ''}" data-section="mycourses"><i class="fa-solid fa-book"></i> كورساتي ${enrolled.length ? `<span class="badge">${enrolled.length}</span>` : ''}</a></li>
+            <li><a href="#" class="${section === 'certificates' ? 'active' : ''}" data-section="certificates"><i class="fa-solid fa-certificate"></i> الشهادات</a></li>
+            <li><a href="#" class="${section === 'invoices' ? 'active' : ''}" data-section="invoices"><i class="fa-solid fa-file-invoice"></i> الفواتير</a></li>
+        `
 
-    function renderLibrary(enrolled) {
-        return `
-            <div class="course-grid">
-                ${enrolled.length ? enrolled.map(c => courseCard(c, 'library')).join('') : '<div class="empty-state"><i class="fa-solid fa-book"></i><p>لم تشترك في أي كورس بعد. <a href="#" onclick="renderStudentUI(\'catalog\');return false;" style="color:#00D4FF;">تصفح المتجر</a></p></div>'}
-            </div>
-        `;
-    }
+        let content = ''
+        if (section === 'home') content = renderHome(enrolled, invoices, attStats)
+        else if (section === 'catalog') content = renderCatalog(allCourses, enrolled)
+        else if (section === 'mycourses') content = await renderMyCourses(enrolled, hasSb)
+        else if (section === 'courseview') content = await renderCourseView(hasSb)
+        else if (section === 'lessonview') content = await renderLessonView(hasSb)
+        else if (section === 'quizview') content = await renderQuizView(hasSb)
+        else if (section === 'quizresult') content = renderQuizResult()
+        else if (section === 'certificates') content = await renderCertificates(hasSb)
+        else if (section === 'invoices') content = renderInvoices(invoices)
 
-    function courseCard(c, from) {
-        return `
-            <div class="course-card-dash">
-                <div class="img-wrap">
-                    <img src="${escHtml(c.image || 'https://picsum.photos/seed/' + c.id + '/400/250')}" alt="" loading="lazy">
-                    <span class="badge">${escHtml(c.badge || c.category)}</span>
-                </div>
-                <div class="body">
-                    <h4>${escHtml(c.title)}</h4>
-                    <p class="meta"><i class="fa-solid fa-tag"></i> ${escHtml(c.category)} <i class="fa-solid fa-clock" style="margin-right:10px;"></i> ${escHtml(c.duration || '')}</p>
-                    <div class="price">${c.currency || '$'}${c.price || 0}</div>
-                    <div class="progress-bar"><div class="fill" style="width:${Math.floor(Math.random() * 50) + 30}%;"></div></div>
-                </div>
-            </div>
-        `;
-    }
+        const container = document.getElementById('dashboardContent')
+        if (!container) return
+        container.innerHTML = renderDashboardLayout('لوحة تحكم الطالب', sidebar, content)
+        bindLogout()
+        bindNav()
 
-    function renderCartItems(cartCourses) {
-        if (!cartCourses.length) {
-            return '<div class="empty-state" style="padding:30px 10px;"><i class="fa-solid fa-cart-empty" style="font-size:2rem;"></i><p>السلة فارغة</p></div>';
-        }
-        return cartCourses.map(c => `
-            <div class="cart-item" data-id="${c.id}">
-                <img src="${escHtml(c.image || 'https://picsum.photos/seed/' + c.id + '/60/60')}" alt="">
-                <div class="info">
-                    <h5>${escHtml(c.title)}</h5>
-                    <div class="p">${c.currency || '$'}${c.price || 0}</div>
-                </div>
-                <button class="remove-btn" data-id="${c.id}" title="إزالة">&times;</button>
-            </div>
-        `).join('');
-    }
-
-    function renderInvoices(invoices) {
-        return `
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>#</th><th>الوصف</th><th>المبلغ</th><th>تاريخ الإصدار</th><th>تاريخ الاستحقاق</th><th>الحالة</th><th></th></tr></thead>
-                    <tbody>
-                        ${invoices.length ? invoices.map((inv, i) => `
-                            <tr>
-                                <td>${i + 1}</td>
-                                <td>${escHtml(inv.description || '')}</td>
-                                <td style="font-weight:700;">${inv.currency || '$'}${inv.amount || 0}</td>
-                                <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${inv.issuedAt || '-'}</td>
-                                <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${inv.dueAt || '-'}</td>
-                                <td>${inv.status === 'paid' ? '<span style="color:#10b981;"><i class="fa-solid fa-circle-check"></i> مدفوع</span>' : '<span style="color:#FBBF24;"><i class="fa-solid fa-circle-exclamation"></i> غير مدفوع</span>'}</td>
-                                <td>${inv.status === 'pending' ? '<button class="ag-btn pay-invoice-btn" data-id="' + inv.id + '" style="padding:6px 18px;font-size:0.8rem;">دفع</button>' : '<span style="color:rgba(255,255,255,0.2);"><i class="fa-solid fa-check"></i></span>'}</td>
-                            </tr>
-                        `).join('') : '<tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد فواتير</td></tr>'}
-                    </tbody>
-                </table>
-            </div>
-        `;
-    }
-
-    function renderAttendance(enrolled) {
-        const stats = window.db.getStudentAttendanceStats(user.id);
-        let courseHtml = enrolled.map(c => {
-            const sessions = window.db.getAttendanceForCourse(c.id);
-            if (!sessions.length) return '';
-            let present = 0, absent = 0;
-            sessions.forEach(s => {
-                const rec = s.records.find(r => r.userId === user.id);
-                if (rec) { if (rec.status === 'present') present++; else if (rec.status === 'absent') absent++; }
-            });
-            const total = present + absent;
-            const rate = total ? Math.round((present / total) * 100) : 0;
-            return `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.85rem;"><span>${escHtml(c.title)}</span><span style="color:#00D4FF;font-weight:700;">${rate}% (${present}/${total})</span></div>`;
-        }).filter(Boolean).join('');
-
-        return `
-            <div class="stats-grid">
-                <div class="stat-card" style="border-top:3px solid #10b981;">
-                    <div class="num" style="color:#10b981;">${stats.present}</div>
-                    <p class="label">حضور</p>
-                </div>
-                <div class="stat-card" style="border-top:3px solid #ff4d4d;">
-                    <div class="num" style="color:#ff4d4d;">${stats.absent}</div>
-                    <p class="label">غياب</p>
-                </div>
-                <div class="stat-card" style="border-top:3px solid #00D4FF;">
-                    <div class="num" style="color:#00D4FF;">${stats.rate}%</div>
-                    <p class="label">نسبة الحضور</p>
-                </div>
-            </div>
-            <div class="course-card-dash" style="padding:20px;">
-                <h4 style="margin:0 0 15px;font-size:1rem;">تفاصيل الحضور حسب الكورس</h4>
-                ${courseHtml || '<p style="color:rgba(255,255,255,0.3);font-size:0.85rem;">لا توجد سجلات حضور</p>'}
-            </div>
-        `;
-    }
-
-    function bindEvents(section, enrolled, allCourses, cartCourses) {
-        /* Sidebar navigation */
-        document.querySelectorAll('.dash-sidebar .nav-list a[data-section]').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                renderStudentUI(link.dataset.section);
-            });
-        });
-
-        /* Logout */
-        document.getElementById('studentLogoutBtn').addEventListener('click', e => {
-            e.preventDefault();
-            window.auth.logout();
-        });
-
-        /* Add to cart buttons */
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = parseInt(btn.dataset.id);
-                if (addToCart(id)) {
-                    showToast('تمت الإضافة إلى السلة ✓');
-                    renderStudentUI('catalog');
-                } else {
-                    showToast('الكورس موجود بالفعل في السلة');
-                }
-            });
-        });
-
-        /* Cart sidebar */
-        const cartSidebar = document.getElementById('cartSidebar');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const cartFloatBtn = document.getElementById('cartFloatBtn');
-
-        document.querySelectorAll('[data-section="cart"]').forEach(el => {
-            el.addEventListener('click', e => {
-                e.preventDefault();
-                cartSidebar.classList.add('open');
-                cartOverlay.classList.add('show');
-            });
-        });
-
-        document.getElementById('cartFloatBtn').addEventListener('click', () => {
-            cartSidebar.classList.add('open');
-            cartOverlay.classList.add('show');
-        });
-
-        document.getElementById('closeCartBtn').addEventListener('click', () => {
-            cartSidebar.classList.remove('open');
-            cartOverlay.classList.remove('show');
-        });
-
-        cartOverlay.addEventListener('click', () => {
-            cartSidebar.classList.remove('open');
-            cartOverlay.classList.remove('show');
-        });
-
-        /* Remove from cart */
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                removeFromCart(parseInt(btn.dataset.id));
-                renderStudentUI(section);
-                updateCartFloat();
-            });
-        });
-
-        /* Checkout */
-        document.getElementById('checkoutBtn').addEventListener('click', () => {
-            if (!cartCourses.length) return;
-            if (confirm('هل أنت متأكد من إتمام شراء ' + cartCourses.length + ' كورس؟')) {
-                cartCourses.forEach(c => {
-                    const data = JSON.parse(localStorage.getItem('lookagenius_db')) || {};
-                    const course = (data.courses || []).find(x => x.id === c.id);
-                    if (course) {
-                        if (!course.studentsEnrolled) course.studentsEnrolled = [];
-                        if (!course.studentsEnrolled.includes(user.id)) {
-                            course.studentsEnrolled.push(user.id);
-                        }
-                    }
-                    localStorage.setItem('lookagenius_db', JSON.stringify(data));
-                    window.db.addInvoice({
-                        userId: user.id,
-                        courseId: c.id,
-                        amount: c.price || 0,
-                        currency: c.currency || '$',
-                        description: c.title,
-                        status: 'paid',
-                        dueAt: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-                        paidAt: new Date().toISOString().slice(0, 10)
-                    });
-                });
-                clearCart();
-                cartSidebar.classList.remove('open');
-                cartOverlay.classList.remove('show');
-                showToast('تم الشراء بنجاح! ✓ تمت إضافة الكورسات إلى مكتبتك.');
-                setTimeout(() => renderStudentUI('library'), 500);
-            }
-        });
-
-        /* Pay invoice */
-        document.querySelectorAll('.pay-invoice-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = parseInt(btn.dataset.id);
-                if (confirm('تأكيد دفع الفاتورة؟')) {
-                    window.db.payInvoice(id);
-                    showToast('تم الدفع ✓');
-                    renderStudentUI('invoices');
-                }
-            });
-        });
-
-        /* Chart */
-        setTimeout(() => {
-            const ctx = document.getElementById('studentProgressChart');
+        if (section === 'home') setTimeout(() => {
+            const ctx = document.getElementById('studentProgressChart')
             if (ctx) {
-                const attStats = window.db.getStudentAttendanceStats(user.id);
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -525,61 +73,658 @@ document.addEventListener('DOMContentLoaded', () => {
                             label: 'التقدم',
                             data: [65, 75, 70, 85, 90, attStats.rate || 70],
                             borderColor: '#00D4FF',
-                            backgroundColor: 'rgba(0, 212, 255, 0.08)',
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#00D4FF',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            pointRadius: 5
+                            backgroundColor: 'rgba(0,212,255,0.08)',
+                            fill: true, tension: 0.4,
+                            pointBackgroundColor: '#00D4FF', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { display: false } },
-                        scales: {
-                            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)' } },
-                            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)' } }
-                        }
+                        scales: { x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)' } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)' } } }
                     }
-                });
+                })
             }
-        }, 100);
+        }, 100)
+        if (section === 'catalog') bindCatalogEvents(enrolled)
+        if (section === 'mycourses') bindMyCourseEvents(hasSb)
+        if (section === 'courseview') bindCourseViewEvents(hasSb)
+        if (section === 'lessonview') bindLessonViewEvents(hasSb)
+        if (section === 'quizview') bindQuizEvents(hasSb)
+        if (section === 'certificates') setTimeout(bindCertEvents, 300)
     }
 
-    /* Catalog filter */
-    window._filterCatalog = function() {
-        const search = (document.getElementById('catalogSearch').value || '').toLowerCase();
-        const cat = document.getElementById('catalogFilter').value;
-        document.querySelectorAll('#catalogGrid .course-card-dash').forEach(card => {
-            const title = (card.dataset.title || '');
-            const desc = (card.dataset.desc || '');
-            const category = (card.dataset.category || '');
-            const matchSearch = title.includes(search) || desc.includes(search);
-            const matchCat = cat === 'all' || category === cat;
-            card.style.display = matchSearch && matchCat ? '' : 'none';
-        });
-    };
+    function bindNav() {
+        document.querySelectorAll('.dash-sidebar .nav-list a[data-section]').forEach(link => {
+            link.addEventListener('click', e => { e.preventDefault(); renderUI(link.dataset.section) })
+        })
+    }
 
-    function updateCartFloat() {
-        const btn = document.getElementById('cartFloatBtn');
-        const count = cartCount();
-        if (btn) {
-            btn.style.display = count ? 'flex' : 'none';
-            const badge = btn.querySelector('.count');
-            if (badge) badge.textContent = count;
+    /* ---- HOME ---- */
+    function renderHome(enrolled, invoices, attStats) {
+        const paid = invoices.filter(i => i.status === 'paid')
+        const totalPaid = paid.reduce((s, i) => s + (i.amount || 0), 0)
+        return `
+            <div class="stats-grid">
+                <div class="stat-card" style="border-top:3px solid #00D4FF;"><div class="num" style="color:#00D4FF;">${enrolled.length}</div><p class="label">الكورسات المسجلة</p></div>
+                <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">${attStats.rate}%</div><p class="label">نسبة الحضور</p></div>
+                <div class="stat-card" style="border-top:3px solid #FF3366;"><div class="num" style="color:#FF3366;">${invoices.filter(i => i.status === 'pending').length}</div><p class="label">الفواتير غير المدفوعة</p></div>
+                <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">$${totalPaid}</div><p class="label">إجمالي المدفوعات</p></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;">
+                <div class="dash-card"><h4><i class="fa-solid fa-chart-line" style="color:#00D4FF;"></i> مخطط التقدم</h4><canvas id="studentProgressChart" style="width:100%;height:200px;"></canvas></div>
+                <div class="dash-card">
+                    <h4><i class="fa-solid fa-clock" style="color:#A855F7;"></i> آخر النشاطات</h4>
+                    ${enrolled.slice(0, 5).map(c => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.85rem;"><span>${esc(c.title)}</span><span style="color:rgba(255,255,255,0.3);font-size:0.75rem;">جاري</span></div>`).join('') || '<p style="color:rgba(255,255,255,0.3);font-size:0.85rem;">لا توجد نشاطات</p>'}
+                </div>
+            </div>
+            <h4 style="font-size:1rem;font-weight:800;margin:0 0 15px;"><i class="fa-solid fa-book-open" style="color:#00D4FF;"></i> كورساتي</h4>
+            <div class="course-grid">${enrolled.length ? enrolled.slice(0, 6).map(c => courseCard(c)).join('') : '<div class="empty-state"><i class="fa-solid fa-book"></i><p>لم تشترك في أي كورس بعد. <a href="#" onclick="document.querySelector(\'[data-section=catalog]\')?.click();return false;" style="color:#00D4FF;">تصفح المتجر</a></p></div>'}</div>
+        `
+    }
+
+    function courseCard(c) {
+        return `<div class="course-card-dash">
+            <div class="img-wrap"><img src="${esc(c.cover_image || c.image || 'https://picsum.photos/seed/course/400/250')}" alt="" loading="lazy"><span class="badge">${esc(c.badge || c.category)}</span></div>
+            <div class="body">
+                <h4>${esc(c.title)}</h4>
+                <p class="meta">${esc(c.category)}</p>
+                <div class="price">${c.currency || '$'}${c.price || 0}</div>
+                <div class="progress-bar"><div class="fill" style="width:${Math.floor(Math.random() * 50) + 30}%;"></div></div>
+            </div>
+        </div>`
+    }
+
+    /* ---- CATALOG ---- */
+    function renderCatalog(allCourses, enrolled) {
+        const enrolledIds = enrolled.map(c => c.id)
+        return `
+            <div class="search-bar">
+                <input type="text" id="catSearch" placeholder="ابحث عن كورس..." oninput="window._catFilter()">
+                <select id="catFilter" onchange="window._catFilter()">
+                    <option value="all">جميع التصنيفات</option>
+                    <option value="languages">لغات</option><option value="science">علوم</option><option value="math">رياضيات</option>
+                    <option value="tech">تقنية</option><option value="physics">فيزياء</option><option value="chemistry">كيمياء</option>
+                    <option value="engineering">هندسة</option>
+                </select>
+            </div>
+            <div class="course-grid" id="catalogGrid">
+                ${allCourses.map(c => {
+                    const isEnrolled = enrolledIds.includes(c.id)
+                    return `<div class="course-card-dash" data-category="${c.category || ''}" data-title="${esc(c.title).toLowerCase()}">
+                        <div class="img-wrap"><img src="${esc(c.cover_image || c.image || 'https://picsum.photos/seed/' + (c.id || 'c') + '/400/250')}" alt="" loading="lazy"><span class="badge">${esc(c.badge || c.category)}</span></div>
+                        <div class="body">
+                            <h4>${esc(c.title)}</h4>
+                            <p class="meta">${esc(c.category)} ${c.duration ? '| ' + esc(c.duration) : ''}</p>
+                            <div class="price">${c.currency || '$'}${c.price || 0}</div>
+                            <div class="actions" style="display:flex;gap:10px;margin-top:14px;">
+                                ${isEnrolled ? '<span class="ag-btn" style="flex:1;justify-content:center;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.3);pointer-events:none;"><i class="fa-solid fa-check"></i> مسجل</span>' :
+                                `<button class="ag-btn enroll-btn" data-id="${c.id || c.title}" style="flex:1;justify-content:center;"><i class="fa-solid fa-cart-plus"></i> اشتراك</button>`}
+                            </div>
+                        </div>
+                    </div>`
+                }).join('')}
+            </div>
+        `
+    }
+
+    window._catFilter = function() {
+        const search = (document.getElementById('catSearch')?.value || '').toLowerCase()
+        const cat = document.getElementById('catFilter')?.value || 'all'
+        document.querySelectorAll('#catalogGrid .course-card-dash').forEach(card => {
+            const title = (card.dataset.title || '')
+            const category = (card.dataset.category || '')
+            const matchSearch = title.includes(search)
+            const matchCat = cat === 'all' || category === cat
+            card.style.display = matchSearch && matchCat ? '' : 'none'
+        })
+    }
+
+    function bindCatalogEvents(enrolled) {
+        document.querySelectorAll('.enroll-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (confirm('تأكيد الاشتراك في هذا الكورس؟')) {
+                    const hasSb = await ensureSb()
+                    const courseId = btn.dataset.id
+                    if (hasSb) {
+                        /* Try Supabase enrollment */
+                        const result = await sb.enrollStudent(user.id, courseId, 0, 'free')
+                        if (result) alert('تم الاشتراك بنجاح ✓')
+                    } else {
+                        /* localStorage fallback */
+                        const data = JSON.parse(localStorage.getItem('lookagenius_db')) || {}
+                        const course = (data.courses || []).find(c => c.id === parseInt(courseId) || c.id === courseId)
+                        if (course) {
+                            if (!course.studentsEnrolled) course.studentsEnrolled = []
+                            if (!course.studentsEnrolled.includes(user.id)) course.studentsEnrolled.push(user.id)
+                            localStorage.setItem('lookagenius_db', JSON.stringify(data))
+                            alert('تم الاشتراك بنجاح ✓')
+                        }
+                    }
+                    renderUI('mycourses')
+                }
+            })
+        })
+    }
+
+    /* ---- MY COURSES ---- */
+    async function renderMyCourses(enrolled, hasSb) {
+        return `
+            <div class="course-grid">
+                ${enrolled.length ? enrolled.map(c => `
+                    <div class="course-card-dash" style="cursor:pointer;">
+                        <div class="img-wrap" style="height:140px;">
+                            <img src="${esc(c.cover_image || c.image || 'https://picsum.photos/seed/course/400/250')}" alt="" loading="lazy">
+                            <span class="badge">${esc(c.badge || c.category)}</span>
+                        </div>
+                        <div class="body">
+                            <h4>${esc(c.title)}</h4>
+                            <p class="meta"><i class="fa-solid fa-tag"></i> ${esc(c.category)}</p>
+                            <div class="progress-bar"><div class="fill" style="width:${Math.floor(Math.random() * 50) + 20}%;"></div></div>
+                            <button class="ag-btn view-course-btn" data-id="${c.id}" style="width:100%;justify-content:center;margin-top:12px;padding:10px;"><i class="fa-solid fa-play"></i> بدء التعلم</button>
+                        </div>
+                    </div>
+                `).join('') : '<div class="empty-state"><i class="fa-solid fa-book"></i><p>لم تشترك في أي كورس بعد</p></div>'}
+            </div>
+        `
+    }
+
+    function bindMyCourseEvents(hasSb) {
+        document.querySelectorAll('.view-course-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCourseId = btn.dataset.id
+                renderUI('courseview')
+            })
+        })
+    }
+
+    /* ---- COURSE VIEW (Modules + Lessons) ---- */
+    async function renderCourseView(hasSb) {
+        if (!currentCourseId) return '<div class="empty-state"><p>اختر كورساً</p></div>'
+        let course, modules = [], assessments = []
+        if (hasSb) {
+            course = await sb.getCourseById(currentCourseId)
+            modules = await sb.getCourseModules(currentCourseId)
+            for (const m of modules) {
+                m.lessons = await sb.getModuleLessons(m.id)
+            }
+            assessments = await sb.getCourseAssessments(currentCourseId)
+        } else {
+            course = window.db.getCourseById(parseInt(currentCourseId))
+        }
+        return `
+            <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                <button class="ag-btn ag-btn-outline" onclick="document.querySelector('[data-section=mycourses]').click()" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                <h4 style="margin:0;font-size:1.2rem;">${esc(course?.title || '')}</h4>
+            </div>
+            ${course?.description ? '<p style="color:rgba(255,255,255,0.5);margin-bottom:25px;font-size:0.9rem;">' + esc(course.description) + '</p>' : ''}
+            <div id="courseContent">
+                ${modules.length ? modules.map((m, mi) => `
+                    <div class="dash-card" style="margin-bottom:15px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                            <h4 style="margin:0;font-size:1rem;"><i class="fa-solid fa-folder-open" style="color:#00D4FF;"></i> ${mi + 1}. ${esc(m.title)}</h4>
+                            <span style="color:rgba(255,255,255,0.3);font-size:0.8rem;">${(m.lessons || []).length} دروس</span>
+                        </div>
+                        <div style="margin-top:15px;">
+                            ${(m.lessons || []).length ? (m.lessons || []).map((l, li) => `
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);margin-bottom:6px;cursor:pointer;transition:0.2s;" class="lesson-item" data-lesson-id="${l.id}" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                                    <div><i class="fa-solid fa-play-circle" style="color:${l.is_free ? '#10b981' : '#00D4FF'};margin-left:10px;"></i> ${esc(l.title)}</div>
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        ${l.duration ? '<span style="font-size:0.75rem;color:rgba(255,255,255,0.3);"><i class="fa-regular fa-clock"></i> ' + l.duration + ' د</span>' : ''}
+                                        <span style="font-size:1rem;color:#00D4FF;"><i class="fa-solid fa-chevron-left"></i></span>
+                                    </div>
+                                </div>
+                            `).join('') : '<p style="color:rgba(255,255,255,0.2);font-size:0.8rem;padding:10px;">لا توجد دروس في هذه الوحدة</p>'}
+                        </div>
+                    </div>
+                `).join('') : '<div class="empty-state"><i class="fa-solid fa-layer-group"></i><p>لم يتم إضافة محتوى لهذا الكورس بعد</p></div>'}
+                ${assessments.length ? `
+                    <h4 style="font-size:1rem;font-weight:800;margin:25px 0 15px;"><i class="fa-solid fa-file-pen" style="color:#A855F7;"></i> التقييمات</h4>
+                    ${assessments.map(a => `
+                        <div class="dash-card" style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;">
+                            <div>
+                                <strong>${esc(a.title)}</strong>
+                                <br><span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${a.questions_count || 0} أسئلة — ${a.time_limit || 0} دقيقة — حد النجاح ${a.passing_score || 0}%</span>
+                            </div>
+                            <button class="ag-btn start-quiz-btn" data-id="${a.id}" style="padding:8px 20px;font-size:0.85rem;"><i class="fa-solid fa-play"></i> بدء الاختبار</button>
+                        </div>
+                    `).join('')}
+                ` : ''}
+            </div>
+        `
+    }
+
+    function bindCourseViewEvents(hasSb) {
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            item.addEventListener('click', () => {
+                currentLessonId = item.dataset.lessonId
+                renderUI('lessonview')
+            })
+        })
+        document.querySelectorAll('.start-quiz-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentAssessmentId = btn.dataset.id
+                renderUI('quizview')
+            })
+        })
+    }
+
+    /* ---- LESSON VIEW ---- */
+    async function renderLessonView(hasSb) {
+        if (!currentLessonId) return '<div class="empty-state"><p>اختر درساً</p></div>'
+        let lesson
+        if (hasSb) {
+            lesson = await sb.getLessonById(currentLessonId)
+        }
+        if (!lesson) return '<div class="empty-state"><p>الدرس غير متاح</p></div>'
+
+        return `
+            <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                <button class="ag-btn ag-btn-outline" onclick="renderUI('courseview')" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                <h4 style="margin:0;font-size:1.1rem;">${esc(lesson.title)}</h4>
+            </div>
+            ${lesson.video_url ? `
+            <div class="dash-card" style="margin-bottom:20px;padding:0;overflow:hidden;">
+                <div style="position:relative;width:100%;padding-top:56.25%;background:#000;">
+                    <iframe src="${esc(lesson.video_url)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>
+                </div>
+            </div>` : ''}
+            <div class="dash-card" style="margin-bottom:20px;">
+                <h4 style="margin:0 0 10px;">${esc(lesson.title)}</h4>
+                ${lesson.description ? '<p style="color:rgba(255,255,255,0.5);font-size:0.9rem;">' + esc(lesson.description) + '</p>' : ''}
+                ${lesson.content ? '<div style="line-height:1.8;font-size:0.9rem;white-space:pre-wrap;">' + esc(lesson.content) + '</div>' : ''}
+            </div>
+            <div class="action-bar">
+                <button class="ag-btn" id="completeLessonBtn" data-id="${lesson.id}"><i class="fa-solid fa-check-circle"></i> إتمام الدرس</button>
+            </div>
+        `
+    }
+
+    function bindLessonViewEvents(hasSb) {
+        document.getElementById('completeLessonBtn')?.addEventListener('click', async () => {
+            if (hasSb && currentLessonId && currentCourseId) {
+                await sb.markLessonComplete(user.id, currentLessonId, currentCourseId)
+                alert('تم إتمام الدرس ✓ تم تحديث نسبة التقدم')
+            } else {
+                alert('تم إتمام الدرس ✓')
+            }
+        })
+    }
+
+    /* ---- QUIZ VIEW ---- */
+    async function renderQuizView(hasSb) {
+        if (!currentAssessmentId) return '<div class="empty-state"><p>اختر تقييماً أولاً</p></div>'
+        let assessment, questions = []
+        if (hasSb) {
+            assessment = await sb.getAssessmentById(currentAssessmentId)
+            questions = await sb.getAssessmentQuestions(currentAssessmentId)
+        }
+        if (!assessment || !questions.length) return '<div class="empty-state"><p>هذا التقييم لا يحتوي على أسئلة بعد</p></div>'
+
+        /* Initialize quiz state */
+        quizState = {
+            assessmentId: currentAssessmentId,
+            questions: questions,
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            timeLimit: assessment.time_limit || 0,
+            startTime: Date.now(),
+            submitted: false
+        }
+
+        return renderQuizQuestion()
+    }
+
+    window._saveCurrentAnswer = function() {
+        if (!quizState) return
+        const q = quizState.questions[quizState.currentIndex]
+        if (!q) return
+        if (q.question_type === 'fillblank') {
+            const inp = document.querySelector('.fillblank-input')
+            if (inp) quizState.answers[q.id] = inp.value
+        } else {
+            const sel = document.querySelector('input[name="q_' + q.id + '"]:checked')
+            if (sel) quizState.answers[q.id] = sel.value
         }
     }
 
-    function showToast(msg) {
-        const t = document.getElementById('dashToast');
-        if (!t) return;
-        t.textContent = msg;
-        t.classList.add('show');
-        clearTimeout(t._timeout);
-        t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+    window._goToQuestion = function(idx) {
+        window._saveCurrentAnswer()
+        quizState.currentIndex = idx
+        renderUI('quizview')
     }
 
-    renderStudentUI();
-});
+    window._prevQuestion = function() {
+        window._saveCurrentAnswer()
+        if (quizState.currentIndex > 0) { quizState.currentIndex--; renderUI('quizview') }
+    }
+
+    window._nextQuestion = function() {
+        window._saveCurrentAnswer()
+        if (quizState.currentIndex < quizState.questions.length - 1) { quizState.currentIndex++; renderUI('quizview') }
+    }
+
+    window._showResult = function() {
+        window._saveCurrentAnswer()
+        quizState.currentIndex = quizState.questions.length
+        renderUI('quizview')
+    }
+
+    function renderQuizQuestion() {
+        if (!quizState || quizState.submitted) return ''
+        const q = quizState.questions[quizState.currentIndex]
+        if (!q) return renderQuizSubmitConfirm()
+
+        const total = quizState.questions.length
+        const current = quizState.currentIndex + 1
+        const elapsed = Math.floor((Date.now() - quizState.startTime) / 1000)
+        const remaining = quizState.timeLimit * 60 - elapsed
+        const mins = Math.max(0, Math.floor(remaining / 60))
+        const secs = Math.max(0, remaining % 60)
+        const timeDisplay = quizState.timeLimit ? `${mins}:${secs.toString().padStart(2, '0')}` : ''
+
+        let inputHtml = ''
+        if (q.question_type === 'mcq') {
+            inputHtml = (q.options || []).map((opt, oi) => `
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer;transition:0.2s;border:1px solid rgba(255,255,255,0.06);"
+                    onmouseover="this.style.borderColor='rgba(0,212,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+                    <input type="radio" name="q_${q.id}" value="${esc(opt)}" style="accent-color:#00D4FF;width:18px;height:18px;" ${quizState.answers[q.id] === opt ? 'checked' : ''}>
+                    <span>${esc(opt)}</span>
+                </label>
+            `).join('')
+        } else if (q.question_type === 'truefalse') {
+            inputHtml = `
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                    <input type="radio" name="q_${q.id}" value="true" style="accent-color:#00D4FF;width:18px;height:18px;" ${quizState.answers[q.id] === 'true' ? 'checked' : ''}> <span>صح</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);">
+                    <input type="radio" name="q_${q.id}" value="false" style="accent-color:#00D4FF;width:18px;height:18px;" ${quizState.answers[q.id] === 'false' ? 'checked' : ''}> <span>خطأ</span>
+                </label>
+            `
+        } else if (q.question_type === 'fillblank') {
+            inputHtml = `
+                <input type="text" class="fillblank-input" data-qid="${q.id}" value="${esc(quizState.answers[q.id] || '')}"
+                    style="width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;font-size:1rem;"
+                    placeholder="اكتب إجابتك هنا...">
+            `
+        }
+
+        return `
+            <div class="dash-card" style="margin-bottom:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+                    <div style="display:flex;align-items:center;gap:15px;">
+                        <button class="ag-btn ag-btn-outline" onclick="document.querySelector('[data-section=courseview]')?.click()" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-arrow-right"></i> خروج</button>
+                        <span style="font-size:0.9rem;color:rgba(255,255,255,0.5);">السؤال ${current} من ${total}</span>
+                    </div>
+                    ${timeDisplay ? `<span style="font-size:1.1rem;font-weight:700;color:${remaining < 60 ? '#ff4d4d' : '#00D4FF'};">${timeDisplay}</span>` : ''}
+                </div>
+                <div style="margin-bottom:20px;">
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        ${quizState.questions.map((_, qi) => `
+                            <span class="q-dot ${qi === quizState.currentIndex ? 'active' : ''} ${quizState.answers[_.id] ? 'answered' : ''}"
+                                style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;cursor:pointer;
+                                background:${qi === quizState.currentIndex ? '#00D4FF' : quizState.answers[_.id] ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.06)'};
+                                color:${qi === quizState.currentIndex ? '#000' : '#fff'};"
+                                onclick="window._goToQuestion(${qi})">${qi + 1}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                <h4 style="font-size:1.1rem;margin-bottom:20px;line-height:1.6;">${esc(q.question_text)}</h4>
+                <div style="margin-bottom:30px;">
+                    ${inputHtml}
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:12px;">
+                    <button class="ag-btn" id="prevQuestionBtn" style="padding:12px 24px;${quizState.currentIndex === 0 ? 'opacity:0.3;pointer-events:none;' : ''}" ${quizState.currentIndex > 0 ? 'onclick="window._prevQuestion()"' : ''}><i class="fa-solid fa-chevron-right"></i> السابق</button>
+                    ${quizState.currentIndex < total - 1
+                        ? `<button class="ag-btn" id="nextQuestionBtn" style="padding:12px 24px;" onclick="window._nextQuestion()">التالي <i class="fa-solid fa-chevron-left"></i></button>`
+                        : `<button class="ag-btn" style="padding:12px 24px;background:#10b981;" onclick="window._showResult()"><i class="fa-solid fa-check"></i> عرض النتيجة</button>`
+                    }
+                </div>
+            </div>
+        `
+    }
+
+    function renderQuizSubmitConfirm() {
+        const total = quizState.questions.length
+        const answered = Object.keys(quizState.answers).length
+        return `
+            <div class="dash-card" style="text-align:center;padding:40px;max-width:500px;margin:40px auto;">
+                <div style="font-size:3rem;margin-bottom:20px;color:#FBBF24;"><i class="fa-solid fa-file-pen"></i></div>
+                <h3>تأكيد تسليم الاختبار</h3>
+                <p style="color:rgba(255,255,255,0.5);margin:15px 0;">لقد أجبت على ${answered} من ${total} أسئلة. هل أنت متأكد من تسليم الاختبار؟</p>
+                <div style="display:flex;gap:12px;justify-content:center;margin-top:25px;">
+                    <button class="ag-btn ag-btn-outline" onclick="quizState.currentIndex=0;renderUI('quizview')" style="padding:12px 30px;">مراجعة الإجابات</button>
+                    <button class="ag-btn" id="submitQuizBtn" style="padding:12px 30px;background:#10b981;"><i class="fa-solid fa-check"></i> تسليم</button>
+                </div>
+            </div>
+        `
+    }
+
+    function renderQuizResult() {
+        if (!quizState || !quizState.submitted) return '<div class="empty-state"><p>لا توجد نتيجة</p></div>'
+        const correctCount = quizState.questions.filter(q => {
+            const userAns = quizState.answers[q.id] || ''
+            return userAns.toLowerCase().trim() === (q.correct_answer || '').toLowerCase().trim()
+        }).length
+        const total = quizState.questions.length
+        const percentage = total ? Math.round((correctCount / total) * 100) : 0
+        const passed = percentage >= (quizState.passingScore || 60)
+        return `
+            <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;">
+                <button class="ag-btn ag-btn-outline" onclick="document.querySelector('[data-section=courseview]')?.click()" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                <h4 style="margin:0;font-size:1.1rem;">نتيجة الاختبار</h4>
+            </div>
+            <div class="dash-card" style="text-align:center;padding:40px;max-width:500px;margin:0 auto 30px;">
+                <div style="font-size:4rem;margin-bottom:15px;color:${passed ? '#10b981' : '#ff4d4d'};">
+                    <i class="fa-solid fa-${passed ? 'check-circle' : 'times-circle'}"></i>
+                </div>
+                <h3 style="font-size:1.8rem;font-weight:900;color:${passed ? '#10b981' : '#ff4d4d'};">${percentage}%</h3>
+                <p style="color:rgba(255,255,255,0.5);margin:10px 0;">${passed ? 'مبروك! لقد نجحت في الاختبار 🎉' : 'لم تنجح هذه المرة. حاول مرة أخرى!'}</p>
+                <div style="display:flex;justify-content:center;gap:30px;margin:20px 0;">
+                    <div><strong style="font-size:1.2rem;color:#00D4FF;">${correctCount}</strong><br><span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">إجابات صحيحة</span></div>
+                    <div><strong style="font-size:1.2rem;color:#ff4d4d;">${total - correctCount}</strong><br><span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">إجابات خاطئة</span></div>
+                </div>
+                <div style="margin-top:20px;">
+                    <button class="ag-btn" onclick="document.querySelector('[data-section=courseview]')?.click()" style="padding:12px 30px;"><i class="fa-solid fa-arrow-right"></i> العودة للكورس</button>
+                </div>
+            </div>
+            <h4 style="font-size:1rem;font-weight:800;margin:0 0 15px;">مراجعة الإجابات</h4>
+            ${quizState.questions.map((q, i) => {
+                const userAns = quizState.answers[q.id] || ''
+                const isCorrect = userAns.toLowerCase().trim() === (q.correct_answer || '').toLowerCase().trim()
+                const typeLabels = { mcq: 'اختيار متعدد', truefalse: 'صح/خطأ', fillblank: 'أكمل الفراغ' }
+                return `
+                <div class="dash-card" style="margin-bottom:10px;padding:16px 20px;border-right:3px solid ${isCorrect ? '#10b981' : '#ff4d4d'};">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div>
+                            <strong>${i + 1}. ${esc(q.question_text)}</strong>
+                            <br><span style="font-size:0.75rem;color:rgba(255,255,255,0.4);">${typeLabels[q.question_type] || q.question_type}</span>
+                            <br><span style="font-size:0.85rem;">إجابتك: <span style="color:${isCorrect ? '#10b981' : '#ff4d4d'};">${userAns || '—'}</span></span>
+                            ${!isCorrect ? `<br><span style="font-size:0.85rem;color:#10b981;">الإجابة الصحيحة: ${esc(q.correct_answer || '')}</span>` : ''}
+                        </div>
+                        <div style="font-size:1.5rem;color:${isCorrect ? '#10b981' : '#ff4d4d'};">
+                            <i class="fa-solid fa-${isCorrect ? 'check' : 'x'}"></i>
+                        </div>
+                    </div>
+                </div>`
+            }).join('')}
+        `
+    }
+
+    async function bindQuizEvents(hasSb) {
+        const submitBtn = document.getElementById('submitQuizBtn')
+        if (!submitBtn) return
+        submitBtn.addEventListener('click', async () => {
+            quizState.submitted = true
+
+            /* Calculate score */
+            let correctCount = 0
+            quizState.questions.forEach(q => {
+                const userAns = quizState.answers[q.id] || ''
+                if (userAns.toLowerCase().trim() === (q.correct_answer || '').toLowerCase().trim()) {
+                    correctCount++
+                }
+            })
+            const total = quizState.questions.length
+            const percentage = total ? Math.round((correctCount / total) * 100) : 0
+            quizState.score = percentage
+            quizState.passingScore = (await sb.getAssessmentById(currentAssessmentId))?.passing_score || 60
+
+            /* Save attempt to Supabase */
+            if (hasSb) {
+                const existing = await sb.getStudentAttempts(user.id, currentAssessmentId)
+                await sb.createAttempt({
+                    student_id: user.id,
+                    assessment_id: currentAssessmentId,
+                    attempt_number: (existing.length || 0) + 1,
+                    score: percentage,
+                    passed: percentage >= (quizState.passingScore || 60),
+                    answers: quizState.answers,
+                    started_at: new Date(quizState.startTime).toISOString(),
+                    completed_at: new Date().toISOString()
+                })
+            }
+
+            /* Auto-issue certificate if passed and course completed */
+            if (percentage >= (quizState.passingScore || 60) && hasSb) {
+                const courseId = currentCourseId
+                const existingCerts = await sb.getStudentCertificates(user.id)
+                const alreadyIssued = existingCerts.some(c => c.course_id === courseId)
+                if (!alreadyIssued) {
+                    /* Check course progress */
+                    const enrolls = await sb.getStudentEnrollments(user.id)
+                    const enrollment = enrolls.find(e => e.course_id === courseId)
+                    if (enrollment && enrollment.progress_percentage >= 100) {
+                        const code = 'CERT-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase()
+                        await sb.createCertificate({
+                            student_id: user.id,
+                            course_id: courseId,
+                            certificate_code: code,
+                            issue_date: new Date().toISOString()
+                        })
+                    }
+                }
+            }
+
+            renderUI('quizresult')
+        })
+    }
+
+    /* ---- CERTIFICATES ---- */
+    async function renderCertificates(hasSb) {
+        let certs = []
+        if (hasSb) certs = await sb.getStudentCertificates(user.id)
+        return `
+            <div class="stats-grid" style="margin-bottom:20px;">
+                <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">${certs.length}</div><p class="label">الشهادات المحصل عليها</p></div>
+            </div>
+            ${certs.length ? `<div class="course-grid">${certs.map(c => `
+                <div class="course-card-dash" style="text-align:center;padding:30px 20px;">
+                    <div style="font-size:3rem;color:#FBBF24;margin-bottom:15px;"><i class="fa-solid fa-certificate"></i></div>
+                    <h4>${esc(c.course?.title || '')}</h4>
+                    <p style="font-size:0.8rem;color:rgba(255,255,255,0.4);margin:8px 0;">رمز الشهادة: ${esc(c.certificate_code || '')}</p>
+                    <p style="font-size:0.75rem;color:rgba(255,255,255,0.3);">تاريخ الإصدار: ${c.issue_date ? new Date(c.issue_date).toLocaleDateString('ar') : '-'}</p>
+                    <div id="qrcode_${c.id.replace(/-/g, '_')}" style="display:flex;justify-content:center;margin:15px 0;"></div>
+                    <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-bottom:10px;">امسح QR للتحقق من الشهادة</div>
+                    <button class="ag-btn download-cert-btn" data-id="${c.id}" data-code="${esc(c.certificate_code || '')}" data-course="${esc(c.course?.title || '')}" data-date="${c.issue_date || ''}" data-student="${esc(user.name || '')}" style="justify-content:center;width:100%;"><i class="fa-solid fa-download"></i> تحميل PDF</button>
+                </div>
+            `).join('')}</div>` : '<div class="empty-state"><i class="fa-solid fa-certificate"></i><p>لم تحصل على أي شهادة بعد. أكمل الكورسات للحصول على شهاداتك!</p></div>'}
+        `
+    }
+
+    /* ---- CERTIFICATE EVENTS ---- */
+    function bindCertEvents() {
+        /* Generate QR codes */
+        document.querySelectorAll('[id^="qrcode_"]').forEach(el => {
+            const id = el.id.replace('qrcode_', '').replace(/_/g, '-')
+            const codeEl = el.closest('.course-card-dash')?.querySelector('p')
+            const code = codeEl?.textContent?.replace('رمز الشهادة: ', '')?.trim() || id
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(el, { text: window.location.origin + '/verify-certificate.html?code=' + code, width: 100, height: 100, colorDark: '#FBBF24', colorLight: '#1a1a2e' })
+                }
+            } catch(e) {}
+        })
+
+        /* PDF download */
+        document.querySelectorAll('.download-cert-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const { jsPDF } = window.jspdf
+                const doc = new jsPDF('landscape', 'mm', 'a4')
+                const course = btn.dataset.course
+                const student = btn.dataset.student
+                const code = btn.dataset.code
+                const date = btn.dataset.date ? new Date(btn.dataset.date).toLocaleDateString('ar') : '-'
+
+                /* Certificate border */
+                doc.setDrawColor(251, 191, 36)
+                doc.setLineWidth(3)
+                doc.rect(10, 10, 277, 190)
+
+                doc.setDrawColor(0, 212, 255)
+                doc.setLineWidth(1)
+                doc.rect(13, 13, 271, 184)
+
+                /* Title */
+                doc.setFont('helvetica', 'bold')
+                doc.setFontSize(32)
+                doc.setTextColor(251, 191, 36)
+                doc.text('شهادة إتمام', 148, 50, { align: 'center' })
+
+                doc.setFontSize(14)
+                doc.setTextColor(255, 255, 255)
+                doc.text('نشهد بأن', 148, 75, { align: 'center' })
+
+                doc.setFont('helvetica', 'bold')
+                doc.setFontSize(24)
+                doc.setTextColor(0, 212, 255)
+                doc.text(student || 'الطالب', 148, 95, { align: 'center' })
+
+                doc.setFont('helvetica', 'normal')
+                doc.setFontSize(14)
+                doc.setTextColor(255, 255, 255)
+                doc.text('قد أتم بنجاح كورس', 148, 115, { align: 'center' })
+
+                doc.setFont('helvetica', 'bold')
+                doc.setFontSize(20)
+                doc.setTextColor(168, 85, 247)
+                doc.text(course || '', 148, 135, { align: 'center' })
+
+                doc.setFont('helvetica', 'normal')
+                doc.setFontSize(11)
+                doc.setTextColor(200, 200, 200)
+                doc.text('تاريخ الإصدار: ' + date, 148, 160, { align: 'center' })
+                doc.text('رمز الشهادة: ' + code, 148, 175, { align: 'center' })
+
+                /* Add QR to PDF */
+                const qrEl = btn.closest('.course-card-dash')?.querySelector('[id^="qrcode_"] canvas')
+                if (qrEl) {
+                    const qrData = qrEl.toDataURL('image/png')
+                    doc.addImage(qrData, 'PNG', 220, 145, 30, 30)
+                }
+
+                doc.save('certificate_' + code + '.pdf')
+            })
+        })
+    }
+
+    /* ---- INVOICES ---- */
+    function renderInvoices(invoices) {
+        return `
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>#</th><th>الوصف</th><th>المبلغ</th><th>تاريخ الإصدار</th><th>تاريخ الاستحقاق</th><th>الحالة</th></tr></thead>
+                    <tbody>${invoices.length ? invoices.map((inv, i) => `
+                        <tr><td>${i + 1}</td><td>${esc(inv.description || '')}</td><td style="font-weight:700;">${inv.currency || '$'}${inv.amount || 0}</td>
+                        <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${inv.issuedAt || '-'}</td>
+                        <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${inv.dueAt || '-'}</td>
+                        <td>${inv.status === 'paid' ? '<span style="color:#10b981;">مدفوع</span>' : '<span style="color:#FBBF24;">غير مدفوع</span>'}</td></tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد فواتير</td></tr>'}</tbody>
+                </table>
+            </div>
+        `
+    }
+
+    renderUI()
+})
