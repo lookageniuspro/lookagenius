@@ -199,6 +199,16 @@ window.auth = {
     }
 }
 
+/* Synchronous session restore — runs before DOMContentLoaded */
+(function() {
+    try {
+        const session = localStorage.getItem('lookagenius_session')
+        if (session) {
+            window.auth.currentUser = JSON.parse(session)
+        }
+    } catch(e) {}
+})()
+
 document.addEventListener('DOMContentLoaded', () => {
     window.auth.init()
     document.body.addEventListener('click', (e) => {

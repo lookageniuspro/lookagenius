@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---- RENDER ENGINE ---- */
     async function renderUI(section) {
+        try {
         const hasSupabase = await ensureSupabase()
         section = section || 'overview'
 
@@ -55,11 +56,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (section === 'lessons') await bindLessonEvents(hasSupabase)
         if (section === 'assessments') await bindAssessmentEvents(hasSupabase)
         if (section === 'questions') await bindQuestionEvents(hasSupabase)
+    } catch(err) {
+        console.error('[teacher] renderUI error:', err)
+        const c = document.getElementById('dashboardContent')
+        if (c) c.innerHTML = '<div class="dash-wrap" style="padding:100px 30px;text-align:center;color:#ff4d4d;"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;margin-bottom:20px;"></i><p style="font-size:1.1rem;">حدث خطأ أثناء تحميل الصفحة</p></div>'
+    }
     }
 
     function bindNav() {
         document.querySelectorAll('.dash-sidebar .nav-list a[data-section]').forEach(link => {
-            link.addEventListener('click', e => { e.preventDefault(); renderUI(link.dataset.section) })
+            link.addEventListener('click', e => {
+                e.preventDefault()
+                renderUI(link.dataset.section).catch(err => {
+                    console.error('[teacher] renderUI error:', err)
+                    const c = document.getElementById('dashboardContent')
+                    if (c) c.innerHTML = '<div class="dash-wrap" style="padding:100px 30px;text-align:center;color:#ff4d4d;"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;margin-bottom:20px;"></i><p style="font-size:1.1rem;">حدث خطأ أثناء تحميل الصفحة</p></div>'
+                })
+            })
         })
     }
 
@@ -835,5 +848,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ---- INIT ---- */
-    renderUI()
+    renderUI().catch(err => {
+        console.error('[teacher] initial renderUI error:', err)
+        const c = document.getElementById('dashboardContent')
+        if (c) c.innerHTML = '<div class="dash-wrap" style="padding:100px 30px;text-align:center;color:#ff4d4d;"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;margin-bottom:20px;"></i><p style="font-size:1.1rem;">حدث خطأ أثناء تحميل لوحة التحكم</p><button class="ag-btn" onclick="location.reload()" style="margin-top:20px;">إعادة المحاولة</button></div>'
+    })
 })
