@@ -303,6 +303,8 @@
             <div class="nav-item"><button class="nav-link" data-page="services" data-i18n="nav_admin_services"><i class="fa-solid fa-briefcase"></i> <span>الخدمات</span></button></div>
             <div class="nav-item"><button class="nav-link" data-page="team" data-i18n="nav_admin_team"><i class="fa-solid fa-people-group"></i> <span>فريق العمل</span></button></div>
             <div class="nav-item"><button class="nav-link" data-page="financials" data-i18n="nav_admin_financials"><i class="fa-solid fa-coins"></i> <span>الحسابات المالية</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="invoices" data-i18n="nav_admin_invoices"><i class="fa-solid fa-file-invoice-dollar"></i> <span>الفواتير</span></button></div>
+            <div class="nav-item"><button class="nav-link" data-page="attendance" data-i18n="nav_admin_attendance"><i class="fa-solid fa-clipboard-list"></i> <span>الحضور والغياب</span></button></div>
             <div class="nav-item"><button class="nav-link" data-page="collaborations" data-i18n="nav_admin_collaborations"><i class="fa-solid fa-handshake"></i> <span>طلبات التعاون</span></button></div>
             <div class="nav-item"><button class="nav-link" data-page="settlements" data-i18n="nav_admin_settlements"><i class="fa-solid fa-file-invoice"></i> <span>طلبات التصفية</span></button></div>
             <div class="nav-item"><button class="nav-link" data-page="chatlogs" data-i18n="nav_admin_chatlogs"><i class="fa-solid fa-comment-dots"></i> <span>سجل الشات</span></button></div>
@@ -584,6 +586,76 @@
                     <tbody id="settlementsTableBody"></tbody>
                 </table>
                 <div class="empty-state" id="settlementsEmpty" style="display:none;"><i class="fa-solid fa-file-invoice"></i><p>لا توجد طلبات تصفية</p></div>
+            </div>
+        </section>
+
+        <!-- ===== INVOICES ===== -->
+        <section class="page-section" id="page-invoices">
+            <div class="section-title"><i class="fa-solid fa-file-invoice" style="color:var(--warning);"></i> الفواتير</div>
+            <div class="actions-bar">
+                <button class="ag-btn" id="addInvoiceBtn"><i class="fa-solid fa-plus"></i> إنشاء فاتورة جديدة</button>
+                <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="invoiceSearch" placeholder="بحث عن فاتورة..."></div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>#</th><th>الطالب</th><th>الوصف</th><th>المبلغ</th><th>تاريخ الإصدار</th><th>تاريخ الاستحقاق</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                    <tbody id="invoicesTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="invoicesEmpty" style="display:none;"><i class="fa-solid fa-file-invoice"></i><p>لا توجد فواتير</p></div>
+            </div>
+        </section>
+
+        <!-- Invoice Modal -->
+        <div class="modal-overlay" id="invoiceModal">
+            <div class="modal">
+                <div class="modal-header"><h2 id="invoiceModalTitle">إنشاء فاتورة</h2><button class="modal-close invoiceModalCloseBtn">&times;</button></div>
+                <form id="invoiceForm">
+                    <input type="hidden" id="invoiceId">
+                    <div class="form-group"><label>الطالب</label>
+                        <select id="invoiceUser" required></select>
+                    </div>
+                    <div class="form-group"><label>الوصف</label><input type="text" id="invoiceDescription" required></div>
+                    <div class="form-group"><label>المبلغ</label><input type="number" id="invoiceAmount" required min="0" step="0.01"></div>
+                    <div class="form-group"><label>العملة</label>
+                        <select id="invoiceCurrency">
+                            <option value="$">$ دولار</option>
+                            <option value="EGP">ج.م جنيه</option>
+                            <option value="SAR">﷼ ريال</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>تاريخ الاستحقاق</label><input type="date" id="invoiceDueAt" required></div>
+                    <div class="form-actions">
+                        <button type="button" class="ag-btn ag-btn-outline invoiceModalCloseBtn">إلغاء</button>
+                        <button type="submit" class="ag-btn">حفظ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== ATTENDANCE ===== -->
+        <section class="page-section" id="page-attendance">
+            <div class="section-title"><i class="fa-solid fa-clipboard-list" style="color:var(--success);"></i> الحضور والغياب</div>
+            <div class="actions-bar">
+                <select id="attCourseFilter" style="width:250px;">
+                    <option value="">كل الكورسات</option>
+                </select>
+                <button class="ag-btn" id="addAttendanceBtn"><i class="fa-solid fa-plus"></i> جلسة حضور جديدة</button>
+            </div>
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead><tr><th>#</th><th>الكورس</th><th>التاريخ</th><th>عدد الطلاب</th><th>الحضور</th><th>الغياب</th><th>نسبة الحضور</th><th>إجراءات</th></tr></thead>
+                    <tbody id="attendanceTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="attendanceEmpty" style="display:none;"><i class="fa-solid fa-clipboard-list"></i><p>لا توجد جلسات حضور</p></div>
+            </div>
+            <div class="glass-card" id="attendanceDetailCard" style="display:none;margin-top:20px;">
+                <div class="section-title" id="attendanceDetailTitle"><i class="fa-solid fa-users"></i> تفاصيل الجلسة</div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>الطالب</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                        <tbody id="attendanceDetailBody"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -1406,7 +1478,9 @@
 
         // ---- Team Modal ----
         setupModalClose('teamModal', ['.teamModalCloseBtn']);
+        setupModalClose('invoiceModal', ['.invoiceModalCloseBtn']);
         let editingTeamId = null;
+        let editingInvoiceId = null;
 
         function populateTeamLinkUser() {
             const sel = document.getElementById('teamLinkUser');
@@ -1458,6 +1532,58 @@
             closeModal('teamModal');
             renderAll();
         });
+        // ---- Invoice modal ----
+        document.getElementById('addInvoiceBtn').addEventListener('click', () => {
+            editingInvoiceId = null;
+            document.getElementById('invoiceModalTitle').textContent = 'إنشاء فاتورة';
+            document.getElementById('invoiceForm').reset();
+            document.getElementById('invoiceId').value = '';
+            /* Populate user select */
+            const sel = document.getElementById('invoiceUser');
+            const users = window.db.getUsers().filter(u => u.type === 'student' || u.type === 'parent');
+            sel.innerHTML = '<option value="">اختر الطالب</option>' + users.map(u => `<option value="${u.id}">${escHtml(u.name)} (${escHtml(u.email)})</option>`).join('');
+            openModal('invoiceModal');
+        });
+        document.getElementById('invoiceForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const editId = document.getElementById('invoiceId').value;
+            const data = {
+                userId: parseInt(document.getElementById('invoiceUser').value),
+                description: document.getElementById('invoiceDescription').value.trim(),
+                amount: parseFloat(document.getElementById('invoiceAmount').value) || 0,
+                currency: document.getElementById('invoiceCurrency').value,
+                dueAt: document.getElementById('invoiceDueAt').value
+            };
+            if (editId) {
+                window.db.updateInvoice(parseInt(editId), data);
+                showToast('تم تحديث الفاتورة ✅');
+            } else {
+                window.db.addInvoice(data);
+                showToast('تم إنشاء الفاتورة ✅');
+            }
+            closeModal('invoiceModal');
+            renderAll();
+        });
+
+        // ---- Attendance ----
+        document.getElementById('addAttendanceBtn').addEventListener('click', () => {
+            const courseId = document.getElementById('attCourseFilter').value;
+            if (!courseId) { showToast('يرجى اختيار الكورس أولاً', 'error'); return; }
+            const students = window.db.getUsers().filter(u => u.type === 'student');
+            if (!students.length) { showToast('لا يوجد طلاب', 'error'); return; }
+            const session = {
+                courseId: parseInt(courseId),
+                date: new Date().toISOString().slice(0, 10),
+                records: students.map(s => ({ userId: s.id, status: 'absent' }))
+            };
+            window.db.addAttendanceSession(session);
+            showToast('تم إنشاء جلسة حضور جديدة ✅');
+            renderAll();
+        });
+        document.getElementById('attCourseFilter').addEventListener('change', () => {
+            renderAttendance();
+        });
+
         function editTeam(id) {
             const t = window.db.getTeam().find(x => x.id === id);
             if (!t) return;
@@ -1521,6 +1647,8 @@
             renderTeam();
             renderCollaborations();
             renderFinancials();
+            renderInvoices();
+            renderAttendance();
             renderSettlements();
             renderChatLogs();
             renderNotifications();
@@ -1867,6 +1995,66 @@
             `}).join('');
         }
 
+        function renderInvoices() {
+            const items = window.db.getInvoices();
+            const tbody = document.getElementById('invoicesTableBody');
+            const empty = document.getElementById('invoicesEmpty');
+            if (!tbody) return;
+            if (items.length === 0) { tbody.innerHTML = ''; if (empty) empty.style.display = 'block'; return; }
+            if (empty) empty.style.display = 'none';
+            const users = window.db.getUsers();
+            const getUserName = (id) => { const u = users.find(x => x.id === id); return u ? u.name : '#' + id; };
+            tbody.innerHTML = items.map((inv, i) => {
+                const statusBadge = inv.status === 'paid' ? 'badge-green' : 'badge-yellow';
+                const statusText = inv.status === 'paid' ? 'مدفوع' : 'غير مدفوع';
+                const actions = inv.status === 'pending' ? `<button class="btn-approve" onclick="payInvoiceAdmin(${inv.id})" title="تأكيد الدفع"><i class="fa-solid fa-check"></i></button><button class="btn-delete" onclick="deleteInvoiceAdmin(${inv.id})"><i class="fa-solid fa-trash"></i></button>` : `<button class="btn-delete" onclick="deleteInvoiceAdmin(${inv.id})"><i class="fa-solid fa-trash"></i></button>`;
+                return `<tr><td>${i+1}</td><td>${escHtml(getUserName(inv.userId))}</td><td>${escHtml(inv.description || '')}</td><td style="font-weight:700;">${inv.currency || '$'}${inv.amount || 0}</td><td style="color:var(--text-secondary);font-size:0.85rem;">${inv.issuedAt || '-'}</td><td style="color:var(--text-secondary);font-size:0.85rem;">${inv.dueAt || '-'}</td><td><span class="badge ${statusBadge}">${statusText}</span></td><td><div class="actions-cell">${actions}</div></td></tr>`;
+            }).join('');
+        }
+
+        function renderAttendance() {
+            const items = window.db.getAttendance();
+            const filter = document.getElementById('attCourseFilter');
+            const tbody = document.getElementById('attendanceTableBody');
+            const empty = document.getElementById('attendanceEmpty');
+            if (!tbody) return;
+            const courses = window.db.getCourses();
+            const filtered = filter && filter.value ? items.filter(s => s.courseId === parseInt(filter.value)) : items;
+            if (filter) {
+                const curVal = filter.value;
+                filter.innerHTML = '<option value="">كل الكورسات</option>' + courses.map(c => `<option value="${c.id}" ${c.id == curVal ? 'selected' : ''}>${escHtml(c.title)}</option>`).join('');
+            }
+            if (filtered.length === 0) { tbody.innerHTML = ''; if (empty) empty.style.display = 'block'; return; }
+            if (empty) empty.style.display = 'none';
+            tbody.innerHTML = filtered.map((s, i) => {
+                const course = courses.find(c => c.id === s.courseId);
+                const present = s.records.filter(r => r.status === 'present').length;
+                const absent = s.records.filter(r => r.status === 'absent').length;
+                const total = s.records.length;
+                const rate = total ? Math.round((present / total) * 100) : 0;
+                return `<tr><td>${i+1}</td><td>${escHtml(course ? course.title : '#' + s.courseId)}</td><td>${s.date}</td><td>${total}</td><td style="color:var(--success);">${present}</td><td style="color:#ff4d4d;">${absent}</td><td style="font-weight:700;color:var(--neon-blue);">${rate}%</td><td><div class="actions-cell"><button class="btn-edit" onclick="showAttendanceDetail(${s.id})" title="عرض التفاصيل"><i class="fa-solid fa-eye"></i></button><button class="btn-delete" onclick="deleteAttendanceAdmin(${s.id})"><i class="fa-solid fa-trash"></i></button></div></td></tr>`;
+            }).join('');
+        }
+
+        function showAttendanceDetail(sessionId) {
+            const session = window.db.getAttendance().find(s => s.id === sessionId);
+            if (!session) return;
+            const card = document.getElementById('attendanceDetailCard');
+            const title = document.getElementById('attendanceDetailTitle');
+            const tbody = document.getElementById('attendanceDetailBody');
+            if (!card || !tbody) return;
+            card.style.display = 'block';
+            const course = window.db.getCourses().find(c => c.id === session.courseId);
+            title.innerHTML = '<i class="fa-solid fa-users"></i> تفاصيل الجلسة: ' + (course ? escHtml(course.title) : '#' + session.courseId) + ' - ' + session.date;
+            const users = window.db.getUsers();
+            tbody.innerHTML = session.records.map(r => {
+                const user = users.find(u => u.id === r.userId);
+                const statusColor = r.status === 'present' ? 'var(--success)' : '#ff4d4d';
+                const statusText = r.status === 'present' ? 'حاضر' : 'غائب';
+                return `<tr><td>${escHtml(user ? user.name : '#' + r.userId)}</td><td style="color:${statusColor};font-weight:700;">${statusText}</td><td><select class="admin-att-update" data-session="${session.id}" data-user="${r.userId}" style="background:transparent;color:var(--text-secondary);border:1px solid var(--border-color);border-radius:5px;padding:3px 8px;"><option value="present" ${r.status === 'present' ? 'selected' : ''}>حاضر</option><option value="absent" ${r.status === 'absent' ? 'selected' : ''}>غائب</option></select></td></tr>`;
+            }).join('');
+        }
+
         function renderSettlements() {
             const items = window.db.getSettlementRequests();
             const tbody = document.getElementById('settlementsTableBody');
@@ -2093,6 +2281,40 @@
             showToast('تم رفض طلب التصفية', 'error');
             renderAll();
         };
+
+        // ---- Invoice actions ----
+        window.payInvoiceAdmin = function(id) {
+            window.db.payInvoice(id);
+            showToast('تم تأكيد الدفع ✅');
+            renderAll();
+        };
+        window.deleteInvoiceAdmin = function(id) {
+            if (confirm('هل أنت متأكد من حذف الفاتورة؟')) {
+                window.db.deleteInvoice(id);
+                showToast('تم حذف الفاتورة');
+                renderAll();
+            }
+        };
+
+        // ---- Attendance actions ----
+        window.deleteAttendanceAdmin = function(id) {
+            if (confirm('هل أنت متأكد من حذف جلسة الحضور؟')) {
+                window.db.deleteAttendanceSession(id);
+                document.getElementById('attendanceDetailCard').style.display = 'none';
+                showToast('تم حذف الجلسة');
+                renderAll();
+            }
+        };
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('admin-att-update')) {
+                const sessionId = parseInt(e.target.dataset.session);
+                const userId = parseInt(e.target.dataset.user);
+                window.db.markAttendance(sessionId, userId, e.target.value);
+                showToast('تم تحديث الحضور');
+                renderAttendance();
+                showAttendanceDetail(sessionId);
+            }
+        });
 
         // ---- Global exports ----
         window.editCourse = editCourse;

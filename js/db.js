@@ -7,13 +7,15 @@ const DB_KEY = 'lookagenius_db';
 
 const defaultData = {
     users: [
-        { id: 1, name: 'Ahmed Mahmoud', email: 'student@test.com', password: '123', type: 'student', active: true },
-        { id: 2, name: 'Dr. Mohamed Tarek', email: 'teacher@test.com', password: '123', type: 'teacher', active: true },
-        { id: 3, name: 'Admin User', email: 'admin@lookagenius.com', password: 'password123', type: 'admin', active: true }
+        { id: 1, name: 'أحمد محمود', email: 'student@test.com', password: '123', type: 'student', active: true, details: { level: 'high', interests: 'لغات, برمجة' } },
+        { id: 2, name: 'د. محمد طارق', email: 'teacher@test.com', password: '123', type: 'teacher', active: true, details: { specialty: 'فيزياء', experience: '10' } },
+        { id: 3, name: 'مدير النظام', email: 'admin@lookagenius.com', password: 'password123', type: 'admin', active: true, details: {} },
+        { id: 4, name: 'سارة أحمد', email: 'sara@test.com', password: '123', type: 'student', active: true, details: { level: 'university', interests: 'علوم, طب' } },
+        { id: 5, name: 'أحمد علي', email: 'parent@test.com', password: '123', type: 'parent', active: true, details: { studentEmail: 'sara@test.com' } }
     ],
     courses: [
-        { id: 101, title: "Arabic: Foundation & Eloquence", description: "Discover the magic of the Arabic language and master grammar and rhetoric.", category: "languages", price: 25, duration: "36 hours", badge: "Arabic", image: "https://picsum.photos/seed/arabic/400/250", stage: "all", currency: "USD" },
-        { id: 102, title: "Comprehensive English (A1-C1)", description: "Speak English confidently with certified international curricula.", category: "languages", price: 40, duration: "48 hours", badge: "English", image: "https://picsum.photos/seed/english/400/250", stage: "all", currency: "USD" },
+        { id: 101, title: "Arabic: Foundation & Eloquence", description: "Discover the magic of the Arabic language and master grammar and rhetoric.", category: "languages", price: 25, duration: "36 hours", badge: "Arabic", image: "https://picsum.photos/seed/arabic/400/250", stage: "all", currency: "USD", studentsEnrolled: [1, 4] },
+        { id: 102, title: "Comprehensive English (A1-C1)", description: "Speak English confidently with certified international curricula.", category: "languages", price: 40, duration: "48 hours", badge: "English", image: "https://picsum.photos/seed/english/400/250", stage: "all", currency: "USD", studentsEnrolled: [1] },
         { id: 103, title: "French for Beginners", description: "Learn the language of art and culture from scratch.", category: "languages", price: 25, duration: "24 hours", badge: "French", image: "https://picsum.photos/seed/french/400/250", stage: "all", currency: "USD" },
         { id: 104, title: "German: Your Step to Europe", description: "Certified methodology to prepare for Goethe exams.", category: "languages", price: 40, duration: "30 hours", badge: "German", image: "https://picsum.photos/seed/german/400/250", stage: "all", currency: "USD" },
         { id: 105, title: "Fun Basic Science", description: "An interactive journey into the world of science for foundational stages.", category: "science", price: 20, duration: "20 hours", badge: "Science", image: "https://picsum.photos/seed/science/400/250", stage: "primary", currency: "USD" },
@@ -86,6 +88,15 @@ const defaultData = {
     financials: [],
     settlementRequests: [],
     collaborations: [],
+    invoices: [
+        { id: 6001, userId: 1, courseId: 101, amount: 25, currency: 'USD', status: 'paid', issuedAt: '2026-01-15', dueAt: '2026-02-15', paidAt: '2026-01-20', description: 'Arabic: Foundation & Eloquence' },
+        { id: 6002, userId: 1, courseId: 102, amount: 40, currency: 'USD', status: 'pending', issuedAt: '2026-03-01', dueAt: '2026-04-01', description: 'Comprehensive English (A1-C1)' }
+    ],
+    attendance: [
+        { id: 7001, courseId: 101, date: '2026-01-10', records: [{ userId: 1, status: 'present' }] },
+        { id: 7002, courseId: 101, date: '2026-01-17', records: [{ userId: 1, status: 'absent' }] },
+        { id: 7003, courseId: 102, date: '2026-03-05', records: [{ userId: 1, status: 'present' }] }
+    ],
     _version: 1
 };
 
@@ -98,7 +109,7 @@ function initDB() {
     try {
         const data = JSON.parse(existing)
         let changed = false
-        for (const key of ['courses', 'scholarships', 'articles', 'services', 'team']) {
+        for (const key of ['courses', 'scholarships', 'articles', 'services', 'team', 'invoices', 'attendance']) {
             if (!data[key] || data[key].length === 0) {
                 data[key] = JSON.parse(JSON.stringify(defaultData[key] || []))
                 changed = true
@@ -123,6 +134,9 @@ function getData() {
 function saveData(data) {
     data._version = (data._version || 0) + 1;
     localStorage.setItem(DB_KEY, JSON.stringify(data));
+    if (window.__supabase && window.__supabase.isReady) {
+        window.__supabase.pushAll(data)
+    }
 }
 
 function makeId() {
@@ -307,7 +321,78 @@ window.db = {
     getCollaborations: () => getData().collaborations || [],
     addCollaboration: (item) => crudFor('collaborations').add(item),
     updateCollaboration: (id, updates) => crudFor('collaborations').update(id, updates),
-    deleteCollaboration: (id) => crudFor('collaborations').delete(id)
+    deleteCollaboration: (id) => crudFor('collaborations').delete(id),
+
+    // Invoices
+    getInvoices: () => getData().invoices || [],
+    getInvoicesForUser: (userId) => (getData().invoices || []).filter(inv => inv.userId === parseInt(userId)),
+    getInvoicesForCourse: (courseId) => (getData().invoices || []).filter(inv => inv.courseId === parseInt(courseId)),
+    addInvoice: (item) => {
+        const data = getData()
+        item.id = makeId()
+        item.issuedAt = new Date().toISOString().slice(0, 10)
+        item.status = item.status || 'pending'
+        if (!data.invoices) data.invoices = []
+        data.invoices.push(item)
+        saveData(data)
+        return item
+    },
+    updateInvoice: (id, updates) => crudFor('invoices').update(id, updates),
+    deleteInvoice: (id) => crudFor('invoices').delete(id),
+    payInvoice: (id) => {
+        const data = getData()
+        const inv = (data.invoices || []).find(i => i.id === parseInt(id))
+        if (inv) {
+            inv.status = 'paid'
+            inv.paidAt = new Date().toISOString().slice(0, 10)
+            saveData(data)
+            return true
+        }
+        return false
+    },
+
+    // Attendance
+    getAttendance: () => getData().attendance || [],
+    getAttendanceForCourse: (courseId) => (getData().attendance || []).filter(a => a.courseId === parseInt(courseId)),
+    getAttendanceForStudent: (userId) => {
+        const att = getData().attendance || []
+        return att.filter(session => session.records.some(r => r.userId === parseInt(userId)))
+    },
+    getStudentAttendanceStats: (userId) => {
+        const sessions = getData().attendance || []
+        let present = 0, absent = 0
+        sessions.forEach(s => {
+            const rec = s.records.find(r => r.userId === parseInt(userId))
+            if (rec) {
+                if (rec.status === 'present') present++
+                else if (rec.status === 'absent') absent++
+            }
+        })
+        const total = present + absent
+        return { present, absent, total, rate: total ? Math.round((present / total) * 100) : 0 }
+    },
+    addAttendanceSession: (session) => {
+        const data = getData()
+        session.id = makeId()
+        if (!data.attendance) data.attendance = []
+        data.attendance.push(session)
+        saveData(data)
+        return session
+    },
+    markAttendance: (sessionId, userId, status) => {
+        const data = getData()
+        const session = (data.attendance || []).find(s => s.id === parseInt(sessionId))
+        if (!session) return false
+        const rec = session.records.find(r => r.userId === parseInt(userId))
+        if (rec) {
+            rec.status = status
+        } else {
+            session.records.push({ userId: parseInt(userId), status })
+        }
+        saveData(data)
+        return true
+    },
+    deleteAttendanceSession: (id) => crudFor('attendance').delete(id)
 }
 
 initDB()
