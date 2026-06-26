@@ -438,6 +438,76 @@ window.supabaseApp = (() => {
         subscriptions = []
     }
 
+    /* ============ WITHDRAWAL REQUESTS HELPERS ============ */
+    async function getWithdrawalRequests(filters) {
+        if (!client) return []
+        let query = client.from('withdrawal_requests').select('*, teacher:teacher_id(full_name, email)').order('created_at', { ascending: false })
+        if (filters?.status) query = query.eq('status', filters.status)
+        const { data } = await query
+        return data || []
+    }
+
+    async function createWithdrawalRequest(req) {
+        if (!client) return null
+        const { data } = await client.from('withdrawal_requests').insert(req).select().single()
+        return data
+    }
+
+    async function updateWithdrawalRequest(id, updates) {
+        if (!client) return null
+        const { data } = await client.from('withdrawal_requests').update(updates).eq('id', id).select().single()
+        return data
+    }
+
+    /* ============ REVIEWS HELPERS ============ */
+    async function getCourseReviews(courseId) {
+        if (!client) return []
+        const { data } = await client.from('reviews').select('*, student:student_id(full_name, avatar_url)').eq('course_id', courseId).order('created_at', { ascending: false })
+        return data || []
+    }
+
+    async function createReview(review) {
+        if (!client) return null
+        const { data } = await client.from('reviews').insert(review).select().single()
+        return data
+    }
+
+    /* ============ VIDEO ACCESS HELPERS ============ */
+    async function requestVideoAccess(lessonId) {
+        if (!client) return null
+        const { data: { user } } = await client.auth.getUser()
+        if (!user) return null
+        const { data } = await client.from('video_access').insert({
+            user_id: user.id, lesson_id: lessonId
+        }).select().single()
+        return data
+    }
+
+    /* ============ SCHOLARSHIPS (Supabase) ============ */
+    async function getAllScholarships() {
+        if (!client) return []
+        const { data } = await client.from('scholarships').select('*').order('created_at', { ascending: false })
+        return data || []
+    }
+
+    async function createScholarship(scholarship) {
+        if (!client) return null
+        const { data } = await client.from('scholarships').insert(scholarship).select().single()
+        return data
+    }
+
+    async function updateScholarship(id, updates) {
+        if (!client) return null
+        const { data } = await client.from('scholarships').update(updates).eq('id', id).select().single()
+        return data
+    }
+
+    async function deleteScholarship(id) {
+        if (!client) return false
+        const { error } = await client.from('scholarships').delete().eq('id', id)
+        return !error
+    }
+
     return {
         init, getClient, isReady,
         signUp, signIn, signOut, getSession, getCurrentUser, onAuthStateChange,
@@ -455,6 +525,10 @@ window.supabaseApp = (() => {
         getTeacherRevenues, getAllRevenues, createRevenue,
         getNotifications, markNotificationRead, markAllNotificationsRead, createNotification, getUnreadCount,
         getSettings, updateSettings,
+        getWithdrawalRequests, createWithdrawalRequest, updateWithdrawalRequest,
+        getCourseReviews, createReview,
+        requestVideoAccess,
+        getAllScholarships, createScholarship, updateScholarship, deleteScholarship,
         subscribeToTable, subscribeToCourse, unsubscribeAll,
         URL: SUPABASE_URL, ANON_KEY: SUPABASE_ANON_KEY
     }

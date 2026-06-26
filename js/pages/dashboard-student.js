@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         `
 
         let content = ''
-        if (section === 'home') content = renderHome(enrolled, invoices, attStats)
+        if (section === 'home') content = renderHome(enrolled, invoices, attStats) + (hasSb ? await renderRecommendations(hasSb) : '')
         else if (section === 'catalog') content = renderCatalog(allCourses, enrolled)
         else if (section === 'mycourses') content = await renderMyCourses(enrolled, hasSb)
         else if (section === 'courseview') content = await renderCourseView(hasSb)
@@ -120,6 +120,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <h4 style="font-size:1rem;font-weight:800;margin:0 0 15px;"><i class="fa-solid fa-book-open" style="color:#00D4FF;"></i> كورساتي</h4>
             <div class="course-grid">${enrolled.length ? enrolled.slice(0, 6).map(c => courseCard(c)).join('') : '<div class="empty-state"><i class="fa-solid fa-book"></i><p>لم تشترك في أي كورس بعد. <a href="#" onclick="document.querySelector(\'[data-section=catalog]\')?.click();return false;" style="color:#00D4FF;">تصفح المتجر</a></p></div>'}</div>
+        `
+    }
+
+    /* Recommendations (AI-powered) */
+    async function renderRecommendations(hasSb) {
+        if (!hasSb) return ''
+        let recs = []
+        try {
+            if (window.studentLib) recs = await window.studentLib.getRecommendedCourses(4)
+        } catch(e) {}
+        if (!recs.length) return ''
+        return `
+            <h4 style="font-size:1rem;font-weight:800;margin:25px 0 15px;"><i class="fa-solid fa-robot" style="color:#A855F7;"></i> موصى به لك 🤖</h4>
+            <div class="course-grid">${recs.map(c => `
+                <div class="course-card-dash" style="cursor:pointer;">
+                    <div class="img-wrap"><img src="${esc(c.cover_image || 'https://picsum.photos/seed/' + (c.id || 'r') + '/400/250')}" alt="" loading="lazy"><span class="badge">${esc(c.badge || c.category)}</span></div>
+                    <div class="body">
+                        <h4>${esc(c.title)}</h4>
+                        <p class="meta">${esc(c.category)} ${c.price ? '| $' + c.price : ''}</p>
+                        <button class="ag-btn enroll-btn" data-id="${c.id}" style="width:100%;justify-content:center;margin-top:12px;"><i class="fa-solid fa-cart-plus"></i> اشتراك</button>
+                    </div>
+                </div>
+            `).join('')}</div>
         `
     }
 

@@ -1,0 +1,13 @@
+{
+  "name": "lookagenius",
+  "version": "1.0.0",
+  "description": "LookaGenius Academy — Multi-page educational platform with CMS, dual auth, RTL Arabic-first UI",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -c-1 -o",
+    "dev": "npx http-server . -p 3000 -c-1",
+    "generate": "node generate.js",
+    "lint": "echo 'No linter configured'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

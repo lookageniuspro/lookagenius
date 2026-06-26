@@ -643,7 +643,62 @@ CREATE POLICY "reviews_update_own" ON public.reviews FOR UPDATE
     WITH CHECK (student_id = auth.uid());
 
 -- ============================================================
--- 16. SETTINGS TABLE (site-wide config)
+-- 16. SCHOLARSHIPS TABLE
+-- ============================================================
+CREATE TABLE public.scholarships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    country TEXT DEFAULT '',
+    university TEXT DEFAULT '',
+    funding TEXT DEFAULT '',
+    deadline TEXT DEFAULT '',
+    image TEXT DEFAULT '',
+    description TEXT DEFAULT '',
+    link TEXT DEFAULT '',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.scholarships ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "scholarships_select" ON public.scholarships FOR SELECT USING (true);
+CREATE POLICY "scholarships_insert_admin" ON public.scholarships FOR INSERT
+    WITH CHECK (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
+CREATE POLICY "scholarships_update_admin" ON public.scholarships FOR UPDATE
+    USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
+CREATE POLICY "scholarships_delete_admin" ON public.scholarships FOR DELETE
+    USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- ============================================================
+-- 17. COLLABORATION REQUESTS TABLE
+-- ============================================================
+CREATE TABLE public.collaboration_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT DEFAULT '',
+    specialty TEXT DEFAULT '',
+    message TEXT DEFAULT '',
+    cv_url TEXT DEFAULT '',
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    admin_notes TEXT DEFAULT '',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.collaboration_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "collab_select_admin" ON public.collaboration_requests FOR SELECT
+    USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
+CREATE POLICY "collab_insert_public" ON public.collaboration_requests FOR INSERT
+    WITH CHECK (true);
+CREATE POLICY "collab_update_admin" ON public.collaboration_requests FOR UPDATE
+    USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- ============================================================
+-- 18. SETTINGS TABLE (site-wide config)
 -- ============================================================
 CREATE TABLE public.settings (
     id INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),

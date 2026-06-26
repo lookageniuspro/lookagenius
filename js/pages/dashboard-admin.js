@@ -19,8 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <li><a href="#" class="${section === 'overview' ? 'active' : ''}" data-section="overview"><i class="fa-solid fa-chart-line"></i> نظرة عامة</a></li>
             <li><a href="#" class="${section === 'users' ? 'active' : ''}" data-section="users"><i class="fa-solid fa-users-gear"></i> المستخدمين</a></li>
             <li><a href="#" class="${section === 'courses' ? 'active' : ''}" data-section="courses"><i class="fa-solid fa-book"></i> الكورسات</a></li>
+            <li><a href="#" class="${section === 'scholarships' ? 'active' : ''}" data-section="scholarships"><i class="fa-solid fa-graduation-cap"></i> المنح</a></li>
+            <li><a href="#" class="${section === 'collaborations' ? 'active' : ''}" data-section="collaborations"><i class="fa-solid fa-handshake"></i> طلبات التعاون</a></li>
             <li><a href="#" class="${section === 'revenue' ? 'active' : ''}" data-section="revenue"><i class="fa-solid fa-money-bill"></i> الأرباح</a></li>
+            <li><a href="#" class="${section === 'withdrawals' ? 'active' : ''}" data-section="withdrawals"><i class="fa-solid fa-bank"></i> طلبات السحب</a></li>
             <li><a href="#" class="${section === 'certificates' ? 'active' : ''}" data-section="certificates"><i class="fa-solid fa-certificate"></i> الشهادات</a></li>
+            <li><a href="#" class="${section === 'notifications' ? 'active' : ''}" data-section="notifications"><i class="fa-solid fa-bell"></i> الإشعارات</a></li>
             <li><a href="#" class="${section === 'settings' ? 'active' : ''}" data-section="settings"><i class="fa-solid fa-gear"></i> الإعدادات</a></li>
         `
 
@@ -28,8 +32,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (section === 'overview') content = await renderOverview(hasSb)
         else if (section === 'users') content = await renderUsers(hasSb)
         else if (section === 'courses') content = await renderCourses(hasSb)
+        else if (section === 'scholarships') content = await renderScholarships(hasSb)
+        else if (section === 'collaborations') content = await renderCollaborations(hasSb)
         else if (section === 'revenue') content = await renderRevenue(hasSb)
+        else if (section === 'withdrawals') content = await renderWithdrawals(hasSb)
         else if (section === 'certificates') content = await renderCertificates(hasSb)
+        else if (section === 'notifications') content = await renderNotifications(hasSb)
         else if (section === 'settings') content = await renderSettings(hasSb)
 
         const container = document.getElementById('dashboardContent')
@@ -39,6 +47,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         bindNav()
         if (section === 'users') bindUserEvents(hasSb)
         if (section === 'courses') bindCourseEvents(hasSb)
+        if (section === 'scholarships') bindScholarshipEvents(hasSb)
+        if (section === 'collaborations') bindCollaborationEvents(hasSb)
+        if (section === 'withdrawals') bindWithdrawalEvents(hasSb)
+        if (section === 'notifications') bindNotificationEvents(hasSb)
         if (section === 'settings') bindSettingsEvents(hasSb)
     }
 
@@ -241,6 +253,277 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </table>
             </div>` : '<div class="empty-state"><i class="fa-solid fa-certificate"></i><p>لم يتم إصدار أي شهادات بعد</p></div>'}
         `
+    }
+
+    /* ---- SCHOLARSHIPS ---- */
+    async function renderScholarships(hasSb) {
+        const list = window.db.getScholarships()
+        return `
+            <div class="action-bar">
+                <button class="ag-btn" id="openScholarshipModal"><i class="fa-solid fa-plus"></i> منحة جديدة</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>العنوان</th><th>الدولة</th><th>الجامعة</th><th>التمويل</th><th>الموعد</th><th>الإجراءات</th></tr></thead>
+                    <tbody>${list.length ? list.map(s => `
+                        <tr>
+                            <td><strong>${esc(s.title)}</strong></td>
+                            <td>${esc(s.country || '')}</td>
+                            <td style="font-size:0.8rem;">${esc(s.university || '')}</td>
+                            <td>${esc(s.funding || '')}</td>
+                            <td>${esc(s.deadline || '')}</td>
+                            <td style="display:flex;gap:6px;">
+                                <button class="ag-btn edit-scholarship-btn" data-id="${s.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(168,85,247,0.12);color:#A855F7;">تعديل</button>
+                                <button class="ag-btn delete-scholarship-btn" data-id="${s.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(255,77,77,0.12);color:#ff4d4d;">حذف</button>
+                            </td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد منح بعد</td></tr>'}</tbody>
+                </table>
+            </div>
+            <!-- Scholarship Modal -->
+            <div class="modal-overlay" id="scholarshipModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+                <div class="dash-card" style="max-width:520px;width:90%;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:15px;">
+                        <h3 style="margin:0;font-weight:800;" id="scholarshipModalTitle">إضافة منحة</h3>
+                        <button id="closeScholarshipModal" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">&times;</button>
+                    </div>
+                    <form id="scholarshipForm">
+                        <input type="hidden" id="editScholarshipId">
+                        <div style="margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">عنوان المنحة</label><input type="text" id="schTitle" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;" required></div>
+                        <div style="display:flex;gap:12px;">
+                            <div style="flex:1;margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">الدولة</label><input type="text" id="schCountry" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
+                            <div style="flex:1;margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">الجامعة</label><input type="text" id="schUniv" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
+                        </div>
+                        <div style="display:flex;gap:12px;">
+                            <div style="flex:1;margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">التمويل</label><input type="text" id="schFunding" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
+                            <div style="flex:1;margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">الموعد النهائي</label><input type="text" id="schDeadline" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;" placeholder="January 2026"></div>
+                        </div>
+                        <div style="margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">رابط الصورة</label><input type="url" id="schImage" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;" value="https://picsum.photos/seed/scholarship/400/250"></div>
+                        <button type="submit" class="ag-btn" style="width:100%;justify-content:center;padding:14px;"><i class="fa-solid fa-save"></i> حفظ</button>
+                    </form>
+                </div>
+            </div>
+        `
+    }
+
+    function bindScholarshipEvents(hasSb) {
+        const modal = document.getElementById('scholarshipModal')
+        if (!modal) return
+        document.getElementById('openScholarshipModal').onclick = () => {
+            modal.style.display = 'flex'
+            document.getElementById('scholarshipModalTitle').textContent = 'إضافة منحة'
+            document.getElementById('editScholarshipId').value = ''
+            document.getElementById('scholarshipForm').reset()
+        }
+        document.getElementById('closeScholarshipModal').onclick = () => modal.style.display = 'none'
+        modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none' })
+
+        document.querySelectorAll('.edit-scholarship-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const s = window.db.getScholarships().find(x => x.id == btn.dataset.id)
+                if (!s) return
+                document.getElementById('scholarshipModalTitle').textContent = 'تعديل المنحة'
+                document.getElementById('editScholarshipId').value = s.id
+                document.getElementById('schTitle').value = s.title || ''
+                document.getElementById('schCountry').value = s.country || ''
+                document.getElementById('schUniv').value = s.university || ''
+                document.getElementById('schFunding').value = s.funding || ''
+                document.getElementById('schDeadline').value = s.deadline || ''
+                document.getElementById('schImage').value = s.image || ''
+                modal.style.display = 'flex'
+            })
+        })
+
+        document.querySelectorAll('.delete-scholarship-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!confirm('حذف المنحة؟')) return
+                window.db.deleteScholarship(btn.dataset.id)
+                renderUI('scholarships')
+            })
+        })
+
+        document.getElementById('scholarshipForm').onsubmit = (e) => {
+            e.preventDefault()
+            const editId = document.getElementById('editScholarshipId').value
+            const data = {
+                title: document.getElementById('schTitle').value,
+                country: document.getElementById('schCountry').value,
+                university: document.getElementById('schUniv').value,
+                funding: document.getElementById('schFunding').value,
+                deadline: document.getElementById('schDeadline').value,
+                image: document.getElementById('schImage').value
+            }
+            if (editId) window.db.updateScholarship(editId, data)
+            else window.db.addScholarship(data)
+            modal.style.display = 'none'
+            renderUI('scholarships')
+        }
+    }
+
+    /* ---- COLLABORATIONS ---- */
+    async function renderCollaborations(hasSb) {
+        const list = window.db.getCollaborations()
+        return `
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>الاسم</th><th>البريد</th><th>الهاتف</th><th>التخصص</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                    <tbody>${list.length ? list.map(c => `
+                        <tr>
+                            <td><strong>${esc(c.name || c.fullName || '')}</strong></td>
+                            <td style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${esc(c.email || '')}</td>
+                            <td>${esc(c.phone || '')}</td>
+                            <td>${esc(c.specialty || c.specialization || '')}</td>
+                            <td>${c.status === 'approved' ? '<span style="color:#10b981;">مقبول</span>' : c.status === 'rejected' ? '<span style="color:#ff4d4d;">مرفوض</span>' : '<span style="color:#FBBF24;">قيد المراجعة</span>'}</td>
+                            <td style="display:flex;gap:6px;">
+                                ${c.status !== 'approved' ? `<button class="ag-btn approve-collab-btn" data-id="${c.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(16,185,129,0.15);color:#10b981;">قبول</button>` : ''}
+                                ${c.status !== 'rejected' ? `<button class="ag-btn reject-collab-btn" data-id="${c.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(255,77,77,0.15);color:#ff4d4d;">رفض</button>` : ''}
+                            </td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد طلبات تعاون</td></tr>'}</tbody>
+                </table>
+            </div>
+        `
+    }
+
+    function bindCollaborationEvents(hasSb) {
+        document.querySelectorAll('.approve-collab-btn').forEach(btn => {
+            btn.addEventListener('click', () => { window.db.updateCollaboration(btn.dataset.id, { status: 'approved' }); renderUI('collaborations') })
+        })
+        document.querySelectorAll('.reject-collab-btn').forEach(btn => {
+            btn.addEventListener('click', () => { window.db.updateCollaboration(btn.dataset.id, { status: 'rejected' }); renderUI('collaborations') })
+        })
+    }
+
+    /* ---- WITHDRAWALS ---- */
+    async function renderWithdrawals(hasSb) {
+        let requests = []
+        if (hasSb) {
+            const { data } = await sb.getClient().from('withdrawal_requests').select('*, teacher:teacher_id(full_name, email)').order('created_at', { ascending: false })
+            requests = data || []
+        } else {
+            requests = window.db.getSettlementRequests()
+        }
+        return `
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>المعلم</th><th>البريد</th><th>المبلغ</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                    <tbody>${requests.length ? requests.map(r => `
+                        <tr>
+                            <td><strong>${esc(r.teacher?.full_name || r.teacherName || '')}</strong></td>
+                            <td style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${esc(r.teacher?.email || r.teacherEmail || '')}</td>
+                            <td style="font-weight:700;color:#10b981;">$${r.amount || 0}</td>
+                            <td style="font-size:0.8rem;">${r.created_at ? new Date(r.created_at).toLocaleDateString('ar') : '-'}</td>
+                            <td>${r.status === 'approved' ? '<span style="color:#10b981;">معتمد</span>' : r.status === 'rejected' ? '<span style="color:#ff4d4d;">مرفوض</span>' : '<span style="color:#FBBF24;">معلق</span>'}</td>
+                            <td style="display:flex;gap:6px;">
+                                ${r.status === 'pending' ? `<button class="ag-btn approve-withdrawal-btn" data-id="${r.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(16,185,129,0.15);color:#10b981;">موافقة</button>
+                                <button class="ag-btn reject-withdrawal-btn" data-id="${r.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(255,77,77,0.15);color:#ff4d4d;">رفض</button>` : '-'}
+                            </td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد طلبات سحب</td></tr>'}</tbody>
+                </table>
+            </div>
+        `
+    }
+
+    function bindWithdrawalEvents(hasSb) {
+        document.querySelectorAll('.approve-withdrawal-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (hasSb) await sb.getClient().from('withdrawal_requests').update({ status: 'approved', processed_at: new Date().toISOString() }).eq('id', btn.dataset.id)
+                else window.db.approveSettlementRequest(btn.dataset.id)
+                renderUI('withdrawals')
+            })
+        })
+        document.querySelectorAll('.reject-withdrawal-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (hasSb) await sb.getClient().from('withdrawal_requests').update({ status: 'rejected' }).eq('id', btn.dataset.id)
+                else window.db.rejectSettlementRequest(btn.dataset.id)
+                renderUI('withdrawals')
+            })
+        })
+    }
+
+    /* ---- NOTIFICATIONS ---- */
+    async function renderNotifications(hasSb) {
+        let notifs = []
+        if (hasSb) {
+            const { data } = await sb.getClient().from('notifications').select('*').order('created_at', { ascending: false }).limit(50)
+            notifs = data || []
+        } else {
+            notifs = window.db.getNotifications()
+        }
+        return `
+            <div class="action-bar">
+                <button class="ag-btn" id="openNotifModal"><i class="fa-solid fa-plus"></i> إشعار جديد</button>
+                <button class="ag-btn ag-btn-outline" id="clearAllNotifs" style="padding:10px 22px;font-size:0.85rem;background:rgba(255,77,77,0.1);color:#ff4d4d;border:none;"><i class="fa-solid fa-trash"></i> مسح الكل</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>العنوان</th><th>الرسالة</th><th>النوع</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+                    <tbody>${notifs.length ? notifs.map(n => `
+                        <tr>
+                            <td><strong>${esc(n.title || '')}</strong></td>
+                            <td style="font-size:0.8rem;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(n.message || '')}</td>
+                            <td><span style="color:#A855F7;">${esc(n.type || 'system')}</span></td>
+                            <td style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${n.created_at ? new Date(n.created_at).toLocaleDateString('ar') : '-'}</td>
+                            <td>${n.is_read ? '<span style="color:rgba(255,255,255,0.3);">مقروء</span>' : '<span style="color:#00D4FF;">جديد</span>'}</td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد إشعارات</td></tr>'}</tbody>
+                </table>
+            </div>
+            <!-- Notification Modal -->
+            <div class="modal-overlay" id="notifModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+                <div class="dash-card" style="max-width:480px;width:90%;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:15px;">
+                        <h3 style="margin:0;font-weight:800;">إرسال إشعار</h3>
+                        <button id="closeNotifModal" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">&times;</button>
+                    </div>
+                    <form id="notifForm">
+                        <div style="margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">المستلم</label><select id="nRecipient" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;"><option value="all">جميع المستخدمين</option><option value="students">جميع الطلاب</option><option value="teachers">جميع المعلمين</option></select></div>
+                        <div style="margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">العنوان</label><input type="text" id="nTitle" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;" required></div>
+                        <div style="margin-bottom:15px;"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">الرسالة</label><textarea id="nMessage" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;min-height:100px;" required></textarea></div>
+                        <button type="submit" class="ag-btn" style="width:100%;justify-content:center;padding:14px;"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+                    </form>
+                </div>
+            </div>
+        `
+    }
+
+    function bindNotificationEvents(hasSb) {
+        const modal = document.getElementById('notifModal')
+        if (!modal) return
+        document.getElementById('openNotifModal').onclick = () => modal.style.display = 'flex'
+        document.getElementById('closeNotifModal').onclick = () => modal.style.display = 'none'
+        modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none' })
+
+        document.getElementById('clearAllNotifs')?.addEventListener('click', () => {
+            if (!confirm('مسح جميع الإشعارات؟')) return
+            window.db.clearAllNotifications()
+            renderUI('notifications')
+        })
+
+        document.getElementById('notifForm').onsubmit = async (e) => {
+            e.preventDefault()
+            const title = document.getElementById('nTitle').value
+            const message = document.getElementById('nMessage').value
+            const recipient = document.getElementById('nRecipient').value
+
+            if (hasSb) {
+                let users = []
+                if (recipient === 'all') users = await sb.getAllProfiles()
+                else users = (await sb.getAllProfiles()).filter(p => p.role === (recipient === 'students' ? 'student' : 'teacher'))
+                for (const u of users) {
+                    await sb.createNotification({ user_id: u.id, title, message, type: 'admin' })
+                }
+                const count = users.length
+                alert(`تم إرسال الإشعار إلى ${count} مستخدم ✓`)
+            } else {
+                if (recipient === 'all') window.db.addNotification({ title, message, type: 'admin', user_id: 'all' })
+                else window.db.addNotification({ title, message, type: 'admin', user_id: recipient })
+                alert('تم إرسال الإشعار ✓')
+            }
+            modal.style.display = 'none'
+            renderUI('notifications')
+        }
     }
 
     /* ---- SETTINGS ---- */
