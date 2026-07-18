@@ -68,6 +68,65 @@ Users, Courses, Scholarships, Articles, Services, Team, CourseCategories, Curren
 ## Important Notes
 - All HTML pages except `index.html` are **auto-generated** by `generate.js` or `generate.py`
 - To add a new page: update `generate.js`, regenerate, then add page-specific JS in `js/pages/`
-- `anti-gravity.css` is the primary design system (over 2000 lines)
+- `assets/css/anti-gravity.css` is the primary design system (over 2000 lines) — must be loaded on EVERY page
 - No package.json — all dependencies loaded via CDN in HTML `<head>`
 - Arabic is the primary language; English is secondary via i18n
+
+## Deployment & DevOps
+- **Hosting**: Vercel (`https://lookagenius.vercel.app`)
+- **GitHub**: `https://github.com/lookageniuspro/lookagenius`
+- **Supabase project**: `hdpmybarejjbnryjxvkk` (linked via `supabase link`)
+- **Supabase CLI**: installed globally via npm (`npx supabase`)
+- **Database**: PostgreSQL via Supabase, applied via `supabase db push --include-all`
+- **Migration file**: `supabase/migrations/20260718211106_fix_forward_refs.sql`
+- **vercel.json**: version 2, cleanUrls, security + cache headers, /admin rewrite
+
+## NextGen Modules (9 total)
+Load ALL on every dashboard page in this exact order:
+1. `js/nextgen-core.js` — core engine
+2. `js/nextgen-paymob.js` — payment integration
+3. `js/nextgen-communication.js` — real-time chat/notifications
+4. `js/nextgen-assignments.js` — assignments & submissions
+5. `js/nextgen-gamification.js` — badges, points, leaderboards
+6. `js/nextgen-live.js` — live streaming
+7. `js/nextgen-analytics.js` — analytics & reporting
+8. `js/nextgen-paths.js` — learning paths
+9. `js/nextgen-loader.js` — AI assistant loader (loads after dashboard-common)
+
+## Dashboard Script Template
+```html
+<!-- Core -->
+<script src="js/db.js" defer></script>
+<script src="js/components.js" defer></script>
+<script src="js/supabase.js" defer></script>
+<script src="js/auth.js" defer></script>
+<script src="js/app.js" defer></script>
+<!-- Libs (for all roles) -->
+<script src="lib/admin-lib.js" defer></script>
+<script src="lib/teacher-lib.js" defer></script>
+<script src="lib/student-lib.js" defer></script>
+<!-- NextGen (all 9) -->
+<script src="js/nextgen-core.js" defer></script>
+<script src="js/nextgen-paymob.js" defer></script>
+<script src="js/nextgen-communication.js" defer></script>
+<script src="js/nextgen-assignments.js" defer></script>
+<script src="js/nextgen-gamification.js" defer></script>
+<script src="js/nextgen-live.js" defer></script>
+<script src="js/nextgen-analytics.js" defer></script>
+<script src="js/nextgen-paths.js" defer></script>
+<script src="js/pages/dashboard-common.js" defer></script>
+<script src="js/nextgen-loader.js" defer></script>
+<script src="js/pages/dashboard-{role}.js" defer></script>
+```
+
+## Public Page Template
+Every public page MUST include in `<head>`:
+- `css/style.css`
+- `css/animations.css` (if applicable)
+- `assets/css/anti-gravity.css` (the premium design system)
+
+Every public page MUST include before `</body>`:
+- `<script src="js/supabase.js" defer></script>` (after CDN scripts, before db.js)
+- `<script src="js/db.js" defer></script>`
+- `<script src="js/auth.js" defer></script>`
+- `<script src="js/app.js" defer></script>`
