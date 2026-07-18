@@ -5,8 +5,8 @@
  */
 
 window.supabaseApp = (() => {
-    const SUPABASE_URL = 'https://ofnzazrtgpmaekqtcejf.supabase.co'
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mbnphenJ0Z3BtYWVrcXRjZWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE2ODQ2MzMsImV4cCI6MjA0NzI2MDYzM30.9db9e048d88b50f1ee8b1cea3ab6b12736490ec7ebedfca4ba996e18a9f6055'
+    const SUPABASE_URL = 'https://hdpmybarejjbnryjxvkk.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_R9YFp41ja36mdYjo1--xmg_dni85u8_'
 
     let client = null
     let ready = false
