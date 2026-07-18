@@ -2,6 +2,18 @@
  * dashboard-admin.js — Full admin control panel
  * Sections: Overview | Users | Courses | Revenue | Certificates | Settings
  */
+window.onerror = function(msg, url, line, col, err) {
+    const el = document.createElement('div')
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ff0044;color:#fff;padding:20px;z-index:999999;font-size:14px;direction:ltr;text-align:left'
+    el.textContent = 'ERR: ' + msg + ' (' + line + ':' + col + ')'
+    document.body.prepend(el)
+}
+window.addEventListener('unhandledrejection', function(e) {
+    const el = document.createElement('div')
+    el.style.cssText = 'position:fixed;top:60px;left:0;right:0;background:#ff8800;color:#fff;padding:20px;z-index:999999;font-size:14px;direction:ltr;text-align:left'
+    el.textContent = 'UNHANDLED PROMISE: ' + (e.reason?.message || e.reason || 'unknown')
+    document.body.prepend(el)
+})
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('[admin] dashboard loaded, auth.currentUser:', window.auth?.currentUser?.type)
     await window.auth.ready
