@@ -200,7 +200,7 @@ window.auth = {
 }
 
 /* Synchronous session restore — runs before DOMContentLoaded */
-(function() {
+;(function() {
     try {
         const session = localStorage.getItem('lookagenius_session')
         if (session) {
