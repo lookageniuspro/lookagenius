@@ -3,7 +3,8 @@
  * Sections: Overview | Users | Courses | Revenue | Certificates | Settings
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!window.auth.currentUser || window.auth.currentUser.type !== 'admin') return
+    await window.auth.ready
+    if (!window.auth.currentUser || window.auth.currentUser.type !== 'admin') { window.location.href = 'login.html'; return }
 
     const user = window.auth.currentUser
     const sb = window.supabaseApp

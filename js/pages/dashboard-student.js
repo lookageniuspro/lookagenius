@@ -3,7 +3,8 @@
  * Sections: Home | Catalog | My Courses | Lesson Player | Quizzes | Certificates
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!window.auth.currentUser || window.auth.currentUser.type !== 'student') return
+    await window.auth.ready
+    if (!window.auth.currentUser || window.auth.currentUser.type !== 'student') { window.location.href = 'login.html'; return }
 
     const user = window.auth.currentUser
     const sb = window.supabaseApp

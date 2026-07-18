@@ -133,7 +133,17 @@ const renderFooter = () => {
     }
 };
 
+function reRenderNav() {
+    const old = document.querySelector('.header')
+    if (old) old.remove()
+    renderNavbar()
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     if(!document.querySelector('.header')) renderNavbar();
     if(!document.querySelector('footer p')) renderFooter();
 });
+
+window.addEventListener('auth:ready', () => {
+    reRenderNav()
+})

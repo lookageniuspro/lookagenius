@@ -43,6 +43,7 @@ window.auth = {
 
         window.auth.updateUI()
         window.auth.protectRoutes()
+        if (window.auth._readyResolve) window.auth._readyResolve()
     },
 
     login: async (email, password) => {
@@ -160,12 +161,14 @@ window.auth = {
             }
             document.querySelectorAll('.smart-cta').forEach(el => {
                 el.href = `dashboard-${window.auth.currentUser.type}.html`
+                el.textContent = el.dataset.i18nLogged || 'لوحة التحكم'
             })
         } else {
             if (authContainer) authContainer.classList.remove('hidden')
             if (userMenu) userMenu.classList.add('hidden')
             document.querySelectorAll('.smart-cta').forEach(el => {
                 el.href = 'login.html'
+                el.textContent = el.dataset.i18n || 'ابدأ الآن'
             })
         }
     },
@@ -199,11 +202,15 @@ window.auth = {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.auth.init()
+window.auth._readyResolve = null
+window.auth.ready = new Promise(resolve => { window.auth._readyResolve = resolve })
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.auth.init()
     document.body.addEventListener('click', (e) => {
         if (e.target.closest('#logoutBtn')) {
             window.auth.logout()
         }
     })
+    window.dispatchEvent(new CustomEvent('auth:ready'))
 })

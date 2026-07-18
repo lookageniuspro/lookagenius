@@ -1,5 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (!window.auth.currentUser || window.auth.currentUser.type !== 'parent') return;
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.auth.ready
+    if (!window.auth.currentUser || window.auth.currentUser.type !== 'parent') { window.location.href = 'login.html'; return }
 
     const user = window.auth.currentUser;
 

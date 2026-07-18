@@ -82,7 +82,14 @@
                 <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
                     <i class="fa-solid fa-globe"></i> العربية
                 </button>
-                <a href="login.html" class="ag-btn smart-cta" data-i18n="btn_start">Start Now</a>
+                <div class="auth-buttons" id="authButtonsContainer">
+                    <a href="login.html" class="ag-btn smart-cta" data-i18n="btn_start" data-i18n-logged="لوحة التحكم">Start Now</a>
+                </div>
+                <div class="user-menu hidden" id="userMenuContainer" style="display: none; gap: 10px; align-items: center;">
+                    <a href="#" class="ag-btn ag-btn-primary" id="dashboardBtn" style="padding: 8px 18px; font-size: 14px;">لوحة التحكم <i class="fa-solid fa-border-all"></i></a>
+                    <button class="ag-btn ag-btn-outline" id="logoutBtn" style="padding: 8px 15px; font-size: 14px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+                    <a href="profile.html" class="ag-btn ag-btn-outline" title="الملف الشخصي" style="padding: 8px 12px; font-size: 14px;"><i class="fa-solid fa-user"></i></a>
+                </div>
             </div>
         </div>
     </nav>
@@ -109,7 +116,7 @@
                 technologies in an integrated educational experience.
             </p>
             <div class="btn-group">
-                <a href="login.html" class="ag-btn hover-trigger ag-float smart-cta" data-i18n="hero_btn_start">Start Journey <i
+                <a href="login.html" class="ag-btn hover-trigger ag-float smart-cta" data-i18n="hero_btn_start" data-i18n-logged="لوحة التحكم">لوحة التحكم <i
                         class="fa-solid fa-rocket"></i></a>
                 <a href="#courses" class="ag-btn ag-btn-outline hover-trigger" data-i18n="hero_btn_courses">Explore
                     Courses</a>

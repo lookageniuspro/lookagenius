@@ -2,9 +2,10 @@
  * dashboard-teacher.js — Supabase + localStorage dual source
  * Sections: Dashboard | Courses | Modules/Lessons | Assessments | Students | Revenue
  */
-document.addEventListener('DOMContentLoaded', () => {
-    if (!window.auth.currentUser) return
-    if (window.auth.currentUser.type !== 'teacher' && window.auth.currentUser.type !== 'admin') return
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.auth.ready
+    if (!window.auth.currentUser) { window.location.href = 'login.html'; return }
+    if (window.auth.currentUser.type !== 'teacher' && window.auth.currentUser.type !== 'admin') { window.location.href = 'login.html'; return }
 
     const user = window.auth.currentUser
     const sb = window.supabaseApp
