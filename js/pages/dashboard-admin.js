@@ -3,11 +3,20 @@
  * Sections: Overview | Users | Courses | Revenue | Certificates | Settings
  */
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('[admin] dashboard loaded, auth.currentUser:', window.auth?.currentUser?.type)
     await window.auth.ready
-    if (!window.auth.currentUser || window.auth.currentUser.type !== 'admin') { window.location.href = 'login.html'; return }
+    if (!window.auth.currentUser || window.auth.currentUser.type !== 'admin') { console.warn('[admin] redirect to login'); window.location.href = 'login.html'; return }
+    console.log('[admin] auth ok, starting render')
 
     const user = window.auth.currentUser
     const sb = window.supabaseApp
+
+    /* Debug display */
+    const dbg = document.createElement('div')
+    dbg.id = 'dashDbg'
+    dbg.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#1a1a2e;color:#00ff88;padding:8px 15px;border-radius:8px;z-index:99999;font-size:13px;font-family:monospace;border:1px solid #00ff88;max-width:90%;'
+    dbg.textContent = 'ready'
+    document.body.appendChild(dbg)
 
     function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML }
     async function ensureSb() { return sb && sb.isReady() }
@@ -39,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         `
 
         let content = ''
+        try {
         if (section === 'overview') { content = await renderOverview(hasSb); setTimeout(() => bindOverviewChart(hasSb), 300) }
         else if (section === 'users') content = await renderUsers(hasSb)
         else if (section === 'courses') content = await renderCourses(hasSb)
@@ -57,10 +67,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         else if (section === 'reviews') content = renderReviews()
         else if (section === 'notifications') content = await renderNotifications(hasSb)
         else if (section === 'settings') content = await renderSettings(hasSb)
+        } catch(e) { console.error('[admin] render content error for', section, e); content = '<div style="padding:20px;color:#ff4d4d;">Error rendering ' + section + '</div>' }
 
         const container = document.getElementById('dashboardContent')
         if (!container) return
-        container.innerHTML = renderDashboardLayout('لوحة تحكم الأدمن', sidebar, content)
+        try {
+            container.innerHTML = renderDashboardLayout('لوحة تحكم الأدمن', sidebar, content)
+        } catch(e) {
+            console.error('[admin] renderDashboardLayout error:', e)
+            container.innerHTML = sidebar + content
+        }
         bindLogout()
         bindNav()
         if (section === 'users') bindUserEvents(hasSb)
@@ -82,7 +98,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.dash-sidebar .nav-list a[data-section]').forEach(link => {
             link.addEventListener('click', e => {
                 e.preventDefault()
-                renderUI(link.dataset.section).catch(err => {
+                const sec = link.dataset.section
+                document.getElementById('dashDbg').textContent = 'click: ' + sec
+                renderUI(sec).catch(err => {
                     console.error('[admin] renderUI error:', err)
                     const c = document.getElementById('dashboardContent')
                     if (c) c.innerHTML = '<div class="dash-wrap" style="padding:100px 30px;text-align:center;color:#ff4d4d;"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;margin-bottom:20px;"></i><p style="font-size:1.1rem;">حدث خطأ أثناء تحميل الصفحة</p><button class="ag-btn" onclick="location.reload()" style="margin-top:20px;">إعادة المحاولة</button></div>'
