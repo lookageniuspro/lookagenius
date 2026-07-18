@@ -73,6 +73,8 @@
             outline: none;
             box-sizing: border-box;
         }
+        .auth-form .form-group select option { background: #1a1a2e; color: white; padding: 8px; }
+        .auth-form .form-group select option:disabled { color: #666; }
         .btn-auth {
             width: 100%;
             padding: 14px;
@@ -101,6 +103,7 @@
             margin-bottom: 15px;
             font-size: 0.85rem;
         }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="dark-theme">
@@ -218,7 +221,9 @@
     <script src="js/db.js" defer></script>
     <script src="js/auth.js" defer></script>
     <script src="js/app.js" defer></script>
+    <script src="js/nextgen-core.js" defer></script>
+    <script src="js/nextgen-paymob.js" defer></script>
     <script src="js/pages/authForms.js" defer></script>
-    <script src="js/components.js" defer></script>
+    <script src="js/pages/home.js" defer></script>
 </body>
 </html>

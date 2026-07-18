@@ -97,6 +97,22 @@ const defaultData = {
         { id: 7002, courseId: 101, date: '2026-01-17', records: [{ userId: 1, status: 'absent' }] },
         { id: 7003, courseId: 102, date: '2026-03-05', records: [{ userId: 1, status: 'present' }] }
     ],
+
+    // NextGen Platform Collections
+    assignments: [],
+    submissions: [],
+    messages: [],
+    threads: [],
+    gamification: {},
+    liveClasses: [],
+    events: [],
+    learningPaths: [],
+    payments: [],
+    subscriptions: [],
+    wallets: {},
+    coupons: [],
+    reviews: [],
+
     _version: 1
 };
 
@@ -109,15 +125,17 @@ function initDB() {
     try {
         const data = JSON.parse(existing)
         let changed = false
-        for (const key of ['courses', 'scholarships', 'articles', 'services', 'team', 'invoices', 'attendance']) {
-            if (!data[key] || data[key].length === 0) {
+        const arrayKeys = ['courses', 'scholarships', 'articles', 'services', 'team', 'invoices', 'attendance', 'assignments', 'submissions', 'messages', 'threads', 'liveClasses', 'events', 'learningPaths', 'payments', 'subscriptions', 'coupons', 'reviews']
+        for (const key of arrayKeys) {
+            if (!data[key]) {
                 data[key] = JSON.parse(JSON.stringify(defaultData[key] || []))
                 changed = true
             }
         }
-        for (const key of ['courseCategories', 'currencies', 'settings', 'notifications', 'financials', 'settlementRequests', 'collaborations']) {
+        const objectKeys = ['courseCategories', 'currencies', 'settings', 'notifications', 'financials', 'settlementRequests', 'collaborations', 'gamification', 'wallets']
+        for (const key of objectKeys) {
             if (!data[key]) {
-                data[key] = JSON.parse(JSON.stringify(defaultData[key] || (key === 'settings' ? defaultData.settings : [])))
+                data[key] = JSON.parse(JSON.stringify(defaultData[key] || (key === 'settings' ? defaultData.settings : {})))
                 changed = true
             }
         }

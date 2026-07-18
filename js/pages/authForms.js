@@ -3,18 +3,24 @@
  * Handles Login and Register UI Logic
  */
 
-document.addEventListener('submit', (e) => {
+document.addEventListener('submit', async (e) => {
     if (e.target && e.target.id === 'loginForm') {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPassword').value;
         const errorMsg = document.getElementById('loginErrorMsg');
-        
-        const result = window.auth.login(email, pass);
-        if (result.success) {
-            window.location.href = `dashboard-${result.user.type}.html`;
-        } else {
-            errorMsg.textContent = result.message;
+        errorMsg.classList.add('hidden');
+
+        try {
+            const result = await window.auth.login(email, pass);
+            if (result.success) {
+                window.location.href = `dashboard-${result.user.type}.html`;
+            } else {
+                errorMsg.textContent = result.message;
+                errorMsg.classList.remove('hidden');
+            }
+        } catch (err) {
+            errorMsg.textContent = 'حدث خطأ غير متوقع';
             errorMsg.classList.remove('hidden');
         }
     }
@@ -22,32 +28,43 @@ document.addEventListener('submit', (e) => {
     if (e.target && e.target.id === 'registerForm') {
         e.preventDefault();
         const type = document.getElementById('regType').value;
+        if (!type) {
+            const errorMsg = document.getElementById('regErrorMsg');
+            errorMsg.textContent = 'يرجى اختيار نوع الحساب';
+            errorMsg.classList.remove('hidden');
+            return;
+        }
         const name = document.getElementById('regName').value;
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
-        
+
         let details = {};
         if (type === 'student') {
-            details.level = document.getElementById('regLevel').value;
-            details.interests = document.getElementById('regInterests').value;
+            details.level = document.getElementById('regLevel')?.value || '';
+            details.interests = document.getElementById('regInterests')?.value || '';
         } else if (type === 'parent') {
-            details.studentEmail = document.getElementById('regStudentEmail').value;
+            details.studentEmail = document.getElementById('regStudentEmail')?.value || '';
         } else if (type === 'teacher') {
-            details.specialty = document.getElementById('regSpecialty').value;
-            details.experience = document.getElementById('regExp').value;
+            details.specialty = document.getElementById('regSpecialty')?.value || '';
+            details.experience = document.getElementById('regExp')?.value || '';
         } else if (type === 'engineer') {
-            details.specialty = document.getElementById('regEngType').value;
+            details.specialty = document.getElementById('regEngType')?.value || '';
         } else if (type === 'accountant') {
-            details.qualification = document.getElementById('regQual').value;
+            details.qualification = document.getElementById('regQual')?.value || '';
         }
 
-        const result = window.auth.register({ name, email, password, type, details });
-        
-        if (result.success) {
-            window.location.href = `dashboard-${type}.html`;
-        } else {
+        try {
+            const result = await window.auth.register({ name, email, password, type, details });
+            if (result.success) {
+                window.location.href = `dashboard-${type}.html`;
+            } else {
+                const errorMsg = document.getElementById('regErrorMsg');
+                errorMsg.textContent = result.message;
+                errorMsg.classList.remove('hidden');
+            }
+        } catch (err) {
             const errorMsg = document.getElementById('regErrorMsg');
-            errorMsg.textContent = result.message;
+            errorMsg.textContent = 'حدث خطأ غير متوقع';
             errorMsg.classList.remove('hidden');
         }
     }

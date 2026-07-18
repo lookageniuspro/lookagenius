@@ -31,9 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const sidebar = `
             <li><a href="#" class="${section === 'overview' ? 'active' : ''}" data-section="overview"><i class="fa-solid fa-chart-simple"></i> لوحة المعلومات</a></li>
             <li><a href="#" class="${section === 'courses' ? 'active' : ''}" data-section="courses"><i class="fa-solid fa-book"></i> الكورسات</a></li>
+            <li><a href="#" class="${section === 'assignments' ? 'active' : ''}" data-section="assignments"><i class="fa-solid fa-file-pen"></i> الواجبات</a></li>
+            <li><a href="#" class="${section === 'live' ? 'active' : ''}" data-section="live"><i class="fa-solid fa-video"></i> الحصص المباشرة</a></li>
+            <li><a href="#" class="${section === 'forum' ? 'active' : ''}" data-section="forum"><i class="fa-solid fa-comments"></i> المناقشات</a></li>
             <li><a href="#" class="${section === 'students' ? 'active' : ''}" data-section="students"><i class="fa-solid fa-users"></i> الطلاب</a></li>
             <li><a href="#" class="${section === 'assessments' ? 'active' : ''}" data-section="assessments"><i class="fa-solid fa-file-pen"></i> التقييمات</a></li>
             <li><a href="#" class="${section === 'revenue' ? 'active' : ''}" data-section="revenue"><i class="fa-solid fa-money-bill-trend-up"></i> الأرباح</a></li>
+            <li><a href="#" class="${section === 'analytics' ? 'active' : ''}" data-section="analytics"><i class="fa-solid fa-chart-line"></i> التحليلات</a></li>
         `
 
         let content = ''
@@ -45,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (section === 'revenue') content = await renderRevenue(hasSupabase)
         else if (section === 'modules') content = await renderModules(hasSupabase)
         else if (section === 'lessons') content = await renderLessons(hasSupabase)
+        else if (section === 'assignments') content = renderAssignments()
+        else if (section === 'live') content = renderLive()
+        else if (section === 'forum') content = renderForum()
+        else if (section === 'analytics') content = renderAnalytics()
 
         const container = document.getElementById('dashboardContent')
         if (!container) return
@@ -843,6 +851,158 @@ document.addEventListener('DOMContentLoaded', () => {
                         `).join('') : '<tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد أرباح بعد</td></tr>'}
                     </tbody>
                 </table>
+            </div>
+        `
+    }
+
+    /* ---- NEXTGEN: Assignments ---- */
+    function renderAssignments() {
+        const courseContainer = document.createElement('div')
+        const d = NextGen.DB ? NextGen.DB.getData() : {}
+        const courses = (d.courses || []).filter(c => c.instructor_id == user.id || user.type === 'admin')
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-file-pen" style="color:#A855F7"></i> إدارة الواجبات</h3>
+            <p style="color:#888;margin-bottom:20px">اختر كورساً لعرض وإدارة واجباته</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;margin-bottom:20px">
+                ${courses.map(c => `
+                    <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.3s" onclick="document.getElementById('assignSection_${c.id}').style.display=document.getElementById('assignSection_${c.id}').style.display==='none'?'block':'none'">
+                        <div style="color:#fff;font-weight:600;margin-bottom:5px">${esc(c.title)}</div>
+                        <div style="color:#888;font-size:13px">${(d.assignments || []).filter(a => a.courseId == c.id).length} واجبات</div>
+                    </div>
+                    <div id="assignSection_${c.id}" style="display:none;grid-column:1/-1">
+                        <div id="assignContainer_${c.id}"></div>
+                    </div>
+                `).join('')}
+                ${courses.length === 0 ? '<p style="color:#666;padding:30px;text-align:center">لا توجد كورسات</p>' : ''}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${courses.map(c => `if(NextGen.Assignments) NextGen.Assignments.renderAssignmentList('${c.id}', 'assignContainer_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Live Classes ---- */
+    function renderLive() {
+        const courseContainer = document.createElement('div')
+        const d = NextGen.DB ? NextGen.DB.getData() : {}
+        const courses = (d.courses || []).filter(c => c.instructor_id == user.id || user.type === 'admin')
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-video" style="color:#22c55e"></i> الحصص المباشرة</h3>
+            <p style="color:#888;margin-bottom:20px">اختر كورساً لإدارة الحصص المباشرة</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;margin-bottom:20px">
+                ${courses.map(c => `
+                    <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.3s" onclick="document.getElementById('liveSection_${c.id}').style.display=document.getElementById('liveSection_${c.id}').style.display==='none'?'block':'none'">
+                        <div style="color:#fff;font-weight:600;margin-bottom:5px">${esc(c.title)}</div>
+                        <div style="color:#888;font-size:13px">${(d.liveClasses || []).filter(lc => lc.courseId == c.id).length} حصص</div>
+                    </div>
+                    <div id="liveSection_${c.id}" style="display:none;grid-column:1/-1">
+                        <div id="liveContainer_${c.id}"></div>
+                    </div>
+                `).join('')}
+                ${courses.length === 0 ? '<p style="color:#666;padding:30px;text-align:center">لا توجد كورسات</p>' : ''}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${courses.map(c => `if(NextGen.Live) NextGen.Live.renderSchedule('${c.id}', 'liveContainer_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Forum ---- */
+    function renderForum() {
+        const d = NextGen.DB ? NextGen.DB.getData() : {}
+        const courses = (d.courses || []).filter(c => c.instructor_id == user.id || user.type === 'admin')
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-comments" style="color:#00D4FF"></i> مناقشات الكورسات</h3>
+            <p style="color:#888;margin-bottom:20px">اختر كورساً لعرض المناقشات</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;margin-bottom:20px">
+                ${courses.map(c => {
+                    const threadCount = (d.threads || []).filter(t => t.courseId == c.id).length
+                    return `
+                        <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.3s" onclick="document.getElementById('forumSection_${c.id}').style.display=document.getElementById('forumSection_${c.id}').style.display==='none'?'block':'none'">
+                            <div style="color:#fff;font-weight:600;margin-bottom:5px">${esc(c.title)}</div>
+                            <div style="color:#888;font-size:13px">${threadCount} نقاشات</div>
+                        </div>
+                        <div id="forumSection_${c.id}" style="display:none;grid-column:1/-1">
+                            <div id="forumContainer_${c.id}"></div>
+                        </div>
+                    `
+                }).join('')}
+                ${courses.length === 0 ? '<p style="color:#666;padding:30px;text-align:center">لا توجد كورسات</p>' : ''}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${courses.map(c => `if(NextGen.Communication) NextGen.Communication.renderForum('${c.id}', 'forumContainer_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Teacher Analytics ---- */
+    function renderAnalytics() {
+        const d = NextGen.DB ? NextGen.DB.getData() : {}
+        const courses = (d.courses || []).filter(c => c.instructor_id == user.id || user.type === 'admin')
+        const courseIds = courses.map(c => c.id)
+        const assignments = (d.assignments || []).filter(a => courseIds.includes(a.courseId))
+        const submissions = (d.submissions || []).filter(s => assignments.some(a => a.id === s.assignmentId))
+        const liveClasses = (d.liveClasses || []).filter(lc => courseIds.includes(lc.courseId))
+        const threads = (d.threads || []).filter(t => courseIds.includes(t.courseId))
+        const totalStudents = new Set((d.courses || []).filter(c => courseIds.includes(c.id)).flatMap(c => c.studentsEnrolled || [])).size
+
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-chart-line" style="color:#00D4FF"></i> التحليلات</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;margin-bottom:25px">
+                ${NextGen.UI ? `
+                    ${NextGen.UI.renderStatCard('fa-book', 'الكورسات', courses.length, '#00D4FF')}
+                    ${NextGen.UI.renderStatCard('fa-users', 'الطلاب', totalStudents, '#A855F7')}
+                    ${NextGen.UI.renderStatCard('fa-file-pen', 'الواجبات', assignments.length, '#22c55e')}
+                    ${NextGen.UI.renderStatCard('fa-check-circle', 'التصحيحات', submissions.filter(s=>s.status==='graded').length+'/'+submissions.length, '#FBBF24')}
+                    ${NextGen.UI.renderStatCard('fa-video', 'الحصص المباشرة', liveClasses.length, '#22c55e')}
+                    ${NextGen.UI.renderStatCard('fa-comments', 'المناقشات', threads.length, '#00D4FF')}
+                ` : ''}
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
+                    <h4 style="color:#fff;margin:0 0 15px">📊 أداء الكورسات</h4>
+                    ${courses.map(c => {
+                        const cAssignments = assignments.filter(a => a.courseId == c.id)
+                        const cSubs = submissions.filter(s => cAssignments.some(a => a.id === s.assignmentId))
+                        const graded = cSubs.filter(s => s.status === 'graded')
+                        const rate = cSubs.length ? Math.round((graded.length / cSubs.length) * 100) : 0
+                        return `
+                            <div style="margin-bottom:12px">
+                                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                                    <span style="color:#aaa">${esc(c.title)}</span>
+                                    <span style="color:#fff">${cSubs.length} تسليم · ${rate}% مصحح</span>
+                                </div>
+                                ${NextGen.UI ? NextGen.UI.renderProgressBar(rate, '#00D4FF') : ''}
+                            </div>
+                        `
+                    }).join('') || '<p style="color:#666;text-align:center;padding:20px">لا توجد بيانات</p>'}
+                </div>
+                <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
+                    <h4 style="color:#fff;margin:0 0 15px">📈 الإحصائيات السريعة</h4>
+                    <div style="display:grid;gap:10px">
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px">
+                            <span style="color:#aaa">متوسط درجات الطلاب</span>
+                            <span style="color:#FBBF24;font-weight:700">${submissions.filter(s=>s.grade).length ? Math.round(submissions.filter(s=>s.grade).reduce((sum,s)=>sum+s.grade,0)/submissions.filter(s=>s.grade).length) : 0}%</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px">
+                            <span style="color:#aaa">إجمالي الحصص المباشرة</span>
+                            <span style="color:#22c55e;font-weight:700">${liveClasses.length}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px">
+                            <span style="color:#aaa">إجمالي المشاركات</span>
+                            <span style="color:#00D4FF;font-weight:700">${threads.reduce((s,t)=>s+(t.replies||0),0)}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px">
+                        <button onclick="NextGen.Analytics?.exportReport('courses')" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,212,255,0.3);background:transparent;color:#00D4FF;cursor:pointer">📥 تصدير التقرير</button>
+                    </div>
+                </div>
             </div>
         `
     }

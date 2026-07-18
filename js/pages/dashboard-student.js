@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <li><a href="#" class="${section === 'home' ? 'active' : ''}" data-section="home"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
             <li><a href="#" class="${section === 'catalog' ? 'active' : ''}" data-section="catalog"><i class="fa-solid fa-store"></i> المتجر</a></li>
             <li><a href="#" class="${section === 'mycourses' ? 'active' : ''}" data-section="mycourses"><i class="fa-solid fa-book"></i> كورساتي ${enrolled.length ? `<span class="badge">${enrolled.length}</span>` : ''}</a></li>
+            <li><a href="#" class="${section === 'assignments' ? 'active' : ''}" data-section="assignments"><i class="fa-solid fa-file-pen"></i> الواجبات</a></li>
+            <li><a href="#" class="${section === 'forum' ? 'active' : ''}" data-section="forum"><i class="fa-solid fa-comments"></i> المناقشات</a></li>
+            <li><a href="#" class="${section === 'live' ? 'active' : ''}" data-section="live"><i class="fa-solid fa-video"></i> الحصص المباشرة</a></li>
+            <li><a href="#" class="${section === 'leaderboard' ? 'active' : ''}" data-section="leaderboard"><i class="fa-solid fa-trophy"></i> المتصدرون</a></li>
+            <li><a href="#" class="${section === 'wallet' ? 'active' : ''}" data-section="wallet"><i class="fa-solid fa-wallet"></i> المحفظة</a></li>
             <li><a href="#" class="${section === 'certificates' ? 'active' : ''}" data-section="certificates"><i class="fa-solid fa-certificate"></i> الشهادات</a></li>
             <li><a href="#" class="${section === 'invoices' ? 'active' : ''}" data-section="invoices"><i class="fa-solid fa-file-invoice"></i> الفواتير</a></li>
         `
@@ -54,6 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         else if (section === 'lessonview') content = await renderLessonView(hasSb)
         else if (section === 'quizview') content = await renderQuizView(hasSb)
         else if (section === 'quizresult') content = renderQuizResult()
+        else if (section === 'assignments') content = renderStudentAssignments(enrolled)
+        else if (section === 'forum') content = renderStudentForum(enrolled)
+        else if (section === 'live') content = renderStudentLive(enrolled)
+        else if (section === 'leaderboard') content = renderStudentLeaderboard()
+        else if (section === 'wallet') content = renderStudentWallet()
         else if (section === 'certificates') content = await renderCertificates(hasSb)
         else if (section === 'invoices') content = renderInvoices(invoices)
 
@@ -759,6 +769,150 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد فواتير</td></tr>'}</tbody>
                 </table>
             </div>
+        `
+    }
+
+    /* ---- NEXTGEN: Student Assignments ---- */
+    function renderStudentAssignments(enrolled) {
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-file-pen" style="color:#A855F7"></i> الواجبات</h3>
+            <div style="display:grid;gap:20px">
+                ${enrolled.map(c => `
+                    <div>
+                        <h4 style="color:#00D4FF;margin:0 0 10px">${esc(c.title)}</h4>
+                        <div id="studentAssign_${c.id}"></div>
+                    </div>
+                `).join('') || '<p style="color:#666;padding:30px;text-align:center">سجل في كورسات لعرض الواجبات</p>'}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${enrolled.map(c => `if(NextGen.Assignments) NextGen.Assignments.renderAssignmentsForStudent('${c.id}', 'studentAssign_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Student Forum ---- */
+    function renderStudentForum(enrolled) {
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-comments" style="color:#00D4FF"></i> المناقشات</h3>
+            <p style="color:#888;margin-bottom:20px">شارك في النقاشات الخاصة بكورساتك</p>
+            <div style="display:grid;gap:20px">
+                ${enrolled.map(c => `
+                    <div>
+                        <h4 style="color:#00D4FF;margin:0 0 10px">${esc(c.title)}</h4>
+                        <div id="studentForum_${c.id}"></div>
+                    </div>
+                `).join('') || '<p style="color:#666;padding:30px;text-align:center">سجل في كورسات للمشاركة في النقاشات</p>'}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${enrolled.map(c => `if(NextGen.Communication) NextGen.Communication.renderForum('${c.id}', 'studentForum_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Student Live Classes ---- */
+    function renderStudentLive(enrolled) {
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-video" style="color:#22c55e"></i> الحصص المباشرة</h3>
+            <p style="color:#888;margin-bottom:20px">تابع الحصص المباشرة والمسجلة لكورساتك</p>
+            <div style="display:grid;gap:20px">
+                ${enrolled.map(c => `
+                    <div>
+                        <h4 style="color:#00D4FF;margin:0 0 10px">${esc(c.title)}</h4>
+                        <div id="studentLive_${c.id}"></div>
+                    </div>
+                `).join('') || '<p style="color:#666;padding:30px;text-align:center">سجل في كورسات لعرض الحصص المباشرة</p>'}
+            </div>
+            <script>
+                setTimeout(() => {
+                    ${enrolled.map(c => `if(NextGen.Live) NextGen.Live.renderSchedule('${c.id}', 'studentLive_${c.id}');`).join('')}
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Student Leaderboard ---- */
+    function renderStudentLeaderboard() {
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-trophy" style="color:#FBBF24"></i> ${NextGen.I18n ? NextGen.I18n.t('leaderboard') : 'المتصدرون'}</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+                <div id="studentProfileCard"></div>
+                <div>
+                    <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
+                        <h4 style="color:#fff;margin:0 0 15px"><i class="fa-solid fa-medal" style="color:#FBBF24"></i> ${NextGen.I18n ? NextGen.I18n.t('myBadges') : 'الشارات'}</h4>
+                        <div id="studentBadges"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="leaderboardContainer"></div>
+            <script>
+                setTimeout(() => {
+                    const uid = window.auth?.currentUser?.id?.toString() || 'guest'
+                    if(NextGen.Gamification) {
+                        NextGen.Gamification.renderPlayerProfile(uid, 'studentProfileCard')
+                        NextGen.Gamification.renderBadges(uid, 'studentBadges')
+                        NextGen.Gamification.renderLeaderboard('leaderboardContainer')
+                    }
+                }, 200)
+            </script>
+        `
+    }
+
+    /* ---- NEXTGEN: Student Wallet ---- */
+    function renderStudentWallet() {
+        const wallet = NextGen.DB ? NextGen.DB.getWallet(user.id) : { balance: 0, points: 0 }
+        return `
+            <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-wallet" style="color:#00D4FF"></i> المحفظة</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+                <div style="padding:30px;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(0,212,255,0.3);text-align:center">
+                    <div style="font-size:48px;font-weight:700;color:#00D4FF">${wallet.balance.toFixed(2)} EGP</div>
+                    <div style="color:#888;margin:10px 0">${NextGen.I18n ? NextGen.I18n.t('balance') : 'الرصيد'}</div>
+                    <button id="depositBtn" style="padding:12px 30px;border-radius:30px;border:none;background:linear-gradient(135deg,#00D4FF,#A855F7);color:#fff;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.3s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="fa-solid fa-plus"></i> شحن المحفظة</button>
+                </div>
+                <div style="padding:30px;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(251,191,36,0.3);text-align:center">
+                    <div style="font-size:48px;font-weight:700;color:#FBBF24">${wallet.points || 0}</div>
+                    <div style="color:#888;margin:10px 0">⭐ نقاط المكافآت</div>
+                    <button style="padding:12px 30px;border-radius:30px;border:1px solid rgba(251,191,36,0.3);background:transparent;color:#FBBF24;cursor:pointer;font-size:14px;transition:all 0.3s" onmouseover="this.style.background='rgba(251,191,36,0.1)'" onmouseout="this.style.background='transparent'">استبدال النقاط</button>
+                </div>
+            </div>
+            <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
+                <h4 style="color:#fff;margin:0 0 15px">📜 سجل المعاملات</h4>
+                <div id="walletTransactions"></div>
+            </div>
+            <script>
+                setTimeout(() => {
+                    const payments = NextGen.DB ? NextGen.DB.getUserPayments('${user.id}') : []
+                    const container = document.getElementById('walletTransactions')
+                    if (container) {
+                        if (payments.length) {
+                            container.innerHTML = payments.map(p => \`
+                                <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+                                    <span style="color:#aaa">\${p.description || 'تحويل'}</span>
+                                    <span style="color:\${p.status === 'paid' ? '#22c55e' : '#eab308'};font-weight:600">\${p.status === 'paid' ? '+' : ''}\${p.amount || 0} EGP</span>
+                                </div>
+                            \`).join('')
+                        } else {
+                            container.innerHTML = '<p style="color:#666;text-align:center;padding:20px">لا توجد معاملات</p>'
+                        }
+                    }
+                    document.getElementById('depositBtn')?.addEventListener('click', () => {
+                        if (NextGen.Paymob) {
+                            NextGen.Paymob.depositToWallet({
+                                userId: '${user.id}',
+                                amount: 100,
+                                userEmail: '${esc(user.email)}',
+                                userName: '${esc(user.name)}',
+                                onSuccess: () => renderUI('wallet')
+                            })
+                        } else {
+                            NextGen.UI.showToast('Paymob module not loaded. Use simulation.', 'info')
+                        }
+                    })
+                }, 200)
+            </script>
         `
     }
 
