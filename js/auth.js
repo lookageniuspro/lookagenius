@@ -5,7 +5,7 @@
  */
 
 window.auth = {
-    currentUser: null,
+    currentUser: (() => { try { const s = localStorage.getItem('lookagenius_session'); return s ? JSON.parse(s) : null } catch(e) { return null } })(),
     supabaseUser: null,
 
     init: async () => {
@@ -198,16 +198,6 @@ window.auth = {
         return `dashboard-${window.auth.currentUser.type}.html`
     }
 }
-
-/* Synchronous session restore — runs before DOMContentLoaded */
-;(function() {
-    try {
-        const session = localStorage.getItem('lookagenius_session')
-        if (session) {
-            window.auth.currentUser = JSON.parse(session)
-        }
-    } catch(e) {}
-})()
 
 document.addEventListener('DOMContentLoaded', () => {
     window.auth.init()

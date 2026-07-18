@@ -15,7 +15,11 @@ window.supabaseApp = (() => {
     function init() {
         try {
             const lib = window.supabase || window.supabasejs
-            if (!lib) { console.warn('[supabase] Library not loaded'); return null }
+            if (!lib) {
+                console.warn('[supabase] Library not loaded, retrying in 1s...')
+                setTimeout(() => window.supabaseApp.init(), 1000)
+                return null
+            }
             client = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true },
                 realtime: { params: { eventsPerSecond: 10 } }
