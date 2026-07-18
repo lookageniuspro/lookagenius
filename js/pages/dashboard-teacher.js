@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function uid() { return user.id }
 
     async function ensureSupabase() {
-        if (sb && sb.isReady()) return true
+        if (sb && sb.isReady() && window.auth.currentUser?.supabase) return true
         /* Fallback: use localStorage data */
         return false
     }

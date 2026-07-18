@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function cartCount() { return getCart().length }
 
     async function ensureSb() {
-        if (sb && sb.isReady()) return true
+        if (sb && sb.isReady() && window.auth.currentUser?.supabase) return true
         return false
     }
 

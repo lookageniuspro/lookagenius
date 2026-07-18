@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.appendChild(dbg)
 
     function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML }
-    async function ensureSb() { return sb && sb.isReady() }
+    async function ensureSb() { return sb && sb.isReady() && window.auth.currentUser?.supabase }
 
     async function renderUI(section) {
         try {
