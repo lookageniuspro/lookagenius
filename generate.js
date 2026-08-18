@@ -8,6 +8,7 @@ const headerHtmlTemplate = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="414kEL-JVanSXQs0icBWZSvZ01TTVZb8LIZOtWTR9ys" />
     <title>LookaGenius Academy | منصة تعليمية متكاملة</title>
     
     <!-- Google Fonts -->
