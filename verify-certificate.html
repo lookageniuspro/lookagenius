@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="414kEL-JVanSXQs0icBWZSvZ01TTVZb8LIZOtWTR9ys" />
-    <title>LookaGenius | Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† Ø§Ù„Ø´Ù‡Ø§Ø¯Ø©</title>
+    <title>LookaGenius | التحقق من الشهادة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -17,25 +17,25 @@
         <div class="dash-card" style="max-width:600px;width:100%;text-align:center;padding:50px 30px;">
             <div id="loadingState">
                 <div style="font-size:3rem;color:#00D4FF;margin-bottom:20px;"><i class="fa-solid fa-spinner fa-spin"></i></div>
-                <p>Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† Ø§Ù„Ø´Ù‡Ø§Ø¯Ø©...</p>
+                <p>جاري التحقق من الشهادة...</p>
             </div>
             <div id="validState" style="display:none;">
                 <div style="font-size:4rem;color:#10b981;margin-bottom:20px;"><i class="fa-solid fa-check-circle"></i></div>
-                <h3 style="font-size:1.5rem;font-weight:900;color:#10b981;margin-bottom:10px;">Ø´Ù‡Ø§Ø¯Ø© ØµØ§Ù„Ø­Ø© âœ“</h3>
+                <h3 style="font-size:1.5rem;font-weight:900;color:#10b981;margin-bottom:10px;">شهادة صالحة ✓</h3>
                 <div id="certDetails" style="text-align:right;background:rgba(255,255,255,0.03);border-radius:16px;padding:25px;margin:20px 0;">
-                    <p style="margin:8px 0;"><strong>Ø§Ù„Ø·Ø§Ù„Ø¨:</strong> <span id="vStudent" style="color:#00D4FF;"></span></p>
-                    <p style="margin:8px 0;"><strong>Ø§Ù„ÙƒÙˆØ±Ø³:</strong> <span id="vCourse" style="color:#A855F7;"></span></p>
-                    <p style="margin:8px 0;"><strong>Ø±Ù…Ø² Ø§Ù„Ø´Ù‡Ø§Ø¯Ø©:</strong> <span id="vCode" style="color:#FBBF24;"></span></p>
-                    <p style="margin:8px 0;"><strong>ØªØ§Ø±ÙŠØ® Ø§Ù„Ø¥ØµØ¯Ø§Ø±:</strong> <span id="vDate" style="color:rgba(255,255,255,0.5);"></span></p>
+                    <p style="margin:8px 0;"><strong>الطالب:</strong> <span id="vStudent" style="color:#00D4FF;"></span></p>
+                    <p style="margin:8px 0;"><strong>الكورس:</strong> <span id="vCourse" style="color:#A855F7;"></span></p>
+                    <p style="margin:8px 0;"><strong>رمز الشهادة:</strong> <span id="vCode" style="color:#FBBF24;"></span></p>
+                    <p style="margin:8px 0;"><strong>تاريخ الإصدار:</strong> <span id="vDate" style="color:rgba(255,255,255,0.5);"></span></p>
                 </div>
                 <div style="margin-top:20px;">
-                    <a href="dashboard-student.html" class="ag-btn" style="display:inline-flex;padding:12px 30px;text-decoration:none;"><i class="fa-solid fa-arrow-right"></i> Ø§Ù„Ø¹ÙˆØ¯Ø© Ù„Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ…</a>
+                    <a href="dashboard-student.html" class="ag-btn" style="display:inline-flex;padding:12px 30px;text-decoration:none;"><i class="fa-solid fa-arrow-right"></i> العودة للوحة التحكم</a>
                 </div>
             </div>
             <div id="invalidState" style="display:none;">
                 <div style="font-size:4rem;color:#ff4d4d;margin-bottom:20px;"><i class="fa-solid fa-times-circle"></i></div>
-                <h3 style="font-size:1.5rem;font-weight:900;color:#ff4d4d;margin-bottom:10px;">Ø´Ù‡Ø§Ø¯Ø© ØºÙŠØ± ØµØ§Ù„Ø­Ø© âœ—</h3>
-                <p style="color:rgba(255,255,255,0.5);">Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¹Ø«ÙˆØ± Ø¹Ù„Ù‰ Ù‡Ø°Ù‡ Ø§Ù„Ø´Ù‡Ø§Ø¯Ø© ÙÙŠ Ø³Ø¬Ù„Ø§ØªÙ†Ø§. ÙŠØ±Ø¬Ù‰ Ø§Ù„ØªØ£ÙƒØ¯ Ù…Ù† Ø±Ù…Ø² Ø§Ù„Ø´Ù‡Ø§Ø¯Ø©.</p>
+                <h3 style="font-size:1.5rem;font-weight:900;color:#ff4d4d;margin-bottom:10px;">شهادة غير صالحة ✗</h3>
+                <p style="color:rgba(255,255,255,0.5);">لم يتم العثور على هذه الشهادة في سجلاتنا. يرجى التأكد من رمز الشهادة.</p>
             </div>
         </div>
     </main>
@@ -53,8 +53,8 @@
             if (!code) {
                 document.getElementById('loadingState').style.display = 'none'
                 document.getElementById('invalidState').style.display = 'block'
-                document.querySelector('#invalidState h3').textContent = 'Ø±Ù…Ø² ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯'
-                document.querySelector('#invalidState p').textContent = 'ÙŠØ±Ø¬Ù‰ Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø±Ø§Ø¨Ø· Ø§Ù„ØªØ­Ù‚Ù‚ Ø§Ù„ÙƒØ§Ù…Ù„ Ø§Ù„Ù…ÙˆØ¬ÙˆØ¯ Ø¹Ù„Ù‰ Ø§Ù„Ø´Ù‡Ø§Ø¯Ø©.'
+                document.querySelector('#invalidState h3').textContent = 'رمز غير موجود'
+                document.querySelector('#invalidState p').textContent = 'يرجى استخدام رابط التحقق الكامل الموجود على الشهادة.'
                 return
             }
             try {
@@ -67,10 +67,10 @@
                     if (data) {
                         document.getElementById('loadingState').style.display = 'none'
                         document.getElementById('validState').style.display = 'block'
-                        document.getElementById('vStudent').textContent = data.profiles?.full_name || 'â€”'
-                        document.getElementById('vCourse').textContent = data.courses?.title || 'â€”'
+                        document.getElementById('vStudent').textContent = data.profiles?.full_name || '—'
+                        document.getElementById('vCourse').textContent = data.courses?.title || '—'
                         document.getElementById('vCode').textContent = data.certificate_code || code
-                        document.getElementById('vDate').textContent = data.issue_date ? new Date(data.issue_date).toLocaleDateString('ar') : 'â€”'
+                        document.getElementById('vDate').textContent = data.issue_date ? new Date(data.issue_date).toLocaleDateString('ar') : '—'
                     } else {
                         document.getElementById('loadingState').style.display = 'none'
                         document.getElementById('invalidState').style.display = 'block'
@@ -78,7 +78,7 @@
                 } else {
                     document.getElementById('loadingState').style.display = 'none'
                     document.getElementById('invalidState').style.display = 'block'
-                    document.querySelector('#invalidState p').textContent = 'Ø®Ø¯Ù…Ø© Ø§Ù„ØªØ­Ù‚Ù‚ ØºÙŠØ± Ù…ØªØ§Ø­Ø© Ø­Ø§Ù„ÙŠØ§Ù‹. ÙŠØ±Ø¬Ù‰ Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ù„Ø§Ø­Ù‚Ø§Ù‹.'
+                    document.querySelector('#invalidState p').textContent = 'خدمة التحقق غير متاحة حالياً. يرجى المحاولة لاحقاً.'
                 }
             } catch(e) {
                 document.getElementById('loadingState').style.display = 'none'
