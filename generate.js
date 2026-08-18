@@ -219,7 +219,7 @@ const pages = {
                     
                     <!-- Mock Google Login -->
                     <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                        <button type="button" class="btn btn-outline btn-full" onclick="alert('Google Login Mock')"><i class="fa-brands fa-google"></i> تسجيل الدخول باستخدام جوجل</button>
+                        <button type="button" class="btn btn-outline btn-full" id="googleAuthBtn"><i class="fa-brands fa-google"></i> تسجيل الدخول باستخدام جوجل</button>
                     </div>
                 </form>
             </div>

@@ -3,6 +3,27 @@
  * Handles Login and Register UI Logic
  */
 
+document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('#googleAuthBtn')
+    if (btn) {
+        btn.disabled = true
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> جارٍ الاتصال بجوجل...'
+        const sb = window.supabaseApp
+        if (!sb || !sb.isReady()) {
+            btn.disabled = false
+            btn.innerHTML = '<i class="fa-brands fa-google"></i> الدخول باستخدام جوجل'
+            alert('خدمة جوجل غير متاحة حالياً، حاول مجدداً بعد قليل')
+            return
+        }
+        const { error } = await sb.signInWithGoogle()
+        if (error) {
+            btn.disabled = false
+            btn.innerHTML = '<i class="fa-brands fa-google"></i> الدخول باستخدام جوجل'
+            alert('فشل الاتصال بجوجل: ' + error.message)
+        }
+    }
+})
+
 document.addEventListener('submit', async (e) => {
     if (e.target && e.target.id === 'loginForm') {
         e.preventDefault();

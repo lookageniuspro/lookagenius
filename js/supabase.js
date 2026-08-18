@@ -61,6 +61,28 @@ window.supabaseApp = (() => {
         return data?.session || null
     }
 
+    /* Google OAuth — sign in / register with Google account */
+    async function signInWithGoogle() {
+        if (!client) return { error: 'Supabase not initialized' }
+        const redirectTo = window.location.origin + '/login.html'
+        const { data, error } = await client.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo }
+        })
+        return { data, error }
+    }
+
+    async function getGoogleProfile() {
+        if (!client) return null
+        const { data } = await client.auth.getUser()
+        const md = data?.user?.user_metadata || {}
+        return {
+            full_name: md.full_name || md.name || '',
+            avatar_url: md.avatar_url || md.picture || '',
+            email: data?.user?.email || ''
+        }
+    }
+
     async function getCurrentUser() {
         if (!client) return null
         const { data } = await client.auth.getUser()
@@ -515,6 +537,7 @@ window.supabaseApp = (() => {
     return {
         init, getClient, isReady,
         signUp, signIn, signOut, getSession, getCurrentUser, onAuthStateChange,
+        signInWithGoogle, getGoogleProfile,
         getProfile, updateProfile, getAllProfiles,
         getPublishedCourses, getCourseById, getTeacherCourses, getAllCourses,
         createCourse, updateCourse, deleteCourse,
