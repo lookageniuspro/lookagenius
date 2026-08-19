@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (section === 'lessons') await bindLessonEvents(hasSupabase)
         if (section === 'assessments') await bindAssessmentEvents(hasSupabase)
         if (section === 'questions') await bindQuestionEvents(hasSupabase)
+        if (section === 'revenue') bindSettlementEvents()
     } catch(err) {
         console.error('[teacher] renderUI error:', err)
         const c = document.getElementById('dashboardContent')
@@ -558,6 +559,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 as.forEach(a => a.course_title = c.title)
                 assessments.push(...as)
             }
+            for (const a of assessments) {
+                a.questions_count = a.questions_count || 0
+            }
+        } else {
+            courses = window.db.getCourses()
+            window.db.getCourses().forEach(c => {
+                window.db.getAssessments(c.id).forEach(a => {
+                    a.course_title = c.title
+                    a.questions_count = window.db.getQuestions(a.id).length
+                    a.course_id = c.id
+                    assessments.push(a)
+                })
+            })
         }
         return `
             <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
@@ -618,13 +632,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.querySelectorAll('.edit-assessment-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
-                const a = await sb.getAssessmentById(btn.dataset.id)
+                const a = hasSupabase ? await sb.getAssessmentById(btn.dataset.id) : window.db.getAssessmentById(btn.dataset.id)
                 if (!a) return
                 document.getElementById('assessmentModalTitle').textContent = 'تعديل التقييم'
                 document.getElementById('editAssessmentId').value = a.id
                 document.getElementById('aTitle').value = a.title || ''
                 document.getElementById('aDesc').value = a.description || ''
-                document.getElementById('aCourse').value = a.course_id || ''
+                document.getElementById('aCourse').value = hasSupabase ? (a.course_id || '') : (a.courseId || '')
                 document.getElementById('aTime').value = a.time_limit || 30
                 document.getElementById('aPass').value = a.passing_score || 60
                 modal.style.display = 'flex'
@@ -634,7 +648,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.delete-assessment-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 if (!confirm('حذف هذا التقييم وجميع أسئلته؟')) return
-                await sb.deleteAssessment(btn.dataset.id)
+                if (hasSupabase) await sb.deleteAssessment(btn.dataset.id)
+                else window.db.deleteAssessment(btn.dataset.id)
                 renderUI('assessments')
             })
         })
@@ -656,8 +671,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 time_limit: parseInt(document.getElementById('aTime').value) || 30,
                 passing_score: parseInt(document.getElementById('aPass').value) || 60
             }
-            if (editId) await sb.updateAssessment(editId, data)
-            else await sb.createAssessment(data)
+            if (editId) {
+                if (hasSupabase) await sb.updateAssessment(editId, data)
+                else window.db.updateAssessment(editId, { ...data, courseId: data.course_id })
+            } else {
+                if (hasSupabase) await sb.createAssessment(data)
+                else window.db.addAssessment({ ...data, courseId: data.course_id })
+            }
             modal.style.display = 'none'
             renderUI('assessments')
         }
@@ -670,6 +690,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (hasSupabase) {
             assessment = await sb.getAssessmentById(currentAssessmentId)
             questions = await sb.getAssessmentQuestions(currentAssessmentId)
+        } else {
+            assessment = window.db.getAssessmentById(currentAssessmentId)
+            questions = window.db.getQuestions(currentAssessmentId)
         }
         return `
             <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
@@ -680,7 +703,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <button class="ag-btn" id="openQuestionModal" data-type="mcq"><i class="fa-solid fa-plus"></i> MCQ</button>
                 <button class="ag-btn" id="openQuestionTrueFalse" data-type="truefalse"><i class="fa-solid fa-plus"></i> صح/خطأ</button>
                 <button class="ag-btn" id="openQuestionFillBlank" data-type="fillblank"><i class="fa-solid fa-plus"></i> أكمل الفراغ</button>
+                <button class="ag-btn" id="aiGenerateBtn" style="background:linear-gradient(135deg,#A855F7,#FF3366);"><i class="fa-solid fa-wand-magic-sparkles"></i> توليد أسئلة بالذكاء الاصطناعي</button>
             </div>
+            <div id="aiGenStatus" style="display:none;padding:12px 16px;border-radius:12px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);margin-bottom:15px;font-size:0.85rem;color:#c084fc;"></div>
             <div id="questionList">
                 ${questions.length ? questions.map((q, i) => {
                     const typeLabels = { mcq: 'اختيار متعدد', truefalse: 'صح/خطأ', fillblank: 'أكمل الفراغ' }
@@ -699,7 +724,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                         </div>
                     </div>`
-                }).join('') : '<div class="empty-state"><i class="fa-solid fa-question"></i><p>لا توجد أسئلة بعد. أضف سؤالاً!</p></div>'}
+                }).join('') : '<div class="empty-state"><i class="fa-solid fa-question"></i><p>لا توجد أسئلة بعد. أضف سؤالاً أو ولّد أسئلة بالذكاء الاصطناعي!</p></div>'}
             </div>
             <!-- Question Modal -->
             <div class="modal-overlay" id="questionModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
@@ -758,7 +783,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.querySelectorAll('.edit-question-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
-                const questions = await sb.getAssessmentQuestions(currentAssessmentId)
+                const questions = hasSupabase ? await sb.getAssessmentQuestions(currentAssessmentId) : window.db.getQuestions(currentAssessmentId)
                 const q = questions.find(x => x.id === btn.dataset.id)
                 if (!q) return
                 const type = q.question_type || 'mcq'
@@ -785,10 +810,79 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.delete-question-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 if (!confirm('حذف هذا السؤال؟')) return
-                await sb.deleteQuestion(btn.dataset.id)
+                if (hasSupabase) await sb.deleteQuestion(btn.dataset.id)
+                else window.db.deleteQuestion(btn.dataset.id)
                 renderUI('questions')
             })
         })
+
+        /* --- AI Question Generation (Pollinations) --- */
+        const aiBtn = document.getElementById('aiGenerateBtn')
+        if (aiBtn) {
+            aiBtn.addEventListener('click', async () => {
+                const status = document.getElementById('aiGenStatus')
+                const assessment = hasSupabase ? await sb.getAssessmentById(currentAssessmentId) : window.db.getAssessmentById(currentAssessmentId)
+                const course = window.db.getCourseById(parseInt(hasSupabase ? (assessment?.course_id || 0) : (assessment?.courseId || 0)))
+                const topic = (assessment?.title || (course?.title || '') || 'General')
+                const count = window.prompt('كم سؤالاً تريد توليدها؟ (1-20)', '5')
+                const num = Math.max(1, Math.min(20, parseInt(count) || 5))
+                status.style.display = 'block'
+                status.textContent = '🤖 جارٍ توليد ' + num + ' أسئلة عن «' + topic + '»...'
+                aiBtn.disabled = true
+                try {
+                    let generated = null
+                    if (window.NextGen && window.NextGen.AI && typeof window.NextGen.AI.generateQuestions === 'function') {
+                        generated = await window.NextGen.AI.generateQuestions(topic, num)
+                    }
+                    if (!generated || !generated.length) {
+                        generated = await fetch('https://text.pollinations.ai/' + encodeURIComponent(
+                            'Generate exactly ' + num + ' quiz questions about: ' + topic +
+                            '. Return ONLY a valid JSON array. Each item: {"question_text":"...","question_type":"mcq","options":["A","B","C","D"],"correct_answer":"A","score":1}. Vary types: mcq, truefalse, fillblank. For truefalse use options [] and correct_answer "true" or "false". For fillblank: options [] and correct_answer the word.'
+                        )).then(r => r.text()).then(t => {
+                            const m = t.match(/\[[\s\S]*\]/)
+                            if (!m) return []
+                            return JSON.parse(m[0])
+                        })
+                    }
+                    if (!generated || !generated.length) throw new Error('empty')
+                    let added = 0
+                    for (const q of generated) {
+                        const qType = q.question_type || 'mcq'
+                        if (hasSupabase) {
+                            await sb.createQuestion({
+                                assessment_id: currentAssessmentId,
+                                question_type: qType,
+                                question_text: q.question_text || q.questionText || '',
+                                options: qType === 'mcq' ? (q.options || []).map(String) : [],
+                                correct_answer: String(q.correct_answer || ''),
+                                score: q.score || 1,
+                                order_index: Date.now() + added
+                            })
+                        } else {
+                            window.db.addQuestion({
+                                assessmentId: currentAssessmentId,
+                                question_type: qType,
+                                question_text: q.question_text || q.questionText || '',
+                                options: qType === 'mcq' ? (q.options || []).map(String) : [],
+                                correct_answer: String(q.correct_answer || ''),
+                                score: q.score || 1,
+                                orderIndex: Date.now() + added
+                            })
+                        }
+                        added++
+                    }
+                    status.style.color = '#4ade80'
+                    status.textContent = '✅ تم توليد وإضافة ' + added + ' سؤال بنجاح!'
+                    setTimeout(() => { status.style.display = 'none'; renderUI('questions') }, 1200)
+                } catch (err) {
+                    console.error('[teacher] AI generation error:', err)
+                    status.style.color = '#ff4d4d'
+                    status.textContent = 'فشل الاتصال بالذكاء الاصطناعي — تحقق من الإنترنت ثم أعد المحاولة.'
+                } finally {
+                    aiBtn.disabled = false
+                }
+            })
+        }
 
         document.getElementById('questionForm').onsubmit = async (e) => {
             e.preventDefault()
@@ -813,8 +907,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 score: parseInt(document.getElementById('qScore').value) || 1,
                 order_index: Date.now()
             }
-            if (editId) await sb.updateQuestion(editId, { question_text: data.question_text, options: data.options, correct_answer: data.correct_answer, score: data.score })
-            else await sb.createQuestion(data)
+            if (editId) {
+                if (hasSupabase) await sb.updateQuestion(editId, { question_text: data.question_text, options: data.options, correct_answer: data.correct_answer, score: data.score })
+                else window.db.updateQuestion(editId, { question_text: data.question_text, options: data.options, correct_answer: data.correct_answer, score: data.score })
+            } else {
+                if (hasSupabase) await sb.createQuestion(data)
+                else window.db.addQuestion({ ...data, assessmentId: data.assessment_id, orderIndex: data.order_index })
+            }
             modal.style.display = 'none'
             renderUI('questions')
         }
@@ -827,9 +926,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             revenues = await sb.getTeacherRevenues(uid())
             totalTeacher = revenues.reduce((s, r) => s + (r.teacher_share || 0), 0)
             totalAcademy = revenues.reduce((s, r) => s + (r.academy_share || 0), 0)
+        } else {
+            const fin = (window.db.getFinancials() || []).filter(f => f.teacherId == user.id)
+            revenues = fin.map(f => ({ course: { title: f.description || '' }, amount: f.amount, teacher_share: f.teacherShare, status: f.status || 'pending', created_at: f.at || f.createdAt }))
+            totalTeacher = revenues.reduce((s, r) => s + (r.teacher_share || 0), 0)
+            totalAcademy = revenues.reduce((s, r) => s + ((r.amount || 0) - (r.teacher_share || 0)), 0)
         }
         const paid = revenues.filter(r => r.status === 'paid').reduce((s, r) => s + (r.teacher_share || 0), 0)
         const pending = revenues.filter(r => r.status === 'pending').reduce((s, r) => s + (r.teacher_share || 0), 0)
+        const myRequests = (window.db.getSettlementRequests() || []).filter(r => r.userId == user.id)
         return `
             <div class="stats-grid">
                 <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">$${totalTeacher}</div><p class="label">حصة المعلم (70%)</p></div>
@@ -853,7 +958,67 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </tbody>
                 </table>
             </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:25px;">
+                <div style="padding:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:14px;">
+                    <h4 style="color:#fff;margin:0 0 15px;"><i class="fa-solid fa-hand-holding-dollar" style="color:#10b981;margin-left:8px;"></i>طلب سحب الأرباح</h4>
+                    <div class="form-group"><label class="form-label">المبلغ (USD)</label><input type="number" id="settleAmount" class="form-control" min="1" max="${Math.max(totalTeacher - (myRequests.filter(r => r.status === 'pending').reduce((s, r) => s + (r.amount || 0), 0)), 0)}" placeholder="0.00"></div>
+                    <div class="form-group"><label class="form-label">طريقة الاستلام</label>
+                        <select id="settleMethod" class="form-select">
+                            <option value="bank">تحويل بنكي</option>
+                            <option value="wallet">محفظة الكترونية</option>
+                            <option value="cash">استلام نقدي</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label">بيانات الاستلام (رقم حساب / محفظة)</label><input type="text" id="settleDetails" class="form-control" placeholder="مثال: رقم IBAN أو رقم المحفظة"></div>
+                    <button class="btn btn-neon" id="settleSubmitBtn" style="width:100%;">إرسال طلب السحب</button>
+                    <div id="settleStatus" style="font-size:.8rem;margin-top:10px;min-height:16px;"></div>
+                </div>
+                <div>
+                    <h4 style="color:#fff;margin:0 0 15px;"><i class="fa-solid fa-clock-rotate-left" style="color:#FBBF24;margin-left:8px;"></i>طلباتي السابقة</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>المبلغ</th><th>الطريقة</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+                            <tbody>
+                                ${myRequests.length ? myRequests.map(r => `
+                                    <tr>
+                                        <td>$${r.amount || 0}</td>
+                                        <td style="font-size:0.8rem;">${r.method === 'bank' ? 'تحويل بنكي' : r.method === 'wallet' ? 'محفظة' : 'نقدي'}</td>
+                                        <td>${r.status === 'paid' ? '<span style="color:#10b981;">تم الدفع</span>' : r.status === 'rejected' ? '<span style="color:#ff5d7a;">مرفوض</span>' : '<span style="color:#FBBF24;">قيد المراجعة</span>'}</td>
+                                        <td style="font-size:0.75rem;color:rgba(255,255,255,0.4);">${r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar') : '-'}</td>
+                                    </tr>
+                                `).join('') : '<tr><td colspan="4" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">لا توجد طلبات سحب بعد</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         `
+    }
+
+    function bindSettlementEvents() {
+        const btn = document.getElementById('settleSubmitBtn')
+        if (!btn) return
+        btn.addEventListener('click', () => {
+            const amount = parseFloat(document.getElementById('settleAmount').value) || 0
+            const method = document.getElementById('settleMethod').value
+            const details = document.getElementById('settleDetails').value.trim()
+            const statusEl = document.getElementById('settleStatus')
+            const pendingAmount = (window.db.getSettlementRequests() || []).filter(r => r.userId == user.id && r.status === 'pending').reduce((s, r) => s + (r.amount || 0), 0)
+            const available = Math.max((window.db.getFinancials() || []).filter(f => f.teacherId == user.id).reduce((s, f) => s + (f.teacherShare || 0), 0) - pendingAmount, 0)
+
+            if (amount <= 0) { statusEl.textContent = 'أدخل مبلغاً صحيحاً'; statusEl.style.color = '#ff5d7a'; return }
+            if (amount > available) { statusEl.textContent = `المبلغ المتاح للسحب $${available} فقط`; statusEl.style.color = '#ff5d7a'; return }
+            if (!details) { statusEl.textContent = 'أدخل بيانات الاستلام'; statusEl.style.color = '#ff5d7a'; return }
+
+            window.db.addSettlementRequest({ userId: user.id, userName: user.name, email: user.email, amount, method, details, status: 'pending' })
+            try {
+                if (window.db.addNotification) window.db.addNotification({ user_id: 3, title: 'طلب سحب أرباح جديد', message: `طلب سحب $${amount} من المعلم «${user.name}»`, type: 'financial' })
+                window.db.addNotification({ user_id: user.id, title: 'تم إرسال طلب السحب', message: `طلب سحب $${amount} قيد المراجعة من الإدارة`, type: 'financial' })
+            } catch (e) {}
+            statusEl.textContent = '✓ تم إرسال الطلب بنجاح — قيد مراجعة الإدارة'
+            statusEl.style.color = '#10b981'
+            setTimeout(() => renderUI('revenue'), 1200)
+        })
     }
 
     /* ---- NEXTGEN: Assignments ---- */

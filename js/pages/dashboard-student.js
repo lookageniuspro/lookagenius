@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const sidebar = `
             <li><a href="#" class="${section === 'home' ? 'active' : ''}" data-section="home"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+            <li><a href="#" class="${section === 'notifications' ? 'active' : ''}" data-section="notifications"><i class="fa-solid fa-bell"></i> الإشعارات ${window.db.getUnreadNotificationsCount ? (window.db.getUnreadNotificationsCount() > 0 ? `<span class="badge">${window.db.getUnreadNotificationsCount()}</span>` : '') : ''}</a></li>
             <li><a href="#" class="${section === 'catalog' ? 'active' : ''}" data-section="catalog"><i class="fa-solid fa-store"></i> المتجر</a></li>
             <li><a href="#" class="${section === 'mycourses' ? 'active' : ''}" data-section="mycourses"><i class="fa-solid fa-book"></i> كورساتي ${enrolled.length ? `<span class="badge">${enrolled.length}</span>` : ''}</a></li>
             <li><a href="#" class="${section === 'assignments' ? 'active' : ''}" data-section="assignments"><i class="fa-solid fa-file-pen"></i> الواجبات</a></li>
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let content = ''
         if (section === 'home') content = renderHome(enrolled, invoices, attStats) + (hasSb ? await renderRecommendations(hasSb) : '')
+        else if (section === 'notifications') content = renderStudentNotifications()
         else if (section === 'catalog') content = renderCatalog(allCourses, enrolled)
         else if (section === 'mycourses') content = await renderMyCourses(enrolled, hasSb)
         else if (section === 'courseview') content = await renderCourseView(hasSb)
@@ -298,6 +300,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             assessments = await sb.getCourseAssessments(currentCourseId)
         } else {
             course = window.db.getCourseById(parseInt(currentCourseId))
+            const localMods = window.db.getCourseModules(currentCourseId)
+            modules = localMods.map(m => ({ ...m, lessons: m.lessons }))
+            assessments = window.db.getAssessments(currentCourseId).map(a => ({
+                ...a,
+                questions_count: window.db.getQuestions(a.id).length,
+                time_limit: a.time_limit,
+                passing_score: a.passing_score
+            }))
         }
         return `
             <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
@@ -362,18 +372,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         let lesson
         if (hasSb) {
             lesson = await sb.getLessonById(currentLessonId)
+        } else if (window.db.getLessons) {
+            lesson = window.db.getLessons().find(l => l.id === parseInt(currentLessonId))
         }
         if (!lesson) return '<div class="empty-state"><p>الدرس غير متاح</p></div>'
 
+        const videoUrl = lesson.video_url || lesson.videoURL || lesson.videoEmbed || ''
         return `
             <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
                 <button class="ag-btn ag-btn-outline" onclick="renderUI('courseview')" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
                 <h4 style="margin:0;font-size:1.1rem;">${esc(lesson.title)}</h4>
             </div>
-            ${lesson.video_url ? `
+            ${videoUrl ? `
             <div class="dash-card" style="margin-bottom:20px;padding:0;overflow:hidden;">
                 <div style="position:relative;width:100%;padding-top:56.25%;background:#000;">
-                    <iframe src="${esc(lesson.video_url)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>
+                    ${/\.(mp4|webm|ogv)(\?.*)?$/i.test(videoUrl)
+                        ? `<video src="${esc(videoUrl)}" controls playsinline controlsList="nodownload" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;background:#000;"></video>`
+                        : `<iframe src="${esc(videoUrl)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>`}
                 </div>
             </div>` : ''}
             <div class="dash-card" style="margin-bottom:20px;">
@@ -405,17 +420,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (hasSb) {
             assessment = await sb.getAssessmentById(currentAssessmentId)
             questions = await sb.getAssessmentQuestions(currentAssessmentId)
+        } else {
+            assessment = window.db.getAssessmentById(currentAssessmentId)
+            questions = window.db.getQuestions(currentAssessmentId)
         }
         if (!assessment || !questions.length) return '<div class="empty-state"><p>هذا التقييم لا يحتوي على أسئلة بعد</p></div>'
 
         /* Initialize quiz state */
         quizState = {
             assessmentId: currentAssessmentId,
+            assessmentTitle: assessment.title || '',
             questions: questions,
             currentIndex: 0,
             answers: {},
             score: 0,
             timeLimit: assessment.time_limit || 0,
+            passingScore: assessment.passing_score || 60,
             startTime: Date.now(),
             submitted: false
         }
@@ -616,9 +636,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const total = quizState.questions.length
             const percentage = total ? Math.round((correctCount / total) * 100) : 0
             quizState.score = percentage
-            quizState.passingScore = (await sb.getAssessmentById(currentAssessmentId))?.passing_score || 60
+            if (hasSb) {
+                quizState.passingScore = (await sb.getAssessmentById(currentAssessmentId))?.passing_score || 60
+            }
 
-            /* Save attempt to Supabase */
+            /* Save attempt (Supabase or local fallback) */
+            const passed = percentage >= (quizState.passingScore || 60)
             if (hasSb) {
                 const existing = await sb.getStudentAttempts(user.id, currentAssessmentId)
                 await sb.createAttempt({
@@ -626,15 +649,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                     assessment_id: currentAssessmentId,
                     attempt_number: (existing.length || 0) + 1,
                     score: percentage,
-                    passed: percentage >= (quizState.passingScore || 60),
+                    passed: passed,
                     answers: quizState.answers,
                     started_at: new Date(quizState.startTime).toISOString(),
                     completed_at: new Date().toISOString()
                 })
+            } else if (window.db.addAttempt) {
+                window.db.addAttempt({
+                    assessmentId: currentAssessmentId,
+                    studentId: user.id,
+                    score: percentage,
+                    passed: passed,
+                    answers: quizState.answers,
+                    startedAt: new Date(quizState.startTime).toISOString()
+                })
+            }
+            if (window.db.addNotification) {
+                window.db.addNotification({
+                    user_id: user.id,
+                    title: 'نتيجة الاختبار',
+                    message: `حصلت على ${percentage}% في اختبار «${quizState.assessmentTitle || ''}» — ${passed ? 'نجحت 🎉' : 'لم تنجح، حاول مرة أخرى'}`,
+                    type: 'exam'
+                })
             }
 
             /* Auto-issue certificate if passed and course completed */
-            if (percentage >= (quizState.passingScore || 60) && hasSb) {
+            if (passed && hasSb) {
                 const courseId = currentCourseId
                 const existingCerts = await sb.getStudentCertificates(user.id)
                 const alreadyIssued = existingCerts.some(c => c.course_id === courseId)
@@ -862,6 +902,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         `
     }
 
+    /* ---- STUDENT NOTIFICATIONS ---- */
+    function renderStudentNotifications() {
+        const notifs = window.db.getNotifications().filter(n => n.user_id === user.id || n.user_id === 'all')
+        const typeIcons = { course: 'fa-book-open', exam: 'fa-file-pen', financial: 'fa-wallet', support: 'fa-headset', system: 'fa-bell', promo: 'fa-tags' }
+        const unread = notifs.filter(n => !n.read).length
+        return `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+                <h4 style="margin:0;font-size:1.1rem;"><i class="fa-solid fa-bell" style="color:#FBBF24;"></i> مركز الإشعارات</h4>
+                <div style="display:flex;gap:8px;">
+                    <button class="ag-btn ag-btn-outline" id="notifMarkAll" style="padding:8px 18px;font-size:0.8rem;"><i class="fa-solid fa-check-double"></i> تحديد الكل كمقروء</button>
+                    <button class="ag-btn ag-btn-outline" id="notifClear" style="padding:8px 18px;font-size:0.8rem;color:#ff4d4d;border-color:rgba(255,77,77,0.3);"><i class="fa-solid fa-trash"></i> مسح الكل</button>
+                </div>
+            </div>
+            ${unread > 0 ? `<div style="padding:10px 16px;border-radius:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);margin-bottom:15px;font-size:0.85rem;color:#FBBF24;"><i class="fa-solid fa-circle-info"></i> لديك ${unread} إشعار غير مقروء</div>` : ''}
+            <div class="table-wrap">
+                ${notifs.length ? notifs.slice(0, 50).map(n => `
+                    <div style="display:flex;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.05);background:${n.read ? 'transparent' : 'rgba(0,212,255,0.04)'};cursor:pointer;" class="notif-item ${n.read ? '' : 'unread'}" data-notif-id="${n.id}">
+                        <div style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(0,212,255,0.1);color:#00D4FF;font-size:16px;"><i class="fa-solid ${typeIcons[n.type] || 'fa-bell'}"></i></div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-weight:${n.read ? '400' : '700'};color:#fff;font-size:0.9rem;">${esc(n.title || 'إشعار')}</div>
+                            <div style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-top:3px;">${esc(n.message || '')}</div>
+                        </div>
+                        <div style="color:rgba(255,255,255,0.25);font-size:0.7rem;white-space:nowrap;">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-EG') : ''} ${n.read ? '' : '<span style="width:8px;height:8px;border-radius:50%;background:#00D4FF;display:inline-block;margin-right:6px;"></span>'}</div>
+                    </div>
+                `).join('') : '<div class="empty-state"><i class="fa-solid fa-bell-slash"></i><p>لا توجد إشعارات بعد</p></div>'}
+            </div>
+            <script>
+                setTimeout(() => {
+                    document.getElementById('notifMarkAll')?.addEventListener('click', () => {
+                        window.db.markAllNotificationsRead()
+                        NextGen.UI.showToast('تم تحديد جميع الإشعارات كمقروءة', 'success')
+                        renderUI('notifications')
+                        mountNotificationBell()
+                    })
+                    document.getElementById('notifClear')?.addEventListener('click', () => {
+                        if (!confirm('مسح جميع الإشعارات؟')) return
+                        const mine = window.db.getNotifications().filter(n => n.user_id === user.id || n.user_id === 'all')
+                        mine.forEach(n => window.db.deleteNotification(n.id))
+                        NextGen.UI.showToast('تم مسح الإشعارات', 'info')
+                        renderUI('notifications')
+                    })
+                    document.querySelectorAll('.notif-item').forEach(el => {
+                        el.addEventListener('click', () => {
+                            if (!el.classList.contains('unread')) return
+                            window.db.markNotificationRead(el.dataset.notifId)
+                            el.classList.remove('unread')
+                            el.style.background = 'transparent'
+                            renderUI('notifications')
+                        })
+                    })
+                }, 200)
+            </script>
+        `
+    }
+
     /* ---- NEXTGEN: Student Wallet ---- */
     function renderStudentWallet() {
         const wallet = NextGen.DB ? NextGen.DB.getWallet(user.id) : { balance: 0, points: 0 }
@@ -871,6 +966,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div style="padding:30px;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(0,212,255,0.3);text-align:center">
                     <div style="font-size:48px;font-weight:700;color:#00D4FF">${wallet.balance.toFixed(2)} EGP</div>
                     <div style="color:#888;margin:10px 0">${NextGen.I18n ? NextGen.I18n.t('balance') : 'الرصيد'}</div>
+                    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
+                        <input type="number" id="depositAmount" min="1" step="1" value="100" style="width:120px;padding:10px 14px;border-radius:30px;border:1px solid rgba(0,212,255,0.3);background:rgba(255,255,255,0.05);color:#fff;outline:none;text-align:center;" onkeydown="if(event.key==='Enter')document.getElementById('depositBtn').click()">
+                        <span style="align-self:center;color:#888;font-size:14px">EGP</span>
+                    </div>
                     <button id="depositBtn" style="padding:12px 30px;border-radius:30px;border:none;background:linear-gradient(135deg,#00D4FF,#A855F7);color:#fff;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.3s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="fa-solid fa-plus"></i> شحن المحفظة</button>
                 </div>
                 <div style="padding:30px;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(251,191,36,0.3);text-align:center">
@@ -879,31 +978,62 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button style="padding:12px 30px;border-radius:30px;border:1px solid rgba(251,191,36,0.3);background:transparent;color:#FBBF24;cursor:pointer;font-size:14px;transition:all 0.3s" onmouseover="this.style.background='rgba(251,191,36,0.1)'" onmouseout="this.style.background='transparent'">استبدال النقاط</button>
                 </div>
             </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+                <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(0,255,170,0.15)">
+                    <h4 style="color:#fff;margin:0 0 15px">🎟️ كود الشحن (Voucher)</h4>
+                    <p style="color:#888;font-size:0.8rem;margin:0 0 12px;">اشترِ كود شحن وأدخله هنا ليضاف رصيده لمحفظتك مباشرة.</p>
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" id="voucherInput" placeholder="أدخل الكود مثل: LG-XXXX" style="flex:1;padding:10px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:#fff;outline:none;" onkeydown="if(event.key==='Enter')document.getElementById('redeemVoucherBtn').click()">
+                        <button id="redeemVoucherBtn" style="padding:10px 20px;border-radius:30px;border:none;background:linear-gradient(135deg,#22c55e,#10b981);color:#fff;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;"><i class="fa-solid fa-ticket"></i> استخدم</button>
+                    </div>
+                </div>
+                <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
+                    <h4 style="color:#fff;margin:0 0 15px">🛒 شراء الكورسات</h4>
+                    <p style="color:#888;font-size:0.8rem;margin:0 0 12px;">ادفع من رصيد المحفظة مباشرة من صفحة الكورس، مع إمكانية إضافة كود خصم عند الدفع.</p>
+                    <a href="course-view.html?id=101" style="display:inline-block;padding:10px 24px;border-radius:30px;border:1px solid rgba(0,212,255,0.4);background:rgba(0,212,255,0.1);color:#00D4FF;cursor:pointer;font-size:13px;font-weight:700;text-decoration:none;">تصفح كورس تجريبي <i class="fa-solid fa-arrow-left"></i></a>
+                </div>
+            </div>
             <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
                 <h4 style="color:#fff;margin:0 0 15px">📜 سجل المعاملات</h4>
                 <div id="walletTransactions"></div>
             </div>
             <script>
                 setTimeout(() => {
-                    const payments = NextGen.DB ? NextGen.DB.getUserPayments('${user.id}') : []
+                    const pubs = NextGen.DB ? NextGen.DB.getWalletTransactions('${user.id}') : []
                     const container = document.getElementById('walletTransactions')
                     if (container) {
-                        if (payments.length) {
-                            container.innerHTML = payments.map(p => \`
-                                <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-                                    <span style="color:#aaa">\${p.description || 'تحويل'}</span>
-                                    <span style="color:\${p.status === 'paid' ? '#22c55e' : '#eab308'};font-weight:600">\${p.status === 'paid' ? '+' : ''}\${p.amount || 0} EGP</span>
+                        if (pubs.length) {
+                            container.innerHTML = pubs.map(p => \`
+                                <div style="display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+                                    <div>
+                                        <div style="color:#ccc;font-size:0.9rem">\${p.description || 'معاملة'}</div>
+                                        <div style="color:#666;font-size:0.72rem;margin-top:2px">\${new Date(p.createdAt).toLocaleDateString('ar-EG')} \${new Date(p.createdAt).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
+                                    </div>
+                                    <span style="color:\${p.amount >= 0 ? '#22c55e' : '#ff4d4d'};font-weight:700;white-space:nowrap">\${p.amount >= 0 ? '+' : ''}\${p.amount} EGP</span>
                                 </div>
                             \`).join('')
                         } else {
-                            container.innerHTML = '<p style="color:#666;text-align:center;padding:20px">لا توجد معاملات</p>'
+                            container.innerHTML = '<p style="color:#666;text-align:center;padding:20px">لا توجد معاملات بعد</p>'
                         }
                     }
+                    document.getElementById('redeemVoucherBtn')?.addEventListener('click', () => {
+                        const code = (document.getElementById('voucherInput').value || '').trim()
+                        if (!code) { NextGen.UI.showToast('أدخل كود الشحن أولاً', 'warning'); return }
+                        const res = NextGen.DB ? NextGen.DB.redeemVoucher('${user.id}', code) : null
+                        if (res && res.success) {
+                            NextGen.UI.showToast('تم شحن محفظتك بنجاح +' + res.amount + ' EGP 🎉', 'success')
+                            renderUI('wallet')
+                        } else {
+                            NextGen.UI.showToast((res && res.message) || 'الكود غير صالح أو مستخدم مسبقاً', 'error')
+                        }
+                    })
                     document.getElementById('depositBtn')?.addEventListener('click', () => {
+                        const amount = parseFloat(document.getElementById('depositAmount').value)
+                        if (!amount || amount <= 0) { NextGen.UI.showToast('أدخل مبلغاً صحيحاً', 'warning'); return }
                         if (NextGen.Paymob) {
                             NextGen.Paymob.depositToWallet({
                                 userId: '${user.id}',
-                                amount: 100,
+                                amount,
                                 userEmail: '${esc(user.email)}',
                                 userName: '${esc(user.name)}',
                                 onSuccess: () => renderUI('wallet')

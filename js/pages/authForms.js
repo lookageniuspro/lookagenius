@@ -36,6 +36,9 @@ document.addEventListener('submit', async (e) => {
             const result = await window.auth.login(email, pass);
             if (result.success) {
                 window.location.href = `dashboard-${result.user.type}.html`;
+            } else if (result.need2FA) {
+                errorMsg.classList.add('hidden');
+                show2FAModal(result.userId);
             } else {
                 errorMsg.textContent = result.message;
                 errorMsg.classList.remove('hidden');
@@ -90,6 +93,51 @@ document.addEventListener('submit', async (e) => {
         }
     }
 });
+
+function show2FAModal(userId) {
+    const existing = document.getElementById('otpModal')
+    if (existing) existing.remove()
+
+    const overlay = document.createElement('div')
+    overlay.id = 'otpModal'
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(5,10,25,.85);backdrop-filter:blur(8px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;direction:rtl'
+    overlay.innerHTML = `
+        <div style="background:linear-gradient(145deg,#0d1326,#131b33);border:1px solid rgba(0,212,255,.35);border-radius:18px;padding:32px 28px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+            <div style="font-size:2.4rem;margin-bottom:10px">🔐</div>
+            <h3 style="color:#fff;margin:0 0 6px;font-family:Cairo,sans-serif">التحقق بخطوتين (2FA)</h3>
+            <p style="color:#9aa7c7;font-size:.85rem;margin:0 0 16px;font-family:Cairo,sans-serif">أدخل كود التحقق المكوّن من 6 أرقام<br>(في هذه النسخة التجريبية يظهر الكود في إشعاراتك داخل النظام)</p>
+            <input id="otpCodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code"
+                style="width:100%;padding:14px;text-align:center;letter-spacing:10px;font-size:1.4rem;font-weight:700;color:#00d4ff;background:#0a101f;border:1px solid rgba(0,212,255,.4);border-radius:12px;outline:none;font-family:monospace;direction:ltr">
+            <div id="otpError" style="color:#ff5d7a;font-size:.8rem;margin-top:8px;min-height:18px;font-family:Cairo,sans-serif"></div>
+            <button id="otpVerifyBtn" style="width:100%;padding:13px;margin-top:10px;border:none;border-radius:12px;background:linear-gradient(90deg,#00d4ff,#0072ff);color:#001018;font-weight:800;font-size:1rem;cursor:pointer;font-family:Cairo,sans-serif">تحقق ودخول</button>
+            <button id="otpCancelBtn" style="width:100%;padding:10px;margin-top:8px;border:none;border-radius:12px;background:transparent;color:#8b96b5;font-size:.85rem;cursor:pointer;font-family:Cairo,sans-serif">إلغاء والعودة لتسجيل الدخول</button>
+        </div>
+    `
+    document.body.appendChild(overlay)
+
+    const codeInput = document.getElementById('otpCodeInput')
+    const errorEl = document.getElementById('otpError')
+    const verifyBtn = document.getElementById('otpVerifyBtn')
+    codeInput.focus()
+
+    const submit = async () => {
+        verifyBtn.disabled = true
+        const res = await window.auth.verifyOTP(userId, codeInput.value)
+        if (res.success) {
+            window.location.href = `dashboard-${res.user.type}.html`
+        } else {
+            errorEl.textContent = res.message
+            verifyBtn.disabled = false
+            codeInput.value = ''
+            codeInput.focus()
+        }
+    }
+
+    verifyBtn.addEventListener('click', submit)
+    codeInput.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') submit() })
+    document.getElementById('otpCancelBtn').addEventListener('click', () => overlay.remove())
+    overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove() })
+}
 
 document.addEventListener('change', (e) => {
     if (e.target && e.target.id === 'regType') {

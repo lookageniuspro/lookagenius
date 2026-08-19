@@ -283,19 +283,23 @@ NextGen.DB = {
         if (!w[userId]) { w[userId] = { balance: 0, currency: 'EGP', points: 0 }; const d = this.getData(); d.wallets = w; this.saveData(d) }
         return w[userId]
     },
-    addToWallet(userId, amount) {
+    addToWallet(userId, amount, description) {
         const w = this.getWallet(userId)
         w.balance += amount
         const d = this.getData()
         d.wallets = { ...(d.wallets || {}), [userId]: w }
+        if (!d.walletTransactions) d.walletTransactions = []
+        d.walletTransactions.unshift({ id: NextGen.uuid(), userId, type: 'deposit', amount, description: description || 'شحن رصيد', createdAt: new Date().toISOString() })
         this.saveData(d)
     },
-    deductFromWallet(userId, amount) {
+    deductFromWallet(userId, amount, description) {
         const w = this.getWallet(userId)
         if (w.balance < amount) return false
         w.balance -= amount
         const d = this.getData()
         d.wallets = { ...(d.wallets || {}), [userId]: w }
+        if (!d.walletTransactions) d.walletTransactions = []
+        d.walletTransactions.unshift({ id: NextGen.uuid(), userId, type: 'withdraw', amount: -Math.abs(amount), description: description || 'خصم رصيد', createdAt: new Date().toISOString() })
         this.saveData(d)
         return true
     },
@@ -322,6 +326,29 @@ NextGen.DB = {
         if (c) { c.usedCount = (c.usedCount || 0) + 1; this.saveData(this.getData()); return c }
         return null
     },
+    updateCoupon(id, updates) {
+        const d = this.getData()
+        const idx = (d.coupons || []).findIndex(x => x.id === id)
+        if (idx > -1) {
+            d.coupons[idx] = { ...d.coupons[idx], ...updates }
+            this.saveData(d)
+            return true
+        }
+        return false
+    },
+    getWalletTransactions(userId) {
+        return (this.getData().walletTransactions || []).filter(t => String(t.userId) === String(userId))
+    },
+    redeemVoucher(userId, code) {
+        const c = this.validateCoupon(code)
+        if (!c) return { success: false, message: 'الكود غير صالح أو منتهي' }
+        if (c.type !== 'balance') return { success: false, message: 'هذا الكود غير صالح للشحن' }
+        const amount = parseFloat(c.discount) || 0
+        this.addToWallet(userId, amount, `استخدام كود شحن ${c.code}`)
+        this.useCoupon(code)
+        if (window.db && window.db.addNotification) window.db.addNotification({ user_id: parseInt(userId), title: 'تم شحن المحفظة', message: `تم إضافة ${amount} EGP إلى محفظتك عبر الكود ${c.code}.`, type: 'financial' })
+        return { success: true, amount }
+    },
 
     // --- Reviews ---
     getReviews() { return this.getData().reviews || [] },
@@ -341,7 +368,16 @@ NextGen.DB = {
         const reviews = this.getCourseReviews(courseId)
         if (!reviews.length) return 0
         return Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
-    }
+    },
+
+    // --- Notifications (delegated to core db) ---
+    getNotifications() { return window.db ? window.db.getNotifications() : [] },
+    addNotification(item) { return window.db ? window.db.addNotification(item) : null },
+    markNotificationRead(id) { if (window.db) window.db.markNotificationRead(id) },
+    markAllNotificationsRead() { if (window.db) window.db.markAllNotificationsRead() },
+    clearAllNotifications() { if (window.db) window.db.clearAllNotifications() },
+    deleteNotification(id) { if (window.db) window.db.deleteNotification(id) },
+    getUnreadNotificationsCount() { return window.db ? window.db.getUnreadNotificationsCount() : 0 },
 }
 
 // ===== UI Component Library =====

@@ -72,6 +72,7 @@ const renderDashboardLayout = (title, sidebarItemsHtml, contentHtml) => {
                 <div class="avatar">${initial}</div>
                 <h4>${escHtml(user.name)}</h4>
                 <p>${window.auth.getRoleAr ? window.auth.getRoleAr(user.type) : user.type}</p>
+                <div id="notificationContainer" style="margin-top:14px;display:flex;justify-content:center;"></div>
             </div>
             <ul class="nav-list">
                 ${sidebarItemsHtml}
@@ -99,4 +100,14 @@ function escHtml(str) {
 function bindLogout() {
     const btn = document.getElementById('globalLogoutBtn');
     if (btn) btn.addEventListener('click', e => { e.preventDefault(); window.auth.logout(); });
+    mountNotificationBell();
+}
+
+/* Mount the shared notification bell (NextGen.Communication) */
+function mountNotificationBell() {
+    if (window.NextGen && NextGen.Communication && typeof NextGen.Communication.renderNotificationBell === 'function') {
+        try {
+            NextGen.Communication.renderNotificationBell('notificationContainer');
+        } catch (e) { console.warn('[common] bell mount failed', e); }
+    }
 }

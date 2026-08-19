@@ -110,8 +110,32 @@ const defaultData = {
     payments: [],
     subscriptions: [],
     wallets: {},
-    coupons: [],
+    coupons: [
+        { id: 'vch_demo_1', code: 'WELCOME10', discount: 10, type: 'percent', maxUses: 100, usedCount: 0, expiresAt: null, active: true },
+        { id: 'vch_demo_2', code: 'LG-500', discount: 500, type: 'balance', maxUses: 100, usedCount: 0, expiresAt: null, active: true }
+    ],
     reviews: [],
+
+    // ===== LookaGenius Pro Collections =====
+    modules: [
+        { id: 8001, courseId: 101, title: 'أساسيات النحو العربي', order: 1 },
+        { id: 8002, courseId: 101, title: 'البلاغة والأدب', order: 2 },
+        { id: 8003, courseId: 102, title: 'English Foundations', order: 1 }
+    ],
+    lessons: [
+        { id: 9001, courseId: 101, moduleId: 8001, title: 'مقدمة اللغة العربية', duration: '15 دقيقة', videoURL: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', isFree: true, order: 1 },
+        { id: 9002, courseId: 101, moduleId: 8001, title: 'أقسام الكلمة', duration: '20 دقيقة', videoURL: 'https://youtu.be/hY7m5jjJ9mM', isFree: false, order: 2 },
+        { id: 9003, courseId: 101, moduleId: 8001, title: 'الجملة الاسمية والفعلية', duration: '25 دقيقة', videoURL: 'https://vimeo.com/76979871', isFree: false, order: 3 },
+        { id: 9004, courseId: 101, moduleId: 8002, title: 'التشبيه والاستعارة', duration: '30 دقيقة', videoURL: 'https://www.youtube.com/watch?v=y3VGWt_WOxI', isFree: false, order: 1 },
+        { id: 9005, courseId: 102, moduleId: 8003, title: 'English Alphabet & Sounds', duration: '20 دقيقة', videoURL: 'https://www.youtube.com/watch?v=OPYf0CypiWY', isFree: true, order: 1 },
+        { id: 9006, courseId: 102, moduleId: 8003, title: 'Basic Grammar: To Be', duration: '25 دقيقة', videoURL: 'https://vimeo.com/90321723', isFree: false, order: 2 }
+    ],
+    assessments: [],
+    questions: [],
+    attempts: [],
+    tickets: [],
+    walletTransactions: [],
+    loginLogs: [],
 
     _version: 1
 };
@@ -125,7 +149,7 @@ function initDB() {
     try {
         const data = JSON.parse(existing)
         let changed = false
-        const arrayKeys = ['courses', 'scholarships', 'articles', 'services', 'team', 'invoices', 'attendance', 'assignments', 'submissions', 'messages', 'threads', 'liveClasses', 'events', 'learningPaths', 'payments', 'subscriptions', 'coupons', 'reviews']
+        const arrayKeys = ['courses', 'scholarships', 'articles', 'services', 'team', 'invoices', 'attendance', 'assignments', 'submissions', 'messages', 'threads', 'liveClasses', 'events', 'learningPaths', 'payments', 'subscriptions', 'coupons', 'reviews', 'modules', 'lessons', 'assessments', 'questions', 'attempts', 'tickets', 'walletTransactions', 'loginLogs']
         for (const key of arrayKeys) {
             if (!data[key]) {
                 data[key] = JSON.parse(JSON.stringify(defaultData[key] || []))
@@ -415,6 +439,272 @@ window.db = {
         return true
     },
     deleteAttendanceSession: (id) => crudFor('attendance').delete(id),
+
+    /* ========= LookaGenius Pro: Modules & Lessons ========= */
+    getModules: () => getData().modules || [],
+    getLessons: () => getData().lessons || [],
+    addModule: (item) => {
+        item.courseId = parseInt(item.courseId)
+        const m = crudFor('modules').add(item)
+        return m
+    },
+    updateModule: (id, updates) => crudFor('modules').update(id, updates),
+    deleteModule: (id) => crudFor('modules').delete(id),
+    addLesson: (item) => {
+        item.courseId = parseInt(item.courseId)
+        item.moduleId = item.moduleId ? parseInt(item.moduleId) : null
+        return crudFor('lessons').add(item)
+    },
+    updateLesson: (id, updates) => crudFor('lessons').update(id, updates),
+    deleteLesson: (id) => crudFor('lessons').delete(id),
+    getCourseModules: (courseId) => {
+        const modules = (getData().modules || []).filter(m => m.courseId === parseInt(courseId)).sort((a, b) => (a.order || 0) - (b.order || 0))
+        const lessons = (getData().lessons || []).filter(l => l.courseId === parseInt(courseId))
+        return modules.map(m => ({ ...m, lessons: lessons.filter(l => l.moduleId === m.id).sort((a, b) => (a.order || 0) - (b.order || 0)) }))
+    },
+    getCourseLessons: (courseId) => (getData().lessons || []).filter(l => l.courseId === parseInt(courseId)).sort((a, b) => (a.order || 0) - (b.order || 0)),
+
+    /* ========= LookaGenius Pro: Enrollment, Progress & Purchase ========= */
+    enrollStudent: (courseId, userId) => {
+        const data = getData()
+        const course = data.courses.find(c => c.id === parseInt(courseId))
+        if (!course) return false
+        if (!course.studentsEnrolled) course.studentsEnrolled = []
+        if (!course.studentsEnrolled.includes(parseInt(userId))) {
+            course.studentsEnrolled.push(parseInt(userId))
+            if (!course.progress) course.progress = {}
+            if (!course.progress[userId]) course.progress[userId] = {}
+            course.progress[userId].enrolledAt = new Date().toISOString()
+            saveData(data)
+            window.db.addNotification({ user_id: parseInt(userId), title: 'تم التسجيل في الكورس', message: `تم تسجيلك في كورس «${course.title}» بنجاح.`, type: 'course' })
+        }
+        return true
+    },
+    unenrollStudent: (courseId, userId) => {
+        const data = getData()
+        const course = data.courses.find(c => c.id === parseInt(courseId))
+        if (!course) return false
+        course.studentsEnrolled = (course.studentsEnrolled || []).filter(id => id !== parseInt(userId))
+        if (course.progress && course.progress[userId]) delete course.progress[userId]
+        saveData(data)
+        return true
+    },
+    getUserEnrolledCourses: (userId) => (getData().courses || []).filter(c => (c.studentsEnrolled || []).includes(parseInt(userId))),
+    getCourseProgress: (courseId, userId) => {
+        const course = getData().courses.find(c => c.id === parseInt(courseId))
+        const lessons = window.db.getCourseLessons(courseId)
+        const done = course && course.progress && course.progress[userId]
+            ? lessons.filter(l => course.progress[userId][l.id] === true).length
+            : 0
+        const total = lessons.length
+        return { completed: done, total, percent: total ? Math.round((done / total) * 100) : 0 }
+    },
+    updateLessonProgress: (courseId, userId, lessonId, completed) => {
+        const data = getData()
+        const course = data.courses.find(c => c.id === parseInt(courseId))
+        if (!course) return false
+        if (!course.progress) course.progress = {}
+        if (!course.progress[userId]) course.progress[userId] = {}
+        if (completed) {
+            course.progress[userId][parseInt(lessonId)] = true
+        } else {
+            delete course.progress[userId][parseInt(lessonId)]
+        }
+        course.progress[userId].enrolledAt = course.progress[userId].enrolledAt || new Date().toISOString()
+        saveData(data)
+        return true
+    },
+
+    /* ========= LookaGenius Pro: Wallet (local mirror, same storage as NextGen) ========= */
+    getWallet: (userId) => {
+        const data = getData()
+        if (!data.wallets) data.wallets = {}
+        if (!data.wallets[userId]) {
+            data.wallets[userId] = { balance: 0, currency: 'EGP', points: 0 }
+            saveData(data)
+        }
+        return data.wallets[userId]
+    },
+    addToWallet: (userId, amount, description) => {
+        const w = window.db.getWallet(userId)
+        w.balance += amount
+        const data = getData()
+        data.wallets[userId] = w
+        saveData(data)
+        window.db.addWalletTransaction(userId, { type: 'deposit', amount, description: description || 'شحن رصيد' })
+        return true
+    },
+    deductFromWallet: (userId, amount, description) => {
+        const w = window.db.getWallet(userId)
+        if (w.balance < amount) return false
+        w.balance -= amount
+        const data = getData()
+        data.wallets[userId] = w
+        saveData(data)
+        window.db.addWalletTransaction(userId, { type: 'withdraw', amount: -Math.abs(amount), description: description || 'خصم رصيد' })
+        return true
+    },
+    addWalletTransaction: (userId, tx) => {
+        const data = getData()
+        if (!data.walletTransactions) data.walletTransactions = []
+        data.walletTransactions.unshift({ id: makeId(), userId: parseInt(userId), ...tx, createdAt: new Date().toISOString() })
+        saveData(data)
+        return true
+    },
+    getWalletTransactions: (userId) => (getData().walletTransactions || []).filter(t => t.userId === parseInt(userId)),
+
+    getCouponByCode: (code) => {
+        const c = (getData().coupons || []).find(x => x.code === String(code).toUpperCase().trim() && x.active !== false)
+        if (!c) return null
+        if (c.expiresAt && new Date(c.expiresAt) < new Date()) return null
+        if (c.maxUses && (c.usedCount || 0) >= c.maxUses) return null
+        return c
+    },
+    markCouponUsed: (code) => {
+        const data = getData()
+        const c = (data.coupons || []).find(x => x.code === String(code).toUpperCase().trim())
+        if (c) {
+            c.usedCount = (c.usedCount || 0) + 1
+            saveData(data)
+            return true
+        }
+        return false
+    },
+
+    /* ========= LookaGenius Pro: Financials ========= */
+    addFinancial: (record) => {
+        const data = getData()
+        if (!data.financials) data.financials = []
+        record.id = makeId()
+        record.createdAt = record.createdAt || new Date().toISOString()
+        data.financials.unshift(record)
+        saveData(data)
+        return record
+    },
+
+    /** Full purchase flow: coupon discount -> wallet deduct -> enroll -> invoice + financial + notification */
+    purchaseCourse: (userId, courseId, opts) => {
+        const data = getData()
+        const course = data.courses.find(c => c.id === parseInt(courseId))
+        if (!course) return { success: false, message: 'الكورس غير موجود' }
+        const uid = parseInt(userId)
+        if ((course.studentsEnrolled || []).includes(uid)) return { success: false, message: 'أنت مسجل في هذا الكورس بالفعل' }
+        if (!course.price) {
+            window.db.enrollStudent(courseId, uid)
+            return { success: true, price: 0 }
+        }
+        const wallet = window.db.getWallet(uid)
+        let price = parseFloat(course.price) || 0
+        let coupon = null
+        if (opts && opts.couponCode) {
+            coupon = window.db.getCouponByCode(opts.couponCode)
+            if (!coupon) return { success: false, message: 'كود الخصم غير صالح أو منتهي' }
+            price = coupon.type === 'percent' ? price * (1 - (coupon.discount || 0) / 100) : Math.max(0, price - (coupon.discount || 0))
+            window.db.markCouponUsed(opts.couponCode)
+        }
+        if (wallet.balance < price) return { success: false, message: 'رصيد المحفظة غير كافٍ', price, coupon, balance: wallet.balance }
+        window.db.deductFromWallet(uid, price, `شراء كورس ${course.title}`)
+        window.db.enrollStudent(courseId, uid)
+        const invoice = window.db.addInvoice({ userId: uid, courseId: course.id, amount: price, currency: course.currency || 'USD', status: 'paid', paidAt: new Date().toISOString().slice(0, 10), description: course.title })
+        const teacherId = course.teacherId || (course.teacherIds && course.teacherIds[0]) || null
+        const teacherShare = teacherId ? Math.round(price * 0.7 * 100) / 100 : 0
+        window.db.addFinancial({ userId: uid, courseId: course.id, teacherId, amount: price, teacherShare, platformShare: Math.round((price - teacherShare) * 100) / 100, type: 'purchase', description: `شراء كورس ${course.title}`, invoiceId: invoice.id })
+        window.db.addNotification({ user_id: uid, title: 'تمت عملية الشراء', message: `تم شراء كورس «${course.title}» بمبلغ ${price} ${course.currency || 'USD'} من المحفظة.`, type: 'financial' })
+        if (teacherId) window.db.addNotification({ user_id: teacherId, title: 'بيع جديد', message: `تم شراء كورسك «${course.title}» — حصتك ${teacherShare} ${course.currency || 'USD'}.`, type: 'financial' })
+        return { success: true, price, coupon, invoice }
+    },
+
+    /** Voucher code redemption: coupon with type 'balance' credits the wallet */
+    redeemVoucher: (userId, code) => {
+        const c = window.db.getCouponByCode(code)
+        if (!c) return { success: false, message: 'الكود غير صالح أو منتهي' }
+        if (c.type === 'balance') {
+            window.db.addToWallet(userId, parseFloat(c.discount) || 0, `استخدام كود شحن ${c.code}`)
+            window.db.markCouponUsed(code)
+            window.db.addNotification({ user_id: parseInt(userId), title: 'تم شحن المحفظة', message: `تم إضافة ${c.discount} EGP إلى محفظتك عبر الكود ${c.code}.`, type: 'financial' })
+            return { success: true, amount: c.discount }
+        }
+        return { success: false, message: 'هذا الكود غير صالح للشحن' }
+    },
+
+    /* ========= LookaGenius Pro: Settlement Requests ========= */
+    addSettlementRequest: (data) => {
+        const d = getData()
+        if (!d.settlementRequests) d.settlementRequests = []
+        data.id = makeId()
+        data.status = data.status || 'pending'
+        data.createdAt = data.createdAt || new Date().toISOString()
+        d.settlementRequests.push(data)
+        saveData(d)
+        return data
+    },
+
+    /* ========= LookaGenius Pro: Support Tickets ========= */
+    getTickets: () => getData().tickets || [],
+    getTicketsForUser: (userId) => (getData().tickets || []).filter(t => t.userId === parseInt(userId)),
+    getTicketById: (id) => (getData().tickets || []).find(t => t.id === parseInt(id)),
+    addTicket: (t) => {
+        const data = getData()
+        if (!data.tickets) data.tickets = []
+        t.id = makeId()
+        t.status = 'open'
+        t.createdAt = new Date().toISOString()
+        t.replies = t.replies || []
+        data.tickets.unshift(t)
+        saveData(data)
+        window.db.addNotification({ user_id: 3, title: 'تذكرة دعم جديدة', message: `تذكرة جديدة من «${t.userName || 'مستخدم'}»: ${t.subject}`, type: 'support' })
+        return t
+    },
+    updateTicket: (id, updates) => crudFor('tickets').update(id, updates),
+    replyToTicket: (id, reply) => {
+        const data = getData()
+        const t = (data.tickets || []).find(x => x.id === parseInt(id))
+        if (!t) return false
+        if (!t.replies) t.replies = []
+        t.replies.push({ ...reply, at: new Date().toISOString() })
+        saveData(data)
+        return true
+    },
+
+    /* ========= LookaGenius Pro: Security Audit Log ========= */
+    addLoginLog: (entry) => {
+        const data = getData()
+        if (!data.loginLogs) data.loginLogs = []
+        entry.id = makeId()
+        entry.at = entry.at || new Date().toISOString()
+        data.loginLogs.unshift(entry)
+        if (data.loginLogs.length > 500) data.loginLogs = data.loginLogs.slice(0, 500)
+        saveData(data)
+        return entry
+    },
+    getLoginLogs: () => getData().loginLogs || [],
+
+    /* ========= LookaGenius Pro: Local Assessments (fallback when no Supabase) ========= */
+    getAssessments: (courseId) => (getData().assessments || []).filter(a => a.courseId === parseInt(courseId)),
+    getAssessmentById: (id) => (getData().assessments || []).find(a => a.id === parseInt(id)),
+    addAssessment: (a) => {
+        a.courseId = parseInt(a.courseId)
+        return crudFor('assessments').add({ ...a, type: a.type || 'quiz', status: 'draft', createdAt: new Date().toISOString() })
+    },
+    updateAssessment: (id, updates) => crudFor('assessments').update(id, updates),
+    deleteAssessment: (id) => crudFor('assessments').delete(id),
+    getQuestions: (assessmentId) => (getData().questions || []).filter(q => q.assessmentId === parseInt(assessmentId)).sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0)),
+    addQuestion: (q) => {
+        q.assessmentId = parseInt(q.assessmentId)
+        return crudFor('questions').add(q)
+    },
+    updateQuestion: (id, updates) => crudFor('questions').update(id, updates),
+    deleteQuestion: (id) => crudFor('questions').delete(id),
+    getAttempts: (assessmentId, studentId) => (getData().attempts || []).filter(a => a.assessmentId === parseInt(assessmentId) && a.studentId === parseInt(studentId)),
+    addAttempt: (a) => {
+        a.assessmentId = parseInt(a.assessmentId)
+        a.studentId = parseInt(a.studentId)
+        if (!a.attemptNumber) {
+            a.attemptNumber = (window.db.getAttempts(a.assessmentId, a.studentId).length || 0) + 1
+        }
+        a.completedAt = new Date().toISOString()
+        return crudFor('attempts').add(a)
+    },
 
     /* ========= Supabase Adapter (async, used when Supabase is available) ========= */
     supabase: {

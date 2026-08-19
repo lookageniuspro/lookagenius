@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <li><a href="#" class="${section === 'coupons' ? 'active' : ''}" data-section="coupons"><i class="fa-solid fa-tags"></i> كوبونات الخصم</a></li>
             <li><a href="#" class="${section === 'reviews' ? 'active' : ''}" data-section="reviews"><i class="fa-solid fa-star"></i> التقييمات</a></li>
             <li><a href="#" class="${section === 'notifications' ? 'active' : ''}" data-section="notifications"><i class="fa-solid fa-bell"></i> الإشعارات</a></li>
+            <li><a href="#" class="${section === 'support' ? 'active' : ''}" data-section="support"><i class="fa-solid fa-headset"></i> تذاكر الدعم</a></li>
             <li><a href="#" class="${section === 'settings' ? 'active' : ''}" data-section="settings"><i class="fa-solid fa-gear"></i> الإعدادات</a></li>
         `
 
@@ -78,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         else if (section === 'coupons') content = renderCoupons()
         else if (section === 'reviews') content = renderReviews()
         else if (section === 'notifications') content = await renderNotifications(hasSb)
+        else if (section === 'support') content = renderSupportTickets()
         else if (section === 'settings') content = await renderSettings(hasSb)
         } catch(e) { console.error('[admin] render content error for', section, e); content = '<div style="padding:20px;color:#ff4d4d;">Error rendering ' + section + '</div>' }
 
@@ -98,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (section === 'withdrawals') bindWithdrawalEvents(hasSb)
         if (section === 'coupons') bindCouponEvents()
         if (section === 'notifications') bindNotificationEvents(hasSb)
+        if (section === 'support') bindSupportTicketEvents()
         if (section === 'settings') bindSettingsEvents(hasSb)
     } catch(err) {
         console.error('[admin] renderUI error:', err)
@@ -483,20 +486,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `
             <div class="table-wrap">
                 <table>
-                    <thead><tr><th>المعلم</th><th>البريد</th><th>المبلغ</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                    <thead><tr><th>المعلم</th><th>البريد</th><th>المبلغ</th><th>طريقة الاستلام</th><th>تاريخ الطلب</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
                     <tbody>${requests.length ? requests.map(r => `
                         <tr>
-                            <td><strong>${esc(r.teacher?.full_name || r.teacherName || '')}</strong></td>
-                            <td style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${esc(r.teacher?.email || r.teacherEmail || '')}</td>
+                            <td><strong>${esc(r.teacher?.full_name || r.teacherName || r.userName || '')}</strong></td>
+                            <td style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${esc(r.teacher?.email || r.teacherEmail || r.email || '')}</td>
                             <td style="font-weight:700;color:#10b981;">$${r.amount || 0}</td>
-                            <td style="font-size:0.8rem;">${r.created_at ? new Date(r.created_at).toLocaleDateString('ar') : '-'}</td>
+                            <td style="font-size:0.8rem;">
+                                ${r.method === 'bank' ? 'تحويل بنكي' : r.method === 'wallet' ? 'محفظة' : r.method === 'cash' ? 'نقدي' : '-'}
+                                ${r.details ? `<div style="color:rgba(255,255,255,0.35);font-size:0.7rem;margin-top:3px;">${esc(r.details)}</div>` : ''}
+                            </td>
+                            <td style="font-size:0.8rem;">${(r.created_at || r.createdAt) ? new Date(r.created_at || r.createdAt).toLocaleDateString('ar') : '-'}</td>
                             <td>${r.status === 'approved' ? '<span style="color:#10b981;">معتمد</span>' : r.status === 'rejected' ? '<span style="color:#ff4d4d;">مرفوض</span>' : '<span style="color:#FBBF24;">معلق</span>'}</td>
                             <td style="display:flex;gap:6px;">
                                 ${r.status === 'pending' ? `<button class="ag-btn approve-withdrawal-btn" data-id="${r.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(16,185,129,0.15);color:#10b981;">موافقة</button>
                                 <button class="ag-btn reject-withdrawal-btn" data-id="${r.id}" style="padding:4px 10px;font-size:0.7rem;background:rgba(255,77,77,0.15);color:#ff4d4d;">رفض</button>` : '-'}
                             </td>
                         </tr>
-                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد طلبات سحب</td></tr>'}</tbody>
+                    `).join('') : '<tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);">لا توجد طلبات سحب</td></tr>'}</tbody>
                 </table>
             </div>
         `
@@ -505,15 +512,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     function bindWithdrawalEvents(hasSb) {
         document.querySelectorAll('.approve-withdrawal-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
+                const req = (window.db.getSettlementRequests() || []).find(x => x.id == btn.dataset.id)
                 if (hasSb) await sb.getClient().from('withdrawal_requests').update({ status: 'approved', processed_at: new Date().toISOString() }).eq('id', btn.dataset.id)
                 else window.db.approveSettlementRequest(btn.dataset.id)
+                if (req && req.userId && window.db.addNotification) {
+                    window.db.addNotification({ user_id: req.userId, title: 'تمت الموافقة على طلب السحب', message: `تم تحويل $${req.amount} إلى حسابك.`, type: 'financial' })
+                }
                 renderUI('withdrawals')
             })
         })
         document.querySelectorAll('.reject-withdrawal-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
+                const req = (window.db.getSettlementRequests() || []).find(x => x.id == btn.dataset.id)
                 if (hasSb) await sb.getClient().from('withdrawal_requests').update({ status: 'rejected' }).eq('id', btn.dataset.id)
                 else window.db.rejectSettlementRequest(btn.dataset.id)
+                if (req && req.userId && window.db.addNotification) {
+                    window.db.addNotification({ user_id: req.userId, title: 'تم رفض طلب السحب', message: `تم رفض طلب سحب $${req.amount} — تواصل مع الدعم لمعرفة السبب.`, type: 'financial' })
+                }
                 renderUI('withdrawals')
             })
         })
@@ -791,8 +806,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <thead><tr><th>الكود</th><th>الخصم</th><th>النوع</th><th>الاستخدامات</th><th>الصلاحية</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
                 <tbody>${coupons.map(c => `<tr>
                     <td><strong style="color:#00D4FF;font-family:monospace">${esc(c.code)}</strong></td>
-                    <td style="font-weight:700;color:#FBBF24">${c.discount}${c.type === 'percent' ? '%' : ' EGP'}</td>
-                    <td>${c.type === 'percent' ? 'نسبة' : 'قيمة'}</td>
+                    <td style="font-weight:700;color:#FBBF24">${c.discount}${c.type === 'percent' ? '%' : c.type === 'balance' ? ' EGP (شحن)' : ' EGP'}</td>
+                    <td>${c.type === 'percent' ? 'نسبة' : c.type === 'balance' ? 'شحن رصيد' : 'قيمة'}</td>
                     <td>${c.usedCount || 0}${c.maxUses ? `/${c.maxUses}` : ''}</td>
                     <td style="font-size:0.8rem">${c.expiresAt ? new Date(c.expiresAt).toLocaleDateString('ar') : 'غير محدد'}</td>
                     <td>${c.active !== false ? '<span style="color:#10b981;">نشط</span>' : '<span style="color:#ff4d4d;">معطل</span>'}</td>
@@ -812,7 +827,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div style="flex:1"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">القيمة</label><input type="number" id="cDiscount" min="0" required style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
                         </div>
                         <div style="display:flex;gap:12px;margin-bottom:15px">
-                            <div style="flex:1"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">النوع</label><select id="cType" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(20,20,40,0.95);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;"><option value="percent">نسبة %</option><option value="fixed">قيمة ثابتة</option></select></div>
+                            <div style="flex:1"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">النوع</label><select id="cType" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(20,20,40,0.95);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;"><option value="percent">نسبة %</option><option value="fixed">قيمة ثابتة (خصم)</option><option value="balance">كود شحن رصيد 💳</option></select></div>
                             <div style="flex:1"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">الحد الأقصى</label><input type="number" id="cMaxUses" min="0" placeholder="غير محدد" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
                         </div>
                         <div style="margin-bottom:15px"><label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">تاريخ الانتهاء</label><input type="date" id="cExpires" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;"></div>
@@ -906,6 +921,127 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }).join('')}</tbody>
             </table></div>` : '<div class="empty-state"><i class="fa-solid fa-star"></i><p>لا توجد تقييمات</p></div>'}
         `
+    }
+
+    /* ---- SUPPORT TICKETS ---- */
+    function renderSupportTickets() {
+        const tickets = window.db.getTickets().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        const statusMap = { open: ['مفتوحة', '#00D4FF'], in_progress: ['قيد المعالجة', '#FBBF24'], resolved: ['تم الحل', '#10b981'], closed: ['مغلقة', '#888'] }
+        const catMap = { technical: 'فني', financial: 'مالي', academic: 'أكاديمي', other: 'أخرى' }
+        const openCount = tickets.filter(t => t.status === 'open').length
+        return `
+            <div class="stats-grid" style="margin-bottom:20px;">
+                <div class="stat-card" style="border-top:3px solid #00D4FF;"><div class="num" style="color:#00D4FF;">${tickets.length}</div><p class="label">إجمالي التذاكر</p></div>
+                <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">${openCount}</div><p class="label">مفتوحة الآن</p></div>
+                <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">${tickets.filter(t => t.status === 'resolved').length}</div><p class="label">تم حلها</p></div>
+            </div>
+            ${tickets.length ? `<div class="table-wrap"><table>
+                <thead><tr><th>#</th><th>المستخدم</th><th>الموضوع</th><th>النوع</th><th>الأولوية</th><th>الحالة</th><th>التاريخ</th><th>الإجراءات</th></tr></thead>
+                <tbody>${tickets.map(t => {
+                    const st = statusMap[t.status] || statusMap.open
+                    return `<tr>
+                        <td><strong style="color:#00D4FF;">#${t.id}</strong></td>
+                        <td>${esc(t.userName || '')}<br><span style="font-size:0.7rem;color:rgba(255,255,255,0.35)">${esc(t.email || '')}</span></td>
+                        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,0.6)">${esc(t.subject || '')}</td>
+                        <td style="font-size:0.8rem">${catMap[t.category] || t.category || '-'}</td>
+                        <td>${t.priority === 'high' ? '<span style="color:#ff4d4d;font-weight:700;">عالية</span>' : t.priority === 'medium' ? '<span style="color:#FBBF24;">متوسطة</span>' : '<span style="color:#888;">منخفضة</span>'}</td>
+                        <td><span style="color:${st[1]};font-weight:700;font-size:0.8rem;">${st[0]}</span></td>
+                        <td style="font-size:0.75rem;color:rgba(255,255,255,0.4)">${t.createdAt ? new Date(t.createdAt).toLocaleDateString('ar-EG') : ''}</td>
+                        <td><button class="ag-btn view-ticket-btn" data-id="${t.id}" style="padding:6px 14px;font-size:0.75rem;background:rgba(0,212,255,0.1);color:#00D4FF;"><i class="fa-solid fa-eye"></i> فتح</button></td>
+                    </tr>`
+                }).join('')}</tbody>
+            </table></div>` : '<div class="empty-state"><i class="fa-solid fa-headset"></i><p>لا توجد تذاكر دعم بعد</p></div>'}
+            <!-- Ticket Detail Modal -->
+            <div class="modal-overlay" id="ticketModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+                <div class="dash-card" style="max-width:640px;width:92%;max-height:85vh;overflow-y:auto;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:12px;">
+                        <h3 style="margin:0;font-weight:800;" id="ticketModalTitle">التذكرة</h3>
+                        <button id="closeTicketModal" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">&times;</button>
+                    </div>
+                    <div id="ticketModalBody"></div>
+                </div>
+            </div>
+        `
+    }
+
+    function bindSupportTicketEvents() {
+        const modal = document.getElementById('ticketModal')
+        if (!modal) return
+        document.getElementById('closeTicketModal')?.addEventListener('click', () => { modal.style.display = 'none'; renderUI('support') })
+        modal.addEventListener('click', e => { if (e.target === modal) { modal.style.display = 'none'; renderUI('support') } })
+
+        let currentTicketId = null
+        document.querySelectorAll('.view-ticket-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentTicketId = btn.dataset.id
+                const t = window.db.getTicketById(currentTicketId)
+                if (!t) return
+                const statusMap = { open: ['مفتوحة', '#00D4FF'], in_progress: ['قيد المعالجة', '#FBBF24'], resolved: ['تم الحل', '#10b981'], closed: ['مغلقة', '#888'] }
+                const st = statusMap[t.status] || statusMap.open
+                const catMap = { technical: 'فني', financial: 'مالي', academic: 'أكاديمي', other: 'أخرى' }
+                document.getElementById('ticketModalTitle').textContent = 'التذكرة #' + t.id
+                document.getElementById('ticketModalBody').innerHTML = `
+                    <div style="padding:14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);margin-bottom:15px;">
+                        <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+                            <strong style="font-size:1rem;">${esc(t.subject || '')}</strong>
+                            <span style="color:${st[1]};font-weight:700;font-size:0.8rem;">${st[0]}</span>
+                        </div>
+                        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:10px;">
+                            ${esc(t.userName || '')} (${esc(t.email || '')}) — ${catMap[t.category] || '-'} — أولوية: ${t.priority || 'منخفضة'}
+                        </div>
+                        <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;font-size:0.9rem;line-height:1.7;color:rgba(255,255,255,0.85);">${esc(t.message || '')}</div>
+                        <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:8px;">${t.createdAt ? new Date(t.createdAt).toLocaleString('ar-EG') : ''}</div>
+                    </div>
+                    ${(t.replies || []).map(r => `
+                        <div style="padding:12px 14px;border-radius:12px;margin-bottom:8px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.12);">
+                            <div style="font-size:0.8rem;font-weight:700;color:#00D4FF;margin-bottom:5px;">${esc(r.author || 'الدعم')} ${r.isAdmin ? '<span style="font-size:0.65rem;background:rgba(168,85,247,0.2);color:#A855F7;padding:2px 8px;border-radius:10px;margin-right:6px;">فريق الدعم</span>' : ''}</div>
+                            <div style="font-size:0.85rem;line-height:1.6;color:rgba(255,255,255,0.8);">${esc(r.text || '')}</div>
+                            <div style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;">${r.at ? new Date(r.at).toLocaleString('ar-EG') : ''}</div>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top:15px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">تغيير الحالة</label>
+                        <select id="ticketStatus" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;margin-bottom:12px;">
+                            <option value="open" ${t.status === 'open' ? 'selected' : ''}>مفتوحة</option>
+                            <option value="in_progress" ${t.status === 'in_progress' ? 'selected' : ''}>قيد المعالجة</option>
+                            <option value="resolved" ${t.status === 'resolved' ? 'selected' : ''}>تم الحل</option>
+                            <option value="closed" ${t.status === 'closed' ? 'selected' : ''}>مغلقة</option>
+                        </select>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:0.85rem;">رد جديد</label>
+                        <textarea id="ticketReply" rows="3" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:white;outline:none;box-sizing:border-box;margin-bottom:12px;" placeholder="اكتب ردك هنا..."></textarea>
+                        <div style="display:flex;gap:10px;">
+                            <button class="ag-btn" id="replyTicketBtn" style="flex:1;justify-content:center;"><i class="fa-solid fa-reply"></i> إرسال الرد</button>
+                            <button class="ag-btn" id="saveTicketStatusBtn" style="flex:1;justify-content:center;background:rgba(251,191,36,0.15);color:#FBBF24;border:1px solid rgba(251,191,36,0.3);"><i class="fa-solid fa-flag"></i> حفظ الحالة</button>
+                        </div>
+                    </div>
+                `
+                modal.style.display = 'flex'
+                document.getElementById('replyTicketBtn')?.addEventListener('click', () => {
+                    const text = document.getElementById('ticketReply').value.trim()
+                    if (!text) return
+                    window.db.replyToTicket(currentTicketId, { text, author: 'فريق الدعم', isAdmin: true })
+                    window.db.updateTicket(currentTicketId, { status: 'in_progress' })
+                    if (t.userId) {
+                        window.db.addNotification({ user_id: t.userId, title: 'رد على تذكرتك', message: `تم الرد على تذكرتك #${currentTicketId}: ${text.slice(0, 80)}${text.length > 80 ? '...' : ''}`, type: 'support' })
+                    }
+                    NextGen.UI.showToast('تم إرسال الرد وإشعار المستخدم', 'success')
+                    bindSupportTicketEvents()
+                    const viewBtn = document.querySelector(`.view-ticket-btn[data-id="${currentTicketId}"]`)
+                    if (viewBtn) viewBtn.click()
+                })
+                document.getElementById('saveTicketStatusBtn')?.addEventListener('click', () => {
+                    const status = document.getElementById('ticketStatus').value
+                    window.db.updateTicket(currentTicketId, { status })
+                    if (status === 'resolved' && t.userId) {
+                        window.db.addNotification({ user_id: t.userId, title: 'تم حل تذكرتك', message: `تم حل تذكرتك #${currentTicketId} بنجاح. شكراً لتواصلك معنا!`, type: 'support' })
+                    }
+                    NextGen.UI.showToast('تم تحديث حالة التذكرة', 'success')
+                    bindSupportTicketEvents()
+                    const viewBtn = document.querySelector(`.view-ticket-btn[data-id="${currentTicketId}"]`)
+                    if (viewBtn) viewBtn.click()
+                })
+            })
+        })
     }
 
     renderUI().catch(err => {
