@@ -109,7 +109,7 @@ window.auth = {
         }
     },
 
-    init: async () => {
+    async init() {
         /* Session validity: revoke sessions replaced by another device */
         if (this.currentUser && !this._isSessionValid() && !this.currentUser.supabase) {
             localStorage.removeItem('lookagenius_session')
@@ -154,7 +154,7 @@ window.auth = {
         if (window.auth._readyResolve) window.auth._readyResolve()
     },
 
-    login: async (email, password) => {
+    async login(email, password) {
         /* Try Supabase first */
         const sb = window.supabaseApp
         if (sb && sb.isReady()) {
@@ -214,7 +214,7 @@ window.auth = {
         return { success: false, message: 'Invalid email or password' }
     },
 
-    register: async (userData) => {
+    async register(userData) {
         const sb = window.supabaseApp
         /* Try Supabase first */
         if (sb && sb.isReady()) {
@@ -253,7 +253,7 @@ window.auth = {
         return { success: false, message: 'Registration unavailable' }
     },
 
-    logout: async () => {
+    async logout() {
         const sb = window.supabaseApp
         if (sb && sb.isReady()) {
             await sb.signOut()
