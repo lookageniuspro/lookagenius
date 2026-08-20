@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const user = window.auth.currentUser;
     const isEnrolled = user && (course.studentsEnrolled || []).includes(user.id);
+    const isParent = user && user.type === 'parent';
+    const children = isParent ? window.db.getUsers().filter(u => u.type === 'student' && u.email === (user.details && user.details.studentEmail)) : [];
+    const boughtForChild = children.some(c => (course.studentsEnrolled || []).includes(c.id));
     const isPaidCourse = !!course.price && course.price > 0;
     const teachers = window.db.getUsers().filter(u => u.type === 'teacher');
     const tNames = (course.teacherIds || []).map(tid => {
@@ -150,7 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         ${user ? `رصيدك الحالي: <strong style="color:var(--neon-blue);">${wallet ? wallet.balance.toFixed(2) : 0} EGP</strong>` : 'سجّل الدخول ثم اشترك في الكورس لمشاهدة كل الدروس.'}
                                     </p>
                                     ${user
-                                        ? `<button class="btn" onclick="doBuy(${courseId},${user.id})" style="padding:12px 34px;border-radius:50px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-violet));color:white;font-weight:700;border:none;cursor:pointer;"><i class="fa-solid fa-cart-shopping"></i> اشترك الآن — ${getCurrencySymbol(course.currency||'USD')}${course.price}</button>`
+                                        ? (isParent && boughtForChild
+                                            ? `<div style="text-align:center;max-width:340px;"><p style="margin:0 0 6px;font-size:0.9rem;color:#fff;font-weight:700;"><i class="fa-solid fa-check-circle" style="color:var(--success);"></i> تم شراء الكورس لابنك ${escHtml(children[0].name)}</p><p style="margin:0;font-size:0.8rem;color:rgba(255,255,255,0.6);line-height:1.7;">سجّل الدخول بحساب الطالب لمشاهدة الدروس ومتابعة تقدمه.</p></div>`
+                                            : `<button class="btn" onclick="doBuy(${courseId},${user.id})" style="padding:12px 34px;border-radius:50px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-violet));color:white;font-weight:700;border:none;cursor:pointer;"><i class="fa-solid fa-cart-shopping"></i> ${isParent ? 'اشترك لابنك الآن' : 'اشترك الآن'} — ${getCurrencySymbol(course.currency||'USD')}${course.price}</button>`)
                                         : `<a href="login.html" class="btn" style="padding:12px 34px;border-radius:50px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-violet));color:white;font-weight:700;border:none;cursor:pointer;text-decoration:none;">تسجيل الدخول</a>`}
                                 </div>
                             ` : `
@@ -287,6 +292,38 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <i class="fa-solid fa-user-plus"></i> تسجيل في الكورس
                                     </button>
                                 `}
+                            ` : isParent ? `
+                                ${children.length === 0 ? `
+                                    <p style="color:var(--neon-pink);font-size:0.8rem;line-height:1.7;margin-bottom:5px;"><i class="fa-solid fa-triangle-exclamation"></i> لم يتم ربط أي طالب بحسابك بعد.</p>
+                                    <p style="color:var(--text-secondary);font-size:0.75rem;line-height:1.7;margin-bottom:10px;">سجّل ابنك/ابنتك في المنصة ثم من <a href="profile.html" style="color:var(--neon-blue);">صفحتك الشخصية</a> اربط بريده بحسابك لتتمكن من شراء الكورسات له.</p>
+                                ` : boughtForChild ? `
+                                    <p style="color:var(--success);font-size:0.85rem;margin-bottom:15px;"><i class="fa-solid fa-check-circle"></i> تم شراء هذا الكورس لابنك ${escHtml(children[0].name)} 🎉</p>
+                                    <p style="font-size:0.75rem;color:var(--text-secondary);">سيظهر الكورس للطالب عند تسجيل دخوله في «دروسي» ويستطيع متابعة الدروس مباشرة.</p>
+                                ` : isPaidCourse ? `
+                                    <div class="cv-checkout">
+                                        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">سعر الكورس: <strong style="color:var(--neon-blue);">${getCurrencySymbol(course.currency||'USD')}${course.price}</strong><br>رصيد محفظتك: <strong style="color:${wallet && wallet.balance >= course.price ? 'var(--success)' : 'var(--neon-pink)'};" id="cvWalletBal">${wallet ? wallet.balance.toFixed(2) : 0} ${wallet ? wallet.currency : 'EGP'}</strong></p>
+                                        ${children.length > 1 ? `
+                                            <label style="display:block;font-size:0.75rem;color:var(--text-secondary);margin-bottom:5px;">الشراء لصالح:</label>
+                                            <select id="cvChildSelect" style="width:100%;padding:9px 12px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);color:white;outline:none;font-size:0.85rem;margin-bottom:12px;">
+                                                ${children.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
+                                            </select>
+                                        ` : `<input type="hidden" id="cvChildSelect" value="${children[0].id}">`}
+                                        <div style="display:flex;gap:8px;margin-bottom:12px;">
+                                            <input type="text" id="cvCouponInput" placeholder="كود الخصم (اختياري)" style="flex:1;padding:10px 14px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);color:white;outline:none;font-size:0.85rem;">
+                                            <button onclick="applyCouponInView(${courseId})" style="padding:10px 16px;border-radius:50px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);color:var(--neon-blue);cursor:pointer;font-size:0.8rem;font-weight:700;">تطبيق</button>
+                                        </div>
+                                        <p id="cvDiscountMsg" style="font-size:0.8rem;color:var(--success);margin:0 0 12px;display:none;"></p>
+                                        <button class="btn" onclick="doBuy(${courseId},${user.id})" style="width:100%;padding:12px;border-radius:50px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-violet));color:white;font-weight:700;border:none;cursor:pointer;">
+                                            <i class="fa-solid fa-graduation-cap"></i> اشترِ لابنك الآن بالمحفظة
+                                        </button>
+                                        <p style="font-size:0.7rem;color:var(--text-secondary);margin:10px 0 0;"><i class="fa-solid fa-wallet"></i> شحّن محفظتك من لوحة تحكم ولي الأمر لاستكمال الشراء.</p>
+                                    </div>
+                                ` : `
+                                    <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:15px;">هذا الكورس مجاني — سجّل ابنك/ابنتك فيه:</p>
+                                    <button class="btn" onclick="doEnroll(${courseId},${user.id})" style="width:100%;padding:12px;border-radius:50px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-violet));color:white;font-weight:700;border:none;cursor:pointer;">
+                                        <i class="fa-solid fa-user-plus"></i> تسجيل ${escHtml(children[0].name)} في الكورس
+                                    </button>
+                                `}
                             ` : `
                                 <p style="color:var(--text-secondary);font-size:0.85rem;">أنت مسجل كـ ${window.auth.getRoleAr(user.type)}. قم بزيارة <a href="dashboard-${user.type}.html" style="color:var(--neon-blue);">لوحة التحكم</a>.</p>
                             `}
@@ -334,7 +371,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Global functions
     window.doEnroll = function(cid, uid) {
-        window.db.enrollStudent(cid, uid);
+        const me = window.auth.currentUser;
+        let enrollUid = uid;
+        if (me && me.type === 'parent') {
+            const sel = document.getElementById('cvChildSelect');
+            const childId = sel ? parseInt(sel.value) : null;
+            if (!childId || isNaN(childId)) { showToast('لا يوجد طالب مرتبط بحسابك — اربط طالباً من صفحتك الشخصية', 'error'); return; }
+            enrollUid = childId;
+        }
+        window.db.enrollStudent(cid, enrollUid);
         render();
         showToast('تم التسجيل في الكورس بنجاح ✅');
     };
@@ -377,7 +422,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.doBuy = function(cid, uid) {
         const input = document.getElementById('cvCouponInput');
         const couponCode = input ? input.value.trim() : '';
-        const result = window.db.purchaseCourse(uid, cid, { couponCode });
+        const opts = { couponCode };
+        const me = window.auth.currentUser;
+        if (me && me.type === 'parent') {
+            let sel = document.getElementById('cvChildSelect');
+            let childId = sel ? parseInt(sel.value) : null;
+            if ((!childId || isNaN(childId)) && me.type === 'parent') {
+                const kids = window.db.getUsers().filter(u => u.type === 'student' && u.email === (me.details && me.details.studentEmail));
+                childId = kids.length ? kids[0].id : null;
+            }
+            if (!childId || isNaN(childId)) { showToast('لا يوجد طالب مرتبط بحسابك — اربط طالباً من صفحتك الشخصية', 'error'); return; }
+            opts.enrollUserId = childId;
+        }
+        const result = window.db.purchaseCourse(uid, cid, opts);
         if (result.success) {
             const balEl = document.getElementById('cvWalletBal');
             if (balEl) {
@@ -386,11 +443,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             window.location.hash = '';
             render();
-            showToast(`تم شراء الكورس بنجاح${result.price ? ' — ' + result.price.toFixed(2) : ''} 🎉`);
+            showToast(`${me && me.type === 'parent' ? 'تم شراء الكورس لابنك' : 'تم شراء الكورس بنجاح'}${result.price ? ' — ' + result.price.toFixed(2) : ''} 🎉`);
         } else {
             showToast(result.message || 'حدث خطأ أثناء الشراء', 'error');
             if (result.message && result.message.includes('غير كافٍ')) {
-                setTimeout(() => showToast('شحن الرصيد من لوحة تحكم الطالب ← المحفظة', 'error'), 2500);
+                setTimeout(() => showToast(me && me.type === 'parent' ? 'شحن الرصيد من لوحة تحكم ولي الأمر ← المحفظة' : 'شحن الرصيد من لوحة تحكم الطالب ← المحفظة', 'error'), 2500);
             }
         }
     };

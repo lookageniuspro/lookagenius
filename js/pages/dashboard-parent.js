@@ -39,6 +39,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = renderDashboardLayout('لوحة تحكم ولي الأمر', sidebar, content);
         bindLogout();
         bindNav();
+        if (section === 'overview') bindWalletEvents();
+    }
+
+    function bindWalletEvents() {
+        const btn = document.getElementById('parentRedeemBtn');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const input = document.getElementById('parentVoucherInput');
+            const code = input ? input.value.trim() : '';
+            if (!code) return;
+            const res = window.db.redeemVoucher(user.id, code);
+            if (res.success) {
+                input.value = '';
+                if (window.db.addNotification) window.db.addNotification({ user_id: user.id, title: 'تم شحن محفظتك', message: `تم إضافة ${res.amount} EGP إلى محفظتك.`, type: 'financial' });
+                renderUI('overview');
+            } else {
+                let msg = document.getElementById('parentWalletMsg');
+                if (!msg) {
+                    msg = document.createElement('div');
+                    msg.id = 'parentWalletMsg';
+                    msg.style.cssText = 'grid-column:1/-1;font-size:0.8rem;text-align:center;margin-top:-10px;';
+                    btn.closest('.stat-card').appendChild(msg);
+                }
+                msg.textContent = res.message;
+                msg.style.color = '#ff5d7a';
+                setTimeout(() => { msg.textContent = '' }, 3000);
+            }
+        });
     }
 
     function bindNav() {
@@ -48,10 +76,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderOverview(children) {
+        const wallet = window.db.getWallet(user.id);
+        const walletHtml = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:25px;">
+                <div class="stat-card" style="border-top:3px solid #10b981;text-align:right;">
+                    <div class="num" style="color:#10b981;font-size:1.6rem;">${wallet ? wallet.balance.toFixed(2) : '0.00'} ${wallet ? wallet.currency : 'EGP'}</div>
+                    <p class="label">رصيد محفظتي</p>
+                </div>
+                <div class="stat-card" style="border-top:3px solid #00D4FF;">
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input type="text" id="parentVoucherInput" placeholder="كود الشحن مثل LG-XXXX" style="flex:1;padding:9px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:#fff;outline:none;font-size:0.85rem;">
+                        <button id="parentRedeemBtn" style="padding:9px 18px;border-radius:30px;border:none;background:linear-gradient(135deg,#22c55e,#10b981);color:#fff;cursor:pointer;font-size:0.8rem;font-weight:700;white-space:nowrap;"><i class="fa-solid fa-ticket"></i> شحن</button>
+                    </div>
+                    <p class="label" style="margin-top:8px;">أكواد شحن الرصيد — لشراء كورسات لأبنائك</p>
+                </div>
+            </div>
+        `;
         if (!children.length) {
-            return '<div class="empty-state"><i class="fa-solid fa-child"></i><p>لم يتم ربط أي طالب بحسابك. تواصل مع الإدارة.</p></div>';
+            return walletHtml + '<div class="empty-state"><i class="fa-solid fa-child"></i><p>لم يتم ربط أي طالب بحسابك. تواصل مع الإدارة.</p></div>';
         }
-        return children.map(child => {
+        return walletHtml + children.map(child => {
             const attStats = window.db.getStudentAttendanceStats(child.id);
             const enrolled = window.db.getCourses().filter(c => (c.studentsEnrolled || []).includes(child.id));
             const invoices = window.db.getInvoicesForUser(child.id);

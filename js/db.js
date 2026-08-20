@@ -582,16 +582,19 @@ window.db = {
         return record
     },
 
-    /** Full purchase flow: coupon discount -> wallet deduct -> enroll -> invoice + financial + notification */
+    /** Full purchase flow: coupon discount -> wallet deduct -> enroll -> invoice + financial + notification
+     *  opts.enrollUserId: when a parent buys a course for a child, enrollment/invoice target the child
+     */
     purchaseCourse: (userId, courseId, opts) => {
         const data = getData()
         const course = data.courses.find(c => c.id === parseInt(courseId))
         if (!course) return { success: false, message: 'الكورس غير موجود' }
         const uid = parseInt(userId)
-        if ((course.studentsEnrolled || []).includes(uid)) return { success: false, message: 'أنت مسجل في هذا الكورس بالفعل' }
+        const enrollUid = (opts && opts.enrollUserId) ? parseInt(opts.enrollUserId) : uid
+        if ((course.studentsEnrolled || []).includes(enrollUid)) return { success: false, message: 'الطالب مسجل في هذا الكورس بالفعل' }
         if (!course.price) {
-            window.db.enrollStudent(courseId, uid)
-            return { success: true, price: 0 }
+            window.db.enrollStudent(courseId, enrollUid)
+            return { success: true, price: 0, enrollUserId: enrollUid }
         }
         const wallet = window.db.getWallet(uid)
         let price = parseFloat(course.price) || 0
@@ -604,14 +607,21 @@ window.db = {
         }
         if (wallet.balance < price) return { success: false, message: 'رصيد المحفظة غير كافٍ', price, coupon, balance: wallet.balance }
         window.db.deductFromWallet(uid, price, `شراء كورس ${course.title}`)
-        window.db.enrollStudent(courseId, uid)
-        const invoice = window.db.addInvoice({ userId: uid, courseId: course.id, amount: price, currency: course.currency || 'USD', status: 'paid', paidAt: new Date().toISOString().slice(0, 10), description: course.title })
+        window.db.enrollStudent(courseId, enrollUid)
+        const payerName = (data.users.find(u => u.id === uid) || {}).name || ''
+        const enrolledName = (data.users.find(u => u.id === enrollUid) || {}).name || ''
+        const invoice = window.db.addInvoice({ userId: enrollUid, courseId: course.id, amount: price, currency: course.currency || 'USD', status: 'paid', paidAt: new Date().toISOString().slice(0, 10), description: course.title, payerId: uid })
         const teacherId = course.teacherId || (course.teacherIds && course.teacherIds[0]) || null
         const teacherShare = teacherId ? Math.round(price * 0.7 * 100) / 100 : 0
-        window.db.addFinancial({ userId: uid, courseId: course.id, teacherId, amount: price, teacherShare, platformShare: Math.round((price - teacherShare) * 100) / 100, type: 'purchase', description: `شراء كورس ${course.title}`, invoiceId: invoice.id })
-        window.db.addNotification({ user_id: uid, title: 'تمت عملية الشراء', message: `تم شراء كورس «${course.title}» بمبلغ ${price} ${course.currency || 'USD'} من المحفظة.`, type: 'financial' })
+        window.db.addFinancial({ userId: enrollUid, courseId: course.id, teacherId, amount: price, teacherShare, platformShare: Math.round((price - teacherShare) * 100) / 100, type: 'purchase', description: `شراء كورس ${course.title}`, invoiceId: invoice.id })
+        if (enrollUid === uid) {
+            window.db.addNotification({ user_id: uid, title: 'تمت عملية الشراء', message: `تم شراء كورس «${course.title}» بمبلغ ${price} ${course.currency || 'USD'} من المحفظة.`, type: 'financial' })
+        } else {
+            window.db.addNotification({ user_id: uid, title: 'تم شراء كورس لابنك', message: `تم شراء كورس «${course.title}» للطالب ${enrolledName || enrollUid} بمبلغ ${price} ${course.currency || 'USD'}.`, type: 'financial' })
+            window.db.addNotification({ user_id: enrollUid, title: 'تم اشتراكك في كورس', message: `تم اشتراكك في كورس «${course.title}» بواسطة ${payerName || 'ولي الأمر'} — ابدأ التعلم الآن!`, type: 'course' })
+        }
         if (teacherId) window.db.addNotification({ user_id: teacherId, title: 'بيع جديد', message: `تم شراء كورسك «${course.title}» — حصتك ${teacherShare} ${course.currency || 'USD'}.`, type: 'financial' })
-        return { success: true, price, coupon, invoice }
+        return { success: true, price, coupon, invoice, enrollUserId: enrollUid }
     },
 
     /** Voucher code redemption: coupon with type 'balance' credits the wallet */
