@@ -83,6 +83,7 @@
             <ul class="nav-links">
                 <li><a href="index.html" class="active" data-i18n="nav_home">Home</a></li>
                 <li><a href="#courses" data-i18n="nav_courses">Courses</a></li>
+                <li><a href="books.html" data-i18n="nav_books">Books & Notes</a></li>
                 <li><a href="blog.html" data-i18n="nav_blog">Blog</a></li>
                 <li><a href="services.html" data-i18n="nav_services">Services</a></li>
                 <li><a href="#scholarships" data-i18n="nav_scholarships">Scholarships</a></li>
@@ -254,13 +255,13 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["تعلم لغة جديدة، تفتح آفاقاً جديدة 🌍", "الإنجليزية والفرنسية والألمانية بأسلوب مبتكر 🎓"]'
                         data-quotes-en='["Learning a new language opens new horizons 🌍", "English, French, and German in an innovative way 🎓"]'
-                        style="color: var(--accent-pink);">Communication and language skills development</span>
+                        style="color: var(--accent-pink);" data-i18n="subj_lang_desc">Communication and language skills development</span>
                 </div>
                 <ul class="subject-list">
-                    <li>اللغة العربية <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>اللغة الإنجليزية <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>اللغة الفرنسية <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>اللغة الألمانية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_ar">اللغة العربية</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_en">اللغة الإنجليزية</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_fr">اللغة الفرنسية</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_de">اللغة الألمانية</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -273,13 +274,13 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["العلوم تجعلك ترى العالم بطريقة مختلفة 🔬", "استكشف أسرار الطبيعة والفيزياء 🌌"]'
                         data-quotes-en='["Science makes you see the world differently 🔬", "Explore the secrets of nature and physics 🌌"]'
-                        style="color: var(--success);">Exploring the world around us</span>
+                        style="color: var(--success);" data-i18n="subj_sci_desc">Exploring the world around us</span>
                 </div>
                 <ul class="subject-list">
-                    <li>الفيزياء <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الكيمياء <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الأحياء <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الجيولوجيا <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_phys">الفيزياء</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_chem">الكيمياء</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_bio">الأحياء</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_geol">الجيولوجيا</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -293,12 +294,12 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["الرياضيات هي لغة الأذكياء 🔢", "التفكير المنطقي هو مفتاح النجاح 📐"]'
                         data-quotes-en='["Mathematics is the language of minds 🔢", "Logical thinking is the key to success 📐"]'
-                        style="color: var(--primary-blue);">التفكير المنطقي والتحليل الرياضي</span>
+                        style="color: var(--primary-blue);" data-i18n="subj_math_desc">التفكير المنطقي والتحليل الرياضي</span>
                 </div>
                 <ul class="subject-list">
-                    <li>الرياضيات المتقدمة <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الجبر والتفاضل <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الاحصاء <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_adv_math">الرياضيات المتقدمة</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_alg">الجبر والتفاضل</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_stat">الاحصاء</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -312,14 +313,12 @@
                     style="min-height: 48px; border-inline-start: 2px solid #FBBF24; padding-inline-start: 8px;">
                     <span class="card-typewriter"
                         data-quotes-ar='["من لا يقرأ التاريخ لا يبصر المستقبل 🏛️", "سافر عبر الزمن واعرف العالم 🌍"]'
-                        data-quotes-en='["He who doesn\' t read history can\'t see the future
-                        🏛️", "Travel through time and know the world 🌍" ]' style="color: #FBBF24;">تاريخ، جغرافيا،
-                        وعلوم إنسانية</span>
+                        data-quotes-en='["He who doesn\' t read history can\'t see the future 🏛️", "Travel through time and know the world 🌍" ]' style="color: #FBBF24;" data-i18n="subj_hist_desc">تاريخ، جغرافيا، وعلوم إنسانية</span>
                 </div>
                 <ul class="subject-list">
-                    <li>الدراسات الاجتماعية <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>التاريخ الحديث <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الجغرافيا السياسية <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_soc">الدراسات الاجتماعية</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_mod_hist">التاريخ الحديث</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_pol_geo">الجغرافيا السياسية</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -334,12 +333,12 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["المهندسون يصنعون العالم 🏗️", "صمم مستقبلك بدقة وإبداع 📐"]'
                         data-quotes-en='["Engineers build the world 🏗️", "Design your future with precision and creativity 📐"]'
-                        style="color: #FF6432;">تطبيقات وبرامج التصميم الهندسي</span>
+                        style="color: #FF6432;" data-i18n="subj_eng_desc">تطبيقات وبرامج التصميم الهندسي</span>
                 </div>
                 <ul class="subject-list">
-                    <li>AutoCAD & Revit <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>نظم GIS والمساحة <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>إدارة المشروعات <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_autocad">AutoCAD & Revit</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_gis">نظم GIS والمساحة</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_pm">إدارة المشروعات</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -352,12 +351,12 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["التكنولوجيا هي لغة العصر المتقدم 💻", "احمِ مستقبلك بالأمن السيبراني 🔒"]'
                         data-quotes-en='["Technology is the language of the modern era 💻", "Protect your future with cybersecurity 🔒"]'
-                        style="color: var(--accent-violet);">ICT والرقمنة</span>
+                        style="color: var(--accent-violet);" data-i18n="subj_ict_desc">ICT والرقمنة</span>
                 </div>
                 <ul class="subject-list">
-                    <li>أساسيات الكمبيوتر <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>تكنولوجيا المعلومات <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>الأمن السيبراني <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_comp_fund">أساسيات الكمبيوتر</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_ict">تكنولوجيا المعلومات</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_cyber">الأمن السيبراني</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -370,12 +369,12 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["برمج أفكارك وانشر إبداعك 🌐", "تصميم الويب فن وهندسة 🎨"]'
                         data-quotes-en='["Program your ideas and spread your creativity 🌐", "Web design is art and engineering 🎨"]'
-                        style="color: var(--primary-blue);">بناء وتصميم الويب</span>
+                        style="color: var(--primary-blue);" data-i18n="subj_web_desc">بناء وتصميم الويب</span>
                 </div>
                 <ul class="subject-list">
-                    <li>HTML & CSS <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>JavaScript <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>تطوير الواجهات <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_html">HTML & CSS</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_js">JavaScript</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_frontend">تطوير الواجهات</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 
@@ -388,12 +387,12 @@
                     <span class="card-typewriter"
                         data-quotes-ar='["البرمجة هي السحر في العصر الحديث ⌨️", "أنشئ أنظمة تغير العالم 📊"]'
                         data-quotes-en='["Programming is magic in the modern age ⌨️", "Build systems that change the world 📊"]'
-                        style="color: var(--primary-blue);">برمجة وتحليل النظم</span>
+                        style="color: var(--primary-blue);" data-i18n="subj_comp_desc">برمجة وتحليل النظم</span>
                 </div>
                 <ul class="subject-list">
-                    <li>برمجة Python <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>قواعد البيانات <i class="fa-solid fa-chevron-left"></i></li>
-                    <li>إدارة الشبكات <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_python">برمجة Python</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_db">قواعد البيانات</span> <i class="fa-solid fa-chevron-left"></i></li>
+                    <li><span data-i18n="subj_sub_net">إدارة الشبكات</span> <i class="fa-solid fa-chevron-left"></i></li>
                 </ul>
             </div>
 

@@ -679,6 +679,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const totalPaid = payments.filter(p => p.status === 'paid').reduce((s, p) => s + (p.amount || 0), 0)
         const totalPending = payments.filter(p => p.status === 'pending').reduce((s, p) => s + (p.amount || 0), 0)
         return `
+            <div style="padding:18px 24px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:14px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <i class="fa-solid fa-circle-pause" style="font-size:2rem;color:var(--neon-blue);"></i>
+                    <div>
+                        <strong style="color:var(--neon-blue);display:block;font-size:1.05rem;margin-bottom:3px;">إدارة المدفوعات: قادم قريباً (Pending)</strong>
+                        <span style="font-size:0.85rem;color:rgba(255,255,255,0.7);">جميع الكورسات مجانية حالياً في مرحلة الإطلاق الأولى. النظام مجهز لاحتساب نسبة المنصة <strong>30%</strong> ونصيب المعلم <strong>70%</strong> تلقائياً عند تفعيل الدفع.</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <span style="background:rgba(251,191,36,0.15);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;"><i class="fa-solid fa-lock"></i> الدفع معطل مؤقتاً</span>
+                </div>
+            </div>
             <div class="stats-grid" style="margin-bottom:20px">
                 <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">${payments.filter(p=>p.status==='paid').length}</div><p class="label">مدفوع</p></div>
                 <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">${payments.filter(p=>p.status==='pending').length}</div><p class="label">معلق</p></div>

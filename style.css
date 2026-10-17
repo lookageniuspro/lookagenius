@@ -37,20 +37,18 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none;
-    /* مؤشر مخصص للكمبيوتر */
 }
 
-/* إرجاع المؤشر الافتراضي للموبايل لتجنب مشاكل اللمس */
-@media (hover: none) and (pointer: coarse) {
-    * {
-        cursor: auto;
-    }
+html, body {
+    cursor: default;
+}
 
-    .cursor-dot,
-    .cursor-outline {
-        display: none;
-    }
+a, button, [role="button"], input[type="submit"], input[type="button"], select, .btn, .nav-link, .hover-trigger {
+    cursor: pointer;
+}
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    cursor: text;
 }
 
 body {
@@ -81,36 +79,7 @@ body::before {
  */
 .cursor-dot,
 .cursor-outline {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    z-index: 9999;
-    pointer-events: none;
-    transition: transform 0.1s;
-}
-
-.cursor-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--primary-blue);
-    box-shadow: 0 0 10px var(--primary-blue);
-}
-
-.cursor-outline {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--accent-violet);
-    transition: all 0.15s ease-out;
-}
-
-body:hover .cursor-outline.hovered {
-    width: 60px;
-    height: 60px;
-    background: rgba(59, 130, 246, 0.1);
-    border-color: var(--primary-blue);
-    backdrop-filter: blur(2px);
+    display: none !important;
 }
 
 /* 

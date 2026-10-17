@@ -8,20 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         AOS.init({ duration: 700, once: true, offset: 60 });
     }
 
-    // 2. Custom Cursor Logic
-    const dot = document.querySelector('[data-cursor-dot]');
-    const outline = document.querySelector('[data-cursor-outline]');
-    const triggers = document.querySelectorAll('a, button, .hover-trigger');
-    
-    window.addEventListener('mousemove', (e) => {
-        if(dot) { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; }
-        if(outline) { outline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" }); }
-    });
-
-    triggers.forEach(el => {
-        el.addEventListener('mouseenter', () => outline && outline.classList.add('hovered'));
-        el.addEventListener('mouseleave', () => outline && outline.classList.remove('hovered'));
-    });
+    // 2. Native hardware cursor enabled (0ms lag)
 
     // 3. Three.js Network Background (Restored)
     if (document.getElementById('canvas-container')) initNetworkBackground();
@@ -34,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function initNetworkBackground() {
     const container = document.getElementById('canvas-container');
-    if (!container) return;
+    if (!container || container.querySelector('canvas')) return;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);

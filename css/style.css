@@ -70,10 +70,8 @@ body::before {
 .sidebar.active { right: 0; }
 .sidebar-close { font-size: 1.5rem; align-self: flex-start; cursor: pointer; color: var(--text-secondary); }
 
-/* --- CUSTOM CURSOR (Restored) --- */
-.cursor-dot { position: fixed; width: 6px; height: 6px; background: var(--primary-blue); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; box-shadow: 0 0 10px var(--primary-blue); }
-.cursor-outline { position: fixed; width: 38px; height: 38px; border: 1.5px solid var(--accent-violet); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: all 0.2s ease-out; }
-.cursor-outline.hovered { width: 56px; height: 56px; background: rgba(168, 85, 247, 0.12); border-color: var(--primary-blue); backdrop-filter: blur(3px); }
+/* --- CUSTOM CURSOR --- */
+.cursor-dot, .cursor-outline { display: none !important; }
 
 /* --- HERO (Restored) --- */
 .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: flex-start; padding: 0 6% 60px; overflow: hidden; }

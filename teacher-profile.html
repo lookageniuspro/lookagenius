@@ -135,6 +135,31 @@
             const bio = user.bio || (teamMember ? teamMember.role + ' at LookaGenius Academy' : 'Instructor at LookaGenius Academy');
             document.getElementById('tpBio').textContent = bio;
 
+            // Inject Schema.org Person JSON-LD for SEO
+            try {
+                const existingScript = document.getElementById('teacher-schema-jsonld');
+                if (existingScript) existingScript.remove();
+                const personSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "Person",
+                    "name": user.name,
+                    "jobTitle": specialization || "مدرس",
+                    "worksFor": {
+                        "@type": "Organization",
+                        "name": "LookaGenius Academy",
+                        "url": "https://www.lookagenius.com"
+                    },
+                    "image": avatar,
+                    "description": bio,
+                    "knowsAbout": user.specialties || [specialization]
+                };
+                const schemaScript = document.createElement('script');
+                schemaScript.id = 'teacher-schema-jsonld';
+                schemaScript.type = 'application/ld+json';
+                schemaScript.textContent = JSON.stringify(personSchema);
+                document.head.appendChild(schemaScript);
+            } catch(e) {}
+
             // WhatsApp link
             const wa = user.whatsapp || '';
             if (wa) {

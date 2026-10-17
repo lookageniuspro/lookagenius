@@ -82,7 +82,11 @@ const defaultData = {
         siteDescription: 'Educational Platform',
         whatsapp: '',
         email: '',
-        currency: '$'
+        currency: '$',
+        paymentsEnabled: false,
+        defaultPlatformFee: 30,
+        defaultInstructorShare: 70,
+        youtubeOnlyMode: true
     },
     notifications: [],
     financials: [],

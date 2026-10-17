@@ -189,25 +189,16 @@
         renderHomeScholarships();
     });
 
-    // 4. Cursor Logic
+    // 4. Cursor Logic (Native hardware cursor - 0ms lag)
     const initCursor = () => {
-        const dot = document.querySelector('[data-cursor-dot]');
-        const out = document.querySelector('[data-cursor-outline]');
-        if (!dot || !out) return;
-        window.addEventListener('mousemove', (e) => {
-            dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`;
-            out.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
-        });
-        document.querySelectorAll('.hover-trigger').forEach(el => {
-            el.addEventListener('mouseenter', () => out.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => out.classList.remove('hovered'));
-        });
+        // Native OS cursor is active for instant hardware-accelerated response
     };
 
     // 5. Three.js: Blue/Violet Network
     function initThreeJS() {
         const container = document.getElementById('canvas-container');
         if (!container) return;
+        if (container.querySelector('canvas')) return; // Avoid duplicate canvas rendering
         const THREE = window.THREE;
         if (!THREE) return;
 

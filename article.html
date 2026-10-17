@@ -209,31 +209,7 @@
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
 
-    <nav class="ag-header ag-glass">
-        <div class="header-container">
-            <a href="index.html" class="logo ag-text-gradient" style="display: flex; align-items: center; gap: 12px;">
-                <img src="assets/img/logo.png" alt="Logo" class="lg-logo">
-                <span class="logo-text">LookaGenius</span>
-            </a>
-            <ul class="nav-links">
-            <li><a href="index.html" data-i18n="nav_home">الرئيسية</a></li>
-            <li><a href="courses.html" data-i18n="nav_courses">الكورسات</a></li>
-            <li><a href="scholarships.html" data-i18n="nav_scholarships">المنح</a></li>
-            <li><a href="blog.html" class="active" data-i18n="nav_blog">المدونة</a></li>
-            <li><a href="services.html" data-i18n="nav_services">خدماتنا</a></li>
-            <li><a href="join-us.html" data-i18n="nav_join">انضم إلينا</a></li>
-            <li><a href="support.html" data-i18n="nav_about">من نحن</a></li>
-            </ul>
-            <div class="header-btns" style="display: flex; gap: 10px; align-items: center;">
-                <button id="langSwitcher" class="ag-btn ag-btn-outline" style="padding: 8px 15px; font-size: 14px;">
-                    <i class="fa-solid fa-globe"></i> English
-                </button>
-            </div>
-            <button class="mobile-menu-btn" onclick="const n=this.closest('.ag-header').querySelector('.nav-links'),i=this.querySelector('i');n.classList.toggle('active');i.className=n.classList.contains('active')?'fa-solid fa-xmark':'fa-solid fa-bars';">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-    </nav>
+    <div id="global-nav"></div>
 
     <div id="articleContent">
         <div style="text-align:center;padding:100px 20px;color:#aaa;">
@@ -242,9 +218,13 @@
         </div>
     </div>
 
+    <div id="global-footer"></div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/components.js" defer></script>
     <script src="js/auth.js"></script>
+    <script src="js/app.js" defer></script>
     <script src="assets/js/i18n.js"></script>
     <script src="script.js"></script>
     <script>

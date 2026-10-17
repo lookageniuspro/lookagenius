@@ -936,6 +936,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pending = revenues.filter(r => r.status === 'pending').reduce((s, r) => s + (r.teacher_share || 0), 0)
         const myRequests = (window.db.getSettlementRequests() || []).filter(r => r.userId == user.id)
         return `
+            <div style="padding:16px 20px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:14px;margin-bottom:20px;display:flex;align-items:center;gap:15px;">
+                <i class="fa-solid fa-clock-rotate-left" style="font-size:1.8rem;color:#FBBF24;"></i>
+                <div>
+                    <strong style="color:#FBBF24;display:block;font-size:1rem;margin-bottom:4px;">الأرباح: غير مفعلة حالياً (Pending)</strong>
+                    <span style="font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.5;">جميع الكورسات مجانية حالياً في مرحلة الإطلاق التجريبي. عند تفعيل الدفع مستقبلاً، سيتم احتساب نصيبك تلقائياً بنسبة <strong>70%</strong> من كل عملية بيع (وحصة المنصة 30%).</span>
+                </div>
+            </div>
             <div class="stats-grid">
                 <div class="stat-card" style="border-top:3px solid #10b981;"><div class="num" style="color:#10b981;">$${totalTeacher}</div><p class="label">حصة المعلم (70%)</p></div>
                 <div class="stat-card" style="border-top:3px solid #00D4FF;"><div class="num" style="color:#00D4FF;">$${totalAcademy}</div><p class="label">حصة الأكاديمية (30%)</p></div>
