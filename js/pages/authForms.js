@@ -3,45 +3,140 @@
  * Handles Login and Register UI Logic
  */
 
+const GOOGLE_CLIENT_ID = '433570799388-ioc6q3feq1fbfnle0ljgk4u8vhgct7ps.apps.googleusercontent.com';
+
+function showAuthError(msg) {
+    const errBox = document.getElementById('loginErrorMsg') || document.getElementById('regErrorMsg');
+    if (errBox) {
+        errBox.textContent = msg;
+        errBox.classList.remove('hidden');
+    } else {
+        alert(msg);
+    }
+}
+
+// Google Identity Services (GSI) credential handler
+async function handleGoogleCredentialResponse(response) {
+    if (!response || !response.credential) return;
+    const btn = document.getElementById('googleAuthBtn');
+    let originalHtml = '';
+    if (btn) {
+        originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> <span>جارٍ تسجيل الدخول بجوجل...</span>';
+    }
+
+    const sb = window.supabaseApp;
+    if (sb) {
+        if (!sb.isReady()) {
+            try { sb.init(); } catch (e) {}
+        }
+        try {
+            const { data, error } = await sb.signInWithIdToken({
+                provider: 'google',
+                token: response.credential
+            });
+
+            if (data?.user) {
+                if (window.auth && typeof window.auth._syncUserProfile === 'function') {
+                    const userObj = await window.auth._syncUserProfile(data.user);
+                    const dest = `dashboard-${userObj.type || 'student'}.html`;
+                    window.location.href = dest;
+                    return;
+                }
+            } else if (error) {
+                console.warn('[auth] signInWithIdToken error:', error);
+                showAuthError('تعذر التحقق من حساب جوجل: ' + (error.message || error));
+            }
+        } catch (err) {
+            console.warn('[auth] signInWithIdToken exception:', err);
+            showAuthError('حدث خطأ أثناء معالجة تسجيل الدخول.');
+        }
+    }
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml || '<span>المتابعة باستخدام Google</span>';
+    }
+}
+
+// Initialize GSI if script is loaded
+function initGoogleIdentity() {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+        try {
+            window.google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredentialResponse,
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+        } catch (e) {
+            console.warn('[auth] GSI init warning:', e);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Attempt initializing Google Identity Services
+    setTimeout(initGoogleIdentity, 500);
+});
+
 document.addEventListener('click', async (e) => {
     const btn = e.target.closest('#googleAuthBtn');
     if (btn) {
+        e.preventDefault();
         const originalContent = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> <span>جارٍ الاتصال بجوجل...</span>';
-        
+
         const sb = window.supabaseApp;
-        if (sb && sb.isReady && sb.isReady()) {
-            const { error } = await sb.signInWithGoogle();
-            if (error) {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-                const errBox = document.getElementById('loginErrorMsg') || document.getElementById('regErrorMsg');
-                if (errBox) {
-                    errBox.textContent = 'تعذر الاتصال بـ Google OAuth: ' + error.message;
-                    errBox.classList.remove('hidden');
-                } else {
-                    alert('تعذر الاتصال بـ Google OAuth: ' + error.message);
-                }
-            }
-        } else {
-            // Local fallback simulation if Supabase credentials are not connected
-            setTimeout(() => {
-                const demoStudent = (window.db ? window.db.getUsers() : []).find(u => u.type === 'student') || {
-                    id: 999,
-                    name: 'طالب تجريبي (Google)',
-                    email: 'student.google@lookagenius.com',
-                    type: 'student'
-                };
-                if (window.auth) {
-                    window.auth.currentUser = demoStudent;
-                    window.auth._issueSession(demoStudent);
-                    window.location.href = 'dashboard-student.html';
-                } else {
+        if (sb && !sb.isReady()) {
+            try { sb.init(); } catch (err) {}
+        }
+
+        // 1. Try Google Identity Services (One-Tap / Prompt) first (Zero-Redirects)
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+            try {
+                initGoogleIdentity();
+                let promptOpened = false;
+                window.google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        console.log('[auth] GSI prompt skipped, falling back to OAuth redirect');
+                        fallbackOAuthRedirect();
+                    }
+                });
+                // Re-enable button after prompt is launched
+                setTimeout(() => {
                     btn.disabled = false;
                     btn.innerHTML = originalContent;
+                }, 2000);
+                return;
+            } catch (gisErr) {
+                console.warn('[auth] GSI prompt error, using OAuth redirect:', gisErr);
+            }
+        }
+
+        // 2. Fallback to Supabase OAuth Redirect Flow
+        await fallbackOAuthRedirect();
+
+        async function fallbackOAuthRedirect() {
+            if (sb) {
+                if (!sb.isReady()) {
+                    try { sb.init(); } catch (e) {}
                 }
-            }, 600);
+                const { data, error } = await sb.signInWithGoogle();
+                if (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    showAuthError('تعذر الاتصال بـ Google OAuth: ' + (error.message || error));
+                } else if (data?.url) {
+                    window.location.href = data.url;
+                }
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                showAuthError('تعذر الاتصال بخدمة المصادقة، يرجى المحاولة بعد لحظات.');
+            }
         }
     }
 });

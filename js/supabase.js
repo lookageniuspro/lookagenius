@@ -62,11 +62,11 @@ window.supabaseApp = (() => {
     }
 
     /* Google OAuth — sign in / register with Google account */
-    async function signInWithGoogle() {
-        if (!client) return { error: 'Supabase not initialized' }
-        const origin = window.location.origin;
-        const isLocal = origin.includes('localhost') || origin.includes('127.0.0.1');
-        const redirectTo = isLocal ? `${origin}/login.html` : `${origin}/login.html`;
+    async function signInWithGoogle(customRedirect) {
+        if (!client) init();
+        if (!client) return { error: { message: 'Supabase client not initialized' } };
+        const currentCleanUrl = window.location.href.split('#')[0].split('?')[0];
+        const redirectTo = customRedirect || currentCleanUrl;
         const { data, error } = await client.auth.signInWithOAuth({
             provider: 'google',
             options: {
@@ -75,8 +75,44 @@ window.supabaseApp = (() => {
                     prompt: 'select_account'
                 }
             }
-        })
-        return { data, error }
+        });
+        return { data, error };
+    }
+
+    /* Google Native ID Token sign-in (via Google Identity Services popup, no redirects) */
+    async function signInWithIdToken(params) {
+        if (!client) init();
+        if (!client) return { error: { message: 'Supabase client not initialized' } };
+        try {
+            const { data, error } = await client.auth.signInWithIdToken(params);
+            return { data, error };
+        } catch (err) {
+            return { error: err };
+        }
+    }
+
+    /* Set active session directly with tokens */
+    async function setSession(tokens) {
+        if (!client) init();
+        if (!client) return { error: { message: 'Supabase client not initialized' } };
+        try {
+            const { data, error } = await client.auth.setSession(tokens);
+            return { data, error };
+        } catch (err) {
+            return { error: err };
+        }
+    }
+
+    /* Exchange PKCE authorization code for session */
+    async function exchangeCodeForSession(code) {
+        if (!client) init();
+        if (!client) return { error: { message: 'Supabase client not initialized' } };
+        try {
+            const { data, error } = await client.auth.exchangeCodeForSession(code);
+            return { data, error };
+        } catch (err) {
+            return { error: err };
+        }
     }
 
     async function getGoogleProfile() {
@@ -543,8 +579,9 @@ window.supabaseApp = (() => {
 
     return {
         init, getClient, isReady,
+        get client() { return client; },
         signUp, signIn, signOut, getSession, getCurrentUser, onAuthStateChange,
-        signInWithGoogle, getGoogleProfile,
+        signInWithGoogle, signInWithIdToken, setSession, exchangeCodeForSession, getGoogleProfile,
         getProfile, updateProfile, getAllProfiles,
         getPublishedCourses, getCourseById, getTeacherCourses, getAllCourses,
         createCourse, updateCourse, deleteCourse,
@@ -568,6 +605,14 @@ window.supabaseApp = (() => {
     }
 })()
 
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => window.supabaseApp.init(), 300)
-})
+// Auto-initialize immediately if Supabase CDN library is already loaded
+if (typeof window !== 'undefined') {
+    if (window.supabase || window.supabasejs) {
+        window.supabaseApp.init();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!window.supabaseApp.isReady()) {
+            window.supabaseApp.init();
+        }
+    });
+}
