@@ -103,8 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderChat() {
         return `
             <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-comments" style="color:#00D4FF"></i> المحادثات</h3>
-            <p style="color:#888;margin-bottom:20px">تواصل مع فريق العمل والإدارة</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px">
+            <div class="dash-grid-2">
                 <button onclick="NextGen.Communication.openChat('admin', 'الإدارة')" style="padding:20px;border-radius:16px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;cursor:pointer;font-size:16px;text-align:center;transition:all 0.3s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'"><i class="fa-solid fa-building" style="display:block;font-size:32px;margin-bottom:10px"></i> الإدارة</button>
                 <button onclick="NextGen.Communication.openChat('teacher', 'فريق التدريس')" style="padding:20px;border-radius:16px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);color:#A855F7;cursor:pointer;font-size:16px;text-align:center;transition:all 0.3s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'"><i class="fa-solid fa-chalkboard-user" style="display:block;font-size:32px;margin-bottom:10px"></i> فريق التدريس</button>
             </div>

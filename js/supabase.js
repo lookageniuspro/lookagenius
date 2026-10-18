@@ -64,10 +64,17 @@ window.supabaseApp = (() => {
     /* Google OAuth — sign in / register with Google account */
     async function signInWithGoogle() {
         if (!client) return { error: 'Supabase not initialized' }
-        const redirectTo = window.location.origin + '/login.html'
+        const origin = window.location.origin;
+        const isLocal = origin.includes('localhost') || origin.includes('127.0.0.1');
+        const redirectTo = isLocal ? `${origin}/login.html` : `${origin}/login.html`;
         const { data, error } = await client.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo }
+            options: {
+                redirectTo,
+                queryParams: {
+                    prompt: 'select_account'
+                }
+            }
         })
         return { data, error }
     }

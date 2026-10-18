@@ -117,8 +117,100 @@ window.auth = {
         }
         this._refreshLegacySession()
 
-        /* Try Supabase session first */
         const sb = window.supabaseApp
+
+        /* Handle OAuth callback hash (#access_token=... or code=...) */
+        if (window.location.hash && (window.location.hash.includes('access_token') || window.location.hash.includes('refresh_token'))) {
+            try {
+                const hashString = window.location.hash.startsWith('#') ? window.location.hash.substring(1) : window.location.hash;
+                const hashParams = new URLSearchParams(hashString);
+                const accessToken = hashParams.get('access_token');
+                const refreshToken = hashParams.get('refresh_token');
+
+                if (accessToken) {
+                    let userObj = null;
+
+                    // 1. Try setting session in Supabase client if ready
+                    if (sb && sb.isReady && sb.isReady() && sb.client) {
+                        try {
+                            const { data } = await sb.client.auth.setSession({
+                                access_token: accessToken,
+                                refresh_token: refreshToken || ''
+                            });
+                            if (data?.user) {
+                                window.auth.supabaseUser = data.user;
+                                let profile = await sb.getProfile(data.user.id);
+                                if (!profile) {
+                                    const meta = data.user.user_metadata || {};
+                                    profile = {
+                                        id: data.user.id,
+                                        full_name: meta.full_name || meta.name || data.user.email.split('@')[0],
+                                        email: data.user.email,
+                                        role: 'student',
+                                        avatar_url: meta.avatar_url || meta.picture || '',
+                                        is_active: true
+                                    };
+                                    try { await sb.client.from('profiles').upsert(profile); } catch(e) {}
+                                }
+                                userObj = {
+                                    id: profile.id,
+                                    name: profile.full_name,
+                                    email: profile.email,
+                                    type: profile.role || 'student',
+                                    avatar_url: profile.avatar_url,
+                                    supabase: true
+                                };
+                            }
+                        } catch(e) {
+                            console.warn('[auth] Supabase setSession failed, decoding JWT:', e);
+                        }
+                    }
+
+                    // 2. Fallback: decode JWT payload directly if Supabase call failed
+                    if (!userObj) {
+                        try {
+                            const payloadBase64 = accessToken.split('.')[1];
+                            if (payloadBase64) {
+                                const decoded = JSON.parse(atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/')));
+                                const meta = decoded.user_metadata || {};
+                                userObj = {
+                                    id: decoded.sub || 'user_' + Date.now(),
+                                    name: meta.full_name || meta.name || decoded.email.split('@')[0],
+                                    email: decoded.email,
+                                    type: 'student',
+                                    avatar_url: meta.avatar_url || meta.picture || '',
+                                    supabase: true
+                                };
+                            }
+                        } catch(e) {
+                            console.warn('[auth] JWT decode fallback error:', e);
+                        }
+                    }
+
+                    if (userObj) {
+                        window.auth.currentUser = userObj;
+                        window.auth._issueSession(userObj);
+                        window.auth.updateUI();
+
+                        // Clean hash from address bar
+                        try {
+                            window.history.replaceState(null, '', window.location.pathname);
+                        } catch(e) {}
+
+                        // If currently on login or register, forward to appropriate role dashboard
+                        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                        if (currentPage === 'login.html' || currentPage === 'register.html' || currentPage === '') {
+                            window.location.href = `dashboard-${userObj.type || 'student'}.html`;
+                            return;
+                        }
+                    }
+                }
+            } catch (oauthErr) {
+                console.warn('[auth] Error parsing OAuth hash:', oauthErr);
+            }
+        }
+
+        /* Try Supabase session first */
         if (sb && sb.isReady()) {
             const session = await sb.getSession()
             if (session?.user) {

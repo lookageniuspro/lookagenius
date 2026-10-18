@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="stat-card" style="border-top:3px solid #FF3366;"><div class="num" style="color:#FF3366;">${invoices.filter(i => i.status === 'pending').length}</div><p class="label">الفواتير غير المدفوعة</p></div>
                 <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">$${totalPaid}</div><p class="label">إجمالي المدفوعات</p></div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;">
+            <div class="dash-grid-2">
                 <div class="dash-card"><h4><i class="fa-solid fa-chart-line" style="color:#00D4FF;"></i> مخطط التقدم</h4><canvas id="studentProgressChart" style="width:100%;height:200px;"></canvas></div>
                 <div class="dash-card">
                     <h4><i class="fa-solid fa-clock" style="color:#A855F7;"></i> آخر النشاطات</h4>
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderStudentLeaderboard() {
         return `
             <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-trophy" style="color:#FBBF24"></i> ${NextGen.I18n ? NextGen.I18n.t('leaderboard') : 'المتصدرون'}</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="dash-grid-2">
                 <div id="studentProfileCard"></div>
                 <div>
                     <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
@@ -962,7 +962,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const wallet = NextGen.DB ? NextGen.DB.getWallet(user.id) : { balance: 0, points: 0 }
         return `
             <h3 style="color:#fff;margin:0 0 20px"><i class="fa-solid fa-wallet" style="color:#00D4FF"></i> المحفظة</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="dash-grid-2">
                 <div style="padding:30px;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(0,212,255,0.3);text-align:center">
                     <div style="font-size:48px;font-weight:700;color:#00D4FF">${wallet.balance.toFixed(2)} EGP</div>
                     <div style="color:#888;margin:10px 0">${NextGen.I18n ? NextGen.I18n.t('balance') : 'الرصيد'}</div>
@@ -978,7 +978,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button style="padding:12px 30px;border-radius:30px;border:1px solid rgba(251,191,36,0.3);background:transparent;color:#FBBF24;cursor:pointer;font-size:14px;transition:all 0.3s" onmouseover="this.style.background='rgba(251,191,36,0.1)'" onmouseout="this.style.background='transparent'">استبدال النقاط</button>
                 </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="dash-grid-2">
                 <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(0,255,170,0.15)">
                     <h4 style="color:#fff;margin:0 0 15px">🎟️ كود الشحن (Voucher)</h4>
                     <p style="color:#888;font-size:0.8rem;margin:0 0 12px;">اشترِ كود شحن وأدخله هنا ليضاف رصيده لمحفظتك مباشرة.</p>

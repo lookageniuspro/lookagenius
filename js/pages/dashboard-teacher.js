@@ -1137,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${NextGen.UI.renderStatCard('fa-comments', 'المناقشات', threads.length, '#00D4FF')}
                 ` : ''}
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="dash-grid-2">
                 <div style="padding:20px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px solid rgba(255,255,255,0.08)">
                     <h4 style="color:#fff;margin:0 0 15px">📊 أداء الكورسات</h4>
                     ${courses.map(c => {

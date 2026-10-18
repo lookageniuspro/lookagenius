@@ -2,33 +2,9 @@
  * dashboard-admin.js — Full admin control panel
  * Sections: Overview | Users | Courses | Revenue | Certificates | Settings
  */
-window.onerror = function(msg, url, line, col, err) {
-    const el = document.createElement('div')
-    el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ff0044;color:#fff;padding:20px;z-index:999999;font-size:14px;direction:ltr;text-align:left'
-    el.textContent = 'ERR: ' + msg + ' (' + line + ':' + col + ')'
-    document.body.prepend(el)
-}
-window.addEventListener('unhandledrejection', function(e) {
-    const el = document.createElement('div')
-    el.style.cssText = 'position:fixed;top:60px;left:0;right:0;background:#ff8800;color:#fff;padding:20px;z-index:999999;font-size:14px;direction:ltr;text-align:left'
-    el.textContent = 'UNHANDLED PROMISE: ' + (e.reason?.message || e.reason || 'unknown')
-    document.body.prepend(el)
-})
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('[admin] dashboard loaded, auth.currentUser:', window.auth?.currentUser?.type)
     await window.auth.ready
     if (!window.auth.currentUser || window.auth.currentUser.type !== 'admin') { console.warn('[admin] redirect to login'); window.location.href = 'login.html'; return }
-    console.log('[admin] auth ok, starting render')
-
-    const user = window.auth.currentUser
-    const sb = window.supabaseApp
-
-    /* Debug display */
-    const dbg = document.createElement('div')
-    dbg.id = 'dashDbg'
-    dbg.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#1a1a2e;color:#00ff88;padding:8px 15px;border-radius:8px;z-index:99999;font-size:13px;font-family:monospace;border:1px solid #00ff88;max-width:90%;'
-    dbg.textContent = 'ready'
-    document.body.appendChild(dbg)
 
     function esc(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML }
     async function ensureSb() { return sb && sb.isReady() && window.auth.currentUser?.supabase }
@@ -162,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="stat-card" style="border-top:3px solid #22c55e;"><div class="num" style="color:#22c55e;">${ngStats.activeSubscriptions || 0}</div><p class="label">الاشتراكات النشطة</p></div>
                 <div class="stat-card" style="border-top:3px solid #FBBF24;"><div class="num" style="color:#FBBF24;">${ngStats.avgRating ? ngStats.avgRating.toFixed(1) : '0'}</div><p class="label">متوسط التقييم</p></div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+            <div class="dash-grid-2" style="margin-top:20px">
                 <div class="dash-card">
                     <h4><i class="fa-solid fa-chart-simple" style="color:#00D4FF;"></i> توزيع المستخدمين</h4>
                     <canvas id="adminUsersChart" style="height:250px;margin-top:15px;"></canvas>
